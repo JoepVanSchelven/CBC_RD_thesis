@@ -44,42 +44,51 @@ def draw_network(df_lines: pd.DataFrame):
     plt.show()
 
 
-def draw_network_with_power_flows(df_lines, df_flows):
-    G = create_G(df_lines)
+def draw_network_with_power_flows(df_lines, df_flows, title, ax=None):
+    import matplotlib.pyplot as plt
+    import networkx as nx
 
-    pos = nx.spring_layout(G)   # Positioning layout (e.g., spring layout)
-    plt.figure(figsize=(14, 12))
+    G = create_G(df_lines)
+    pos = nx.spring_layout(G)  # Positioning layout (e.g., spring layout)
 
     # Map power flows to edges
     power_flows = {}
     for idx, row in df_flows.iterrows():
         from_bus = df_lines.iloc[idx]['from_bus']
         to_bus = df_lines.iloc[idx]['to_bus']
-        power_flows[(from_bus, to_bus)] = row['flow']  # Take absolute values for flow magnitudes
+        power_flows[(from_bus, to_bus)] = row['flow']
 
-    # Color edges based on power flows (optional)
-    edge_colors = [power_flows.get((i, j), power_flows.get((j, i))) for i, j in G.edges]  # Power flows dictionary
+    # Determine if we're plotting independently
+    independent_plot = ax is None
+    if independent_plot:
+        fig, ax = plt.subplots(figsize=(14, 12))
 
-    # Draw the graph with edge colors based on power flows
-    nx.draw_networkx_nodes(G, pos, node_size=700, node_color='skyblue', alpha=0.7)
-    nx.draw_networkx_edges(G, pos, width=2, alpha=0.7, edge_color=edge_colors, edge_cmap=plt.cm.RdYlGn_r)
-    nx.draw_networkx_labels(G, pos, font_size=12, font_weight='bold', font_color='black')
+    # Color edges based on power flows
+    edge_colors = [power_flows.get((i, j), power_flows.get((j, i))) for i, j in G.edges]
+
+    # Draw the graph
+    nx.draw_networkx_nodes(G, pos, node_size=700, node_color='skyblue', alpha=0.7, ax=ax)
+    nx.draw_networkx_edges(G, pos, width=2, alpha=0.7, edge_color=edge_colors, edge_cmap=plt.cm.cividis, ax=ax)
+    nx.draw_networkx_labels(G, pos, font_size=12, font_weight='bold', font_color='black', ax=ax)
 
     # Add edge labels (e.g., power flows)
     edge_labels = {(i, j): f"{power_flows.get((i, j), power_flows.get((j, i))):.2f} MW" for i, j in G.edges}
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, ax=ax)
 
-    # Add colorbar to the graph
+    # Add colorbar
     min_flow = min(power_flows.values())
     max_flow = max(power_flows.values())
-
-    sm = plt.cm.ScalarMappable(cmap=plt.cm.RdYlGn_r, norm=plt.Normalize(vmin=min_flow, vmax=max_flow))
+    sm = plt.cm.ScalarMappable(cmap=plt.cm.cividis, norm=plt.Normalize(vmin=min_flow, vmax=max_flow))
     sm.set_array([])  # Empty array for the colorbar
-    plt.colorbar(sm, ax=plt.gca(), label="Power Flow (MW)")
+    plt.colorbar(sm, ax=ax, label="Power Flow (MW)")
 
-    plt.title("Transmission Network with Power Flows")
-    plt.axis('off')
-    plt.show()
+    # Set title and axis off
+    ax.set_title(title)
+    ax.axis('off')
+
+    # Show the plot if independent
+    if independent_plot:
+        plt.show()
 
 
 def draw_network_with_absolute_power_flows(df_lines, df_flows):

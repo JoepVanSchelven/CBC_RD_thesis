@@ -21,7 +21,7 @@ from pyomo.opt import SolverFactory
 import os  
 
 #this is a custom script used to plot different networks
-from network_plotting import draw_network, draw_network_with_power_flows, draw_network_with_absolute_power_flows
+from network_plotting import draw_network, draw_network_with_power_flows, draw_network_with_absolute_power_flows, draw_network_with_congestion
 
 
 
@@ -104,6 +104,18 @@ def CHP_dispatch_calc(df_chp_max: pd.DataFrame, load_per_node:pd.DataFrame) -> p
 #use both function to add the CHP to the load per node.
 chp = CHP_dispatch_calc(df_chp_max, load_per_node_D2)
 load_per_node_D2 = add_to_array(chp, load_per_node_D2)
+
+# check if the system is balanced, exit the script if not the case
+if load_per_node_D2.sum() != 0:
+    fig, ax = plt.subplots()
+    pd. DataFrame(load_per_node_D2.sum(axis = 0)).plot(ax=ax)
+    ax.set_xlabel("Hour on day D")
+    ax.set_ylabel("Unbalance [MW]")
+    ax.set_title("Unbalance per hour ")
+    if load_per_node_D2.sum() > 0:
+        sys.exit(f' The system is inherently unbalanced because too little generation. {load_per_node_D2.sum()} MWh additional generation is required is required.')
+    elif load_per_node_D2.sum < 0:
+        sys.exit(f' The system is inherently unbalanced because to much RE. {load_per_node_D2.sum()} MWh "curtailement" is required.')
 
 #build the susceptance matrix
 df_lines['susceptance'] = 1/(df_lines['len']*(1/susceptance))
@@ -193,29 +205,66 @@ load_per_type = pd.DataFrame(load_per_type)
 load_per_type['imbalance'] = load_per_type.sum(axis=1)
 
 
-fig, ax = plt.subplots()
-load_per_type.plot(ax=ax)
-ax.set_xlabel("Hour on day D")
-ax.set_ylabel("Active Power [MW]")
-ax.set_title("df_loads_D2 per type before RD and CLC")
+# Create a 2x2 grid of subplots
+fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(14, 10))
 
-fig, ax = plt.subplots()
-pd.DataFrame(load_per_node_D2).T.plot(ax=ax)
-ax.set_xlabel("Hour on day D")
-ax.set_ylabel("Active Power [MW]")
-ax.set_title("df_loads_D2 per node before RD and CLC")
+# Plot 1: df_loads_D2 per type before RD and CLC
+load_per_type.plot(ax=axes[0, 0])
+axes[0, 0].set_xlabel("Hour on day D")
+axes[0, 0].set_ylabel("Active Power [MW]")
+axes[0, 0].set_title("df_loads_D2 per type before RD and CLC")
 
-fig, ax = plt.subplots()
-pd.DataFrame(abs(df_flows)).T.plot(ax=ax)
-ax.set_xlabel("Hour on day D")
-ax.set_ylabel("absolute flow [MW]")
-ax.set_title("absolute flow per line before RD and CLC")
+# Plot 2: df_loads_D2 per node before RD and CLC
+pd.DataFrame(load_per_node_D2).T.plot(ax=axes[0, 1])
+axes[0, 1].set_xlabel("Hour on day D")
+axes[0, 1].set_ylabel("Active Power [MW]")
+axes[0, 1].set_title("df_loads_D2 per node before RD and CLC")
 
-fig, ax = plt.subplots()
-pd.DataFrame(df_congestion).T.plot(ax=ax)
-ax.set_xlabel("Hour on day D")
-ax.set_ylabel("Congestion [MW]")
-ax.set_title(f"Congestion  per line before RD and CLC (total:{round(congestion_volume,2)})")
+# Plot 3: absolute flow per line before RD and CLC
+pd.DataFrame(abs(df_flows)).T.plot(ax=axes[1, 0])
+axes[1, 0].set_xlabel("Hour on day D")
+axes[1, 0].set_ylabel("Absolute Flow [MW]")
+axes[1, 0].set_title("Absolute Flow per line before RD and CLC")
+
+# Plot 4: Congestion per line before RD and CLC
+pd.DataFrame(df_congestion).T.plot(ax=axes[1, 1])
+axes[1, 1].set_xlabel("Hour on day D")
+axes[1, 1].set_ylabel("Congestion [MW]")
+axes[1, 1].set_title(f"Congestion per line before RD and CLC (total: {round(congestion_volume, 2)})")
+
+# Adjust layout to prevent overlap
+plt.tight_layout()
+
+# Display the plots
+plt.show()
+
+# Create 2x2 grid of subplots
+fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(14, 10))
+
+# Plot 1: Network with total congestion
+congestion_per_bus = df_congestion.sum(axis='columns')
+congestion_per_bus = congestion_per_bus.rename_axis('line').reset_index(name='flow')
+draw_network_with_power_flows(df_lines, congestion_per_bus, 'Network with total congestion', axes[0, 0])
+
+# Plot 2: Network with peak congestion
+congestion_peak_per_bus = df_congestion.max(axis='columns')
+congestion_peak_per_bus = congestion_peak_per_bus.rename_axis('line').reset_index(name='flow')
+draw_network_with_power_flows(df_lines, congestion_peak_per_bus, 'Network with peak congestion', axes[0, 1])
+
+# Plot 3: Congestion per hour
+df_congestion[df_congestion.sum(axis=1) != 0].transpose().plot(ax=axes[1, 0])
+axes[1, 0].set_xlabel("Hour on day D")
+axes[1, 0].set_ylabel("Congestion [MW]")
+axes[1, 0].set_title("Congestion per hour")
+
+# Leave the last subplot empty
+axes[1, 1].axis('off')
+
+# Adjust layout
+plt.tight_layout()
+plt.show()
+
+
 
 
 # ### Activate CBCs
@@ -291,7 +340,7 @@ ax.set_title("df_loads per node before RD")
 # In[9]:
 
 
-#Fist initlialize dicts (pyomo works with dicts)
+#read orderbook
 df_RD_orderbook = pd.read_excel(input_file,'RD', header=0, index_col=0) #read the orderbook
 
 from redispatch import optimal_redispatch
