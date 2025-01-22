@@ -36,7 +36,7 @@ from network_plotting import draw_network, draw_network_with_power_flows, draw_n
 from config_loader import retrieve_config_variables
 
 # Retrieve variables as a tuple, use this line in sperate files to get teh same gloabl variables
-ptus, input_file, susceptance, df_lines, buses, n_buses, n_lines = retrieve_config_variables()
+ptus, input_file, susceptance, df_lines, buses, n_buses, n_lines, ratio = retrieve_config_variables()
 
 df_loads_D2 = pd.read_excel(input_file,'loads', header=0, index_col=0)  #load D-2 prognoses for loads
 df_RE_D2 = pd.read_excel(input_file,'re', header=0, index_col=0)        #Load D-2 prognoses for renewable generation
@@ -272,12 +272,49 @@ plt.show()
 # Vervolgens word er weer gedispatched met als constraint dat he tcongestievolume niet mag toenemen
 
 # In[6]:
+df_CBC_orderbook = pd.read_excel(input_file,'CBC', header=0, index_col=0) #read the orderbook
+
+from CBC import optimal_CBC
+
+model = optimal_CBC(load_per_node_D2, df_CBC_orderbook,sum(df_congestion.sum()),1)
+
+# Get results from the model
+p_CBC = {(b, t): pyo.value(model.dp[b, t]) for b in model.bus_set for t in model.time_set}
+#f_results = {(l, t): pyo.value(model.f[l, t]) for l in model.line_set for t in model.time_set}
+congestion_hypotheses_CBC = {(l, t): pyo.value(model.congestion[l, t]) for l in model.line_set for t in model.time_set}
+
+total_congestion_results = pyo.value(model.total_congestion)
+total_costs_results = pyo.value(model.total_costs)
 
 
-'''
-'''
+congestion_D2 = sum(df_congestion.sum())
+
+# Create a DataFrame from the dictionary
+result_df_dp = pd.DataFrame.from_dict(p_CBC, orient='index', columns=['value'])
+# Reset the index and expand the tuple keys into separate columns
+result_df_dp.index = pd.MultiIndex.from_tuples(result_df_dp.index, names=["node", "hour"])
+result_df_dp = result_df_dp.unstack(level="hour")
+
+# Clean up the column names
+result_df_dp.columns = result_df_dp.columns.droplevel(0)
 
 
+# Transform the dictionary into a DataFrame
+df_congestion_hypotheses_CBC = pd.DataFrame.from_dict(congestion_hypotheses_CBC, orient="index", columns=["congestion"])
+
+
+# Reset the index and expand the tuple keys into separate columns
+df_congestion_hypotheses_CBC.index = pd.MultiIndex.from_tuples(df_congestion_hypotheses_CBC.index, names=["node", "hour"])
+df_congestion_hypotheses_CBC = df_congestion_hypotheses_CBC.unstack(level="hour")
+
+# Clean up the column names
+df_congestion_hypotheses_CBC.columns = df_congestion_hypotheses_CBC.columns.droplevel(0)
+
+tot_congestion_hypotheses_CBC = sum(df_congestion_hypotheses_CBC.sum())
+ratio_hypothesis = tot_congestion_hypotheses_CBC/congestion_D2
+print(f'The aimed congestion reduction is {ratio}, the actual ongestion redution is {1-ratio_hypothesis}')
+
+sys.exit('stop after CBC')
 # ### Actualise prognoses
 # Introduce 'noise' to the prognoses so they represent the actual T-pofile data to be used for the marketcoupling later the CBC will also be taken into consoderation during this stage, but not yet implemented
 
@@ -345,7 +382,7 @@ df_RD_orderbook = pd.read_excel(input_file,'RD', header=0, index_col=0) #read th
 
 from redispatch import optimal_redispatch
 
-model = optimal_redispatch(load_per_node, df_RD_orderbook,0)
+model = optimal_redispatch(load_per_node, df_RD_orderbook)
 
 
 # In[10]:

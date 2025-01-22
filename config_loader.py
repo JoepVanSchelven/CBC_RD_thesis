@@ -19,6 +19,7 @@ def retrieve_config_variables():
     ptus = config.ptus
     input_file = config.input_file
     susceptance = config.susceptance
+    ratio = config.ratio
 
     # Load data from input file
     df_lines = pd.read_excel(input_file, 'lines', header=0, index_col=0)
@@ -29,4 +30,4 @@ def retrieve_config_variables():
     n_lines = len(df_lines)
 
     # Return all variables
-    return ptus, input_file, susceptance, df_lines, buses, n_buses, n_lines
+    return ptus, input_file, susceptance, df_lines, buses, n_buses, n_lines, ratio
