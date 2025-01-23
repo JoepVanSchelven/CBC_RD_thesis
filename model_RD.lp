@@ -1206,580 +1206,244 @@ c_e_con_nodal_power_balance(1_23)_:
 +1 p(1_23)
 = 0
 
-c_e_con_def_balancing_p(0_0)_:
--0.5 dp(0_0)
--0.5 dp(1_0)
-+1 balancing_p(0)
-= 0
-
-c_e_con_def_balancing_p(0_1)_:
--0.5 dp(0_1)
--0.5 dp(1_1)
-+1 balancing_p(1)
-= 0
-
-c_e_con_def_balancing_p(0_2)_:
--0.5 dp(0_2)
--0.5 dp(1_2)
-+1 balancing_p(2)
-= 0
-
-c_e_con_def_balancing_p(0_3)_:
--0.5 dp(0_3)
--0.5 dp(1_3)
-+1 balancing_p(3)
-= 0
-
-c_e_con_def_balancing_p(0_4)_:
--0.5 dp(0_4)
--0.5 dp(1_4)
-+1 balancing_p(4)
-= 0
-
-c_e_con_def_balancing_p(0_5)_:
--0.5 dp(0_5)
--0.5 dp(1_5)
-+1 balancing_p(5)
-= 0
-
-c_e_con_def_balancing_p(0_6)_:
--0.5 dp(0_6)
--0.5 dp(1_6)
-+1 balancing_p(6)
-= 0
-
-c_e_con_def_balancing_p(0_7)_:
--0.5 dp(0_7)
--0.5 dp(1_7)
-+1 balancing_p(7)
-= 0
-
-c_e_con_def_balancing_p(0_8)_:
--0.5 dp(0_8)
--0.5 dp(1_8)
-+1 balancing_p(8)
-= 0
-
-c_e_con_def_balancing_p(0_9)_:
--0.5 dp(0_9)
--0.5 dp(1_9)
-+1 balancing_p(9)
-= 0
-
-c_e_con_def_balancing_p(0_10)_:
--0.5 dp(0_10)
--0.5 dp(1_10)
-+1 balancing_p(10)
-= 0
-
-c_e_con_def_balancing_p(0_11)_:
--0.5 dp(0_11)
--0.5 dp(1_11)
-+1 balancing_p(11)
-= 0
-
-c_e_con_def_balancing_p(0_12)_:
--0.5 dp(0_12)
--0.5 dp(1_12)
-+1 balancing_p(12)
-= 0
-
-c_e_con_def_balancing_p(0_13)_:
--0.5 dp(0_13)
--0.5 dp(1_13)
-+1 balancing_p(13)
-= 0
-
-c_e_con_def_balancing_p(0_14)_:
--0.5 dp(0_14)
--0.5 dp(1_14)
-+1 balancing_p(14)
-= 0
-
-c_e_con_def_balancing_p(0_15)_:
--0.5 dp(0_15)
--0.5 dp(1_15)
-+1 balancing_p(15)
-= 0
-
-c_e_con_def_balancing_p(0_16)_:
--0.5 dp(0_16)
--0.5 dp(1_16)
-+1 balancing_p(16)
-= 0
-
-c_e_con_def_balancing_p(0_17)_:
--0.5 dp(0_17)
--0.5 dp(1_17)
-+1 balancing_p(17)
-= 0
-
-c_e_con_def_balancing_p(0_18)_:
--0.5 dp(0_18)
--0.5 dp(1_18)
-+1 balancing_p(18)
-= 0
-
-c_e_con_def_balancing_p(0_19)_:
--0.5 dp(0_19)
--0.5 dp(1_19)
-+1 balancing_p(19)
-= 0
-
-c_e_con_def_balancing_p(0_20)_:
--0.5 dp(0_20)
--0.5 dp(1_20)
-+1 balancing_p(20)
-= 0
-
-c_e_con_def_balancing_p(0_21)_:
--0.5 dp(0_21)
--0.5 dp(1_21)
-+1 balancing_p(21)
-= 0
-
-c_e_con_def_balancing_p(0_22)_:
--0.5 dp(0_22)
--0.5 dp(1_22)
-+1 balancing_p(22)
-= 0
-
-c_e_con_def_balancing_p(0_23)_:
--0.5 dp(0_23)
--0.5 dp(1_23)
-+1 balancing_p(23)
-= 0
-
-c_e_con_def_balancing_p(1_0)_:
--0.5 dp(0_0)
--0.5 dp(1_0)
-+1 balancing_p(0)
-= 0
-
-c_e_con_def_balancing_p(1_1)_:
--0.5 dp(0_1)
--0.5 dp(1_1)
-+1 balancing_p(1)
-= 0
-
-c_e_con_def_balancing_p(1_2)_:
--0.5 dp(0_2)
--0.5 dp(1_2)
-+1 balancing_p(2)
-= 0
-
-c_e_con_def_balancing_p(1_3)_:
--0.5 dp(0_3)
--0.5 dp(1_3)
-+1 balancing_p(3)
-= 0
-
-c_e_con_def_balancing_p(1_4)_:
--0.5 dp(0_4)
--0.5 dp(1_4)
-+1 balancing_p(4)
-= 0
-
-c_e_con_def_balancing_p(1_5)_:
--0.5 dp(0_5)
--0.5 dp(1_5)
-+1 balancing_p(5)
-= 0
-
-c_e_con_def_balancing_p(1_6)_:
--0.5 dp(0_6)
--0.5 dp(1_6)
-+1 balancing_p(6)
-= 0
-
-c_e_con_def_balancing_p(1_7)_:
--0.5 dp(0_7)
--0.5 dp(1_7)
-+1 balancing_p(7)
-= 0
-
-c_e_con_def_balancing_p(1_8)_:
--0.5 dp(0_8)
--0.5 dp(1_8)
-+1 balancing_p(8)
-= 0
-
-c_e_con_def_balancing_p(1_9)_:
--0.5 dp(0_9)
--0.5 dp(1_9)
-+1 balancing_p(9)
-= 0
-
-c_e_con_def_balancing_p(1_10)_:
--0.5 dp(0_10)
--0.5 dp(1_10)
-+1 balancing_p(10)
-= 0
-
-c_e_con_def_balancing_p(1_11)_:
--0.5 dp(0_11)
--0.5 dp(1_11)
-+1 balancing_p(11)
-= 0
-
-c_e_con_def_balancing_p(1_12)_:
--0.5 dp(0_12)
--0.5 dp(1_12)
-+1 balancing_p(12)
-= 0
-
-c_e_con_def_balancing_p(1_13)_:
--0.5 dp(0_13)
--0.5 dp(1_13)
-+1 balancing_p(13)
-= 0
-
-c_e_con_def_balancing_p(1_14)_:
--0.5 dp(0_14)
--0.5 dp(1_14)
-+1 balancing_p(14)
-= 0
-
-c_e_con_def_balancing_p(1_15)_:
--0.5 dp(0_15)
--0.5 dp(1_15)
-+1 balancing_p(15)
-= 0
-
-c_e_con_def_balancing_p(1_16)_:
--0.5 dp(0_16)
--0.5 dp(1_16)
-+1 balancing_p(16)
-= 0
-
-c_e_con_def_balancing_p(1_17)_:
--0.5 dp(0_17)
--0.5 dp(1_17)
-+1 balancing_p(17)
-= 0
-
-c_e_con_def_balancing_p(1_18)_:
--0.5 dp(0_18)
--0.5 dp(1_18)
-+1 balancing_p(18)
-= 0
-
-c_e_con_def_balancing_p(1_19)_:
--0.5 dp(0_19)
--0.5 dp(1_19)
-+1 balancing_p(19)
-= 0
-
-c_e_con_def_balancing_p(1_20)_:
--0.5 dp(0_20)
--0.5 dp(1_20)
-+1 balancing_p(20)
-= 0
-
-c_e_con_def_balancing_p(1_21)_:
--0.5 dp(0_21)
--0.5 dp(1_21)
-+1 balancing_p(21)
-= 0
-
-c_e_con_def_balancing_p(1_22)_:
--0.5 dp(0_22)
--0.5 dp(1_22)
-+1 balancing_p(22)
-= 0
-
-c_e_con_def_balancing_p(1_23)_:
--0.5 dp(0_23)
--0.5 dp(1_23)
-+1 balancing_p(23)
-= 0
-
 c_e_con_def_p(0_0)_:
 -1 dp(0_0)
 +1 p(0_0)
-+1 balancing_p(0)
 = 100.0
 
 c_e_con_def_p(0_1)_:
 -1 dp(0_1)
 +1 p(0_1)
-+1 balancing_p(1)
 = 100.0
 
 c_e_con_def_p(0_2)_:
 -1 dp(0_2)
 +1 p(0_2)
-+1 balancing_p(2)
 = 100.0
 
 c_e_con_def_p(0_3)_:
 -1 dp(0_3)
 +1 p(0_3)
-+1 balancing_p(3)
 = 100.0
 
 c_e_con_def_p(0_4)_:
 -1 dp(0_4)
 +1 p(0_4)
-+1 balancing_p(4)
 = 100.0
 
 c_e_con_def_p(0_5)_:
 -1 dp(0_5)
 +1 p(0_5)
-+1 balancing_p(5)
 = 100.0
 
 c_e_con_def_p(0_6)_:
 -1 dp(0_6)
 +1 p(0_6)
-+1 balancing_p(6)
 = 100.0
 
 c_e_con_def_p(0_7)_:
 -1 dp(0_7)
 +1 p(0_7)
-+1 balancing_p(7)
 = 100.0
 
 c_e_con_def_p(0_8)_:
 -1 dp(0_8)
 +1 p(0_8)
-+1 balancing_p(8)
 = 100.0
 
 c_e_con_def_p(0_9)_:
 -1 dp(0_9)
 +1 p(0_9)
-+1 balancing_p(9)
 = 100.0
 
 c_e_con_def_p(0_10)_:
 -1 dp(0_10)
 +1 p(0_10)
-+1 balancing_p(10)
 = 150.0
 
 c_e_con_def_p(0_11)_:
 -1 dp(0_11)
 +1 p(0_11)
-+1 balancing_p(11)
 = 150.0
 
 c_e_con_def_p(0_12)_:
 -1 dp(0_12)
 +1 p(0_12)
-+1 balancing_p(12)
 = 150.0
 
 c_e_con_def_p(0_13)_:
 -1 dp(0_13)
 +1 p(0_13)
-+1 balancing_p(13)
 = 150.0
 
 c_e_con_def_p(0_14)_:
 -1 dp(0_14)
 +1 p(0_14)
-+1 balancing_p(14)
-= 150.0
+= 100.0
 
 c_e_con_def_p(0_15)_:
 -1 dp(0_15)
 +1 p(0_15)
-+1 balancing_p(15)
 = 150.0
 
 c_e_con_def_p(0_16)_:
 -1 dp(0_16)
 +1 p(0_16)
-+1 balancing_p(16)
 = 100.0
 
 c_e_con_def_p(0_17)_:
 -1 dp(0_17)
 +1 p(0_17)
-+1 balancing_p(17)
 = 100.0
 
 c_e_con_def_p(0_18)_:
 -1 dp(0_18)
 +1 p(0_18)
-+1 balancing_p(18)
 = 100.0
 
 c_e_con_def_p(0_19)_:
 -1 dp(0_19)
 +1 p(0_19)
-+1 balancing_p(19)
 = 100.0
 
 c_e_con_def_p(0_20)_:
 -1 dp(0_20)
 +1 p(0_20)
-+1 balancing_p(20)
 = 100.0
 
 c_e_con_def_p(0_21)_:
 -1 dp(0_21)
 +1 p(0_21)
-+1 balancing_p(21)
 = 100.0
 
 c_e_con_def_p(0_22)_:
 -1 dp(0_22)
 +1 p(0_22)
-+1 balancing_p(22)
 = 100.0
 
 c_e_con_def_p(0_23)_:
 -1 dp(0_23)
 +1 p(0_23)
-+1 balancing_p(23)
 = 100.0
 
 c_e_con_def_p(1_0)_:
 -1 dp(1_0)
 +1 p(1_0)
-+1 balancing_p(0)
 = -100.0
 
 c_e_con_def_p(1_1)_:
 -1 dp(1_1)
 +1 p(1_1)
-+1 balancing_p(1)
 = -100.0
 
 c_e_con_def_p(1_2)_:
 -1 dp(1_2)
 +1 p(1_2)
-+1 balancing_p(2)
 = -100.0
 
 c_e_con_def_p(1_3)_:
 -1 dp(1_3)
 +1 p(1_3)
-+1 balancing_p(3)
 = -100.0
 
 c_e_con_def_p(1_4)_:
 -1 dp(1_4)
 +1 p(1_4)
-+1 balancing_p(4)
 = -100.0
 
 c_e_con_def_p(1_5)_:
 -1 dp(1_5)
 +1 p(1_5)
-+1 balancing_p(5)
 = -100.0
 
 c_e_con_def_p(1_6)_:
 -1 dp(1_6)
 +1 p(1_6)
-+1 balancing_p(6)
 = -100.0
 
 c_e_con_def_p(1_7)_:
 -1 dp(1_7)
 +1 p(1_7)
-+1 balancing_p(7)
 = -100.0
 
 c_e_con_def_p(1_8)_:
 -1 dp(1_8)
 +1 p(1_8)
-+1 balancing_p(8)
 = -100.0
 
 c_e_con_def_p(1_9)_:
 -1 dp(1_9)
 +1 p(1_9)
-+1 balancing_p(9)
 = -100.0
 
 c_e_con_def_p(1_10)_:
 -1 dp(1_10)
 +1 p(1_10)
-+1 balancing_p(10)
 = -150.0
 
 c_e_con_def_p(1_11)_:
 -1 dp(1_11)
 +1 p(1_11)
-+1 balancing_p(11)
 = -150.0
 
 c_e_con_def_p(1_12)_:
 -1 dp(1_12)
 +1 p(1_12)
-+1 balancing_p(12)
 = -150.0
 
 c_e_con_def_p(1_13)_:
 -1 dp(1_13)
 +1 p(1_13)
-+1 balancing_p(13)
 = -150.0
 
 c_e_con_def_p(1_14)_:
 -1 dp(1_14)
 +1 p(1_14)
-+1 balancing_p(14)
-= -150.0
+= -100.0
 
 c_e_con_def_p(1_15)_:
 -1 dp(1_15)
 +1 p(1_15)
-+1 balancing_p(15)
 = -150.0
 
 c_e_con_def_p(1_16)_:
 -1 dp(1_16)
 +1 p(1_16)
-+1 balancing_p(16)
 = -100.0
 
 c_e_con_def_p(1_17)_:
 -1 dp(1_17)
 +1 p(1_17)
-+1 balancing_p(17)
 = -100.0
 
 c_e_con_def_p(1_18)_:
 -1 dp(1_18)
 +1 p(1_18)
-+1 balancing_p(18)
 = -100.0
 
 c_e_con_def_p(1_19)_:
 -1 dp(1_19)
 +1 p(1_19)
-+1 balancing_p(19)
 = -100.0
 
 c_e_con_def_p(1_20)_:
 -1 dp(1_20)
 +1 p(1_20)
-+1 balancing_p(20)
 = -100.0
 
 c_e_con_def_p(1_21)_:
 -1 dp(1_21)
 +1 p(1_21)
-+1 balancing_p(21)
 = -100.0
 
 c_e_con_def_p(1_22)_:
 -1 dp(1_22)
 +1 p(1_22)
-+1 balancing_p(22)
 = -100.0
 
 c_e_con_def_p(1_23)_:
 -1 dp(1_23)
 +1 p(1_23)
-+1 balancing_p(23)
 = -100.0
 
 c_l_con_lower_bound_dp(0_0)_:
@@ -1788,91 +1452,91 @@ c_l_con_lower_bound_dp(0_0)_:
 
 c_l_con_lower_bound_dp(0_1)_:
 +1 dp(0_1)
->= 0
+>= -1000.0
 
 c_l_con_lower_bound_dp(0_2)_:
 +1 dp(0_2)
->= 0
+>= -1000.0
 
 c_l_con_lower_bound_dp(0_3)_:
 +1 dp(0_3)
->= 0
+>= -1000.0
 
 c_l_con_lower_bound_dp(0_4)_:
 +1 dp(0_4)
->= 0
+>= -1000.0
 
 c_l_con_lower_bound_dp(0_5)_:
 +1 dp(0_5)
->= 0
+>= -1000.0
 
 c_l_con_lower_bound_dp(0_6)_:
 +1 dp(0_6)
->= 0
+>= -1000.0
 
 c_l_con_lower_bound_dp(0_7)_:
 +1 dp(0_7)
->= 0
+>= -1000.0
 
 c_l_con_lower_bound_dp(0_8)_:
 +1 dp(0_8)
->= 0
+>= -1000.0
 
 c_l_con_lower_bound_dp(0_9)_:
 +1 dp(0_9)
->= 0
+>= -1000.0
 
 c_l_con_lower_bound_dp(0_10)_:
 +1 dp(0_10)
->= 0
+>= -1000.0
 
 c_l_con_lower_bound_dp(0_11)_:
 +1 dp(0_11)
->= 0
+>= -1000.0
 
 c_l_con_lower_bound_dp(0_12)_:
 +1 dp(0_12)
->= 0
+>= -1000.0
 
 c_l_con_lower_bound_dp(0_13)_:
 +1 dp(0_13)
->= 0
+>= -1000.0
 
 c_l_con_lower_bound_dp(0_14)_:
 +1 dp(0_14)
->= 0
+>= -1000.0
 
 c_l_con_lower_bound_dp(0_15)_:
 +1 dp(0_15)
->= 0
+>= -1000.0
 
 c_l_con_lower_bound_dp(0_16)_:
 +1 dp(0_16)
->= 0
+>= -1000.0
 
 c_l_con_lower_bound_dp(0_17)_:
 +1 dp(0_17)
->= 0
+>= -1000.0
 
 c_l_con_lower_bound_dp(0_18)_:
 +1 dp(0_18)
->= 0
+>= -1000.0
 
 c_l_con_lower_bound_dp(0_19)_:
 +1 dp(0_19)
->= 0
+>= -1000.0
 
 c_l_con_lower_bound_dp(0_20)_:
 +1 dp(0_20)
->= 0
+>= -1000.0
 
 c_l_con_lower_bound_dp(0_21)_:
 +1 dp(0_21)
->= 0
+>= -1000.0
 
 c_l_con_lower_bound_dp(0_22)_:
 +1 dp(0_22)
->= 0
+>= -1000.0
 
 c_l_con_lower_bound_dp(0_23)_:
 +1 dp(0_23)
@@ -2166,9 +1830,173 @@ c_u_con_upper_bound_dp(1_23)_:
 +1 dp(1_23)
 <= 0.0
 
+c_e_con_dp_balance(0)_:
++1 dp(0_0)
++1 dp(1_0)
+= 0.0
+
+c_e_con_dp_balance(1)_:
++1 dp(0_1)
++1 dp(1_1)
+= 0.0
+
+c_e_con_dp_balance(2)_:
++1 dp(0_2)
++1 dp(1_2)
+= 0.0
+
+c_e_con_dp_balance(3)_:
++1 dp(0_3)
++1 dp(1_3)
+= 0.0
+
+c_e_con_dp_balance(4)_:
++1 dp(0_4)
++1 dp(1_4)
+= 0.0
+
+c_e_con_dp_balance(5)_:
++1 dp(0_5)
++1 dp(1_5)
+= 0.0
+
+c_e_con_dp_balance(6)_:
++1 dp(0_6)
++1 dp(1_6)
+= 0.0
+
+c_e_con_dp_balance(7)_:
++1 dp(0_7)
++1 dp(1_7)
+= 0.0
+
+c_e_con_dp_balance(8)_:
++1 dp(0_8)
++1 dp(1_8)
+= 0.0
+
+c_e_con_dp_balance(9)_:
++1 dp(0_9)
++1 dp(1_9)
+= 0.0
+
+c_e_con_dp_balance(10)_:
++1 dp(0_10)
++1 dp(1_10)
+= 0.0
+
+c_e_con_dp_balance(11)_:
++1 dp(0_11)
++1 dp(1_11)
+= 0.0
+
+c_e_con_dp_balance(12)_:
++1 dp(0_12)
++1 dp(1_12)
+= 0.0
+
+c_e_con_dp_balance(13)_:
++1 dp(0_13)
++1 dp(1_13)
+= 0.0
+
+c_e_con_dp_balance(14)_:
++1 dp(0_14)
++1 dp(1_14)
+= 0.0
+
+c_e_con_dp_balance(15)_:
++1 dp(0_15)
++1 dp(1_15)
+= 0.0
+
+c_e_con_dp_balance(16)_:
++1 dp(0_16)
++1 dp(1_16)
+= 0.0
+
+c_e_con_dp_balance(17)_:
++1 dp(0_17)
++1 dp(1_17)
+= 0.0
+
+c_e_con_dp_balance(18)_:
++1 dp(0_18)
++1 dp(1_18)
+= 0.0
+
+c_e_con_dp_balance(19)_:
++1 dp(0_19)
++1 dp(1_19)
+= 0.0
+
+c_e_con_dp_balance(20)_:
++1 dp(0_20)
++1 dp(1_20)
+= 0.0
+
+c_e_con_dp_balance(21)_:
++1 dp(0_21)
++1 dp(1_21)
+= 0.0
+
+c_e_con_dp_balance(22)_:
++1 dp(0_22)
++1 dp(1_22)
+= 0.0
+
+c_e_con_dp_balance(23)_:
++1 dp(0_23)
++1 dp(1_23)
+= 0.0
+
 c_e_total_costs_constraint_:
 +1 total_costs
++20.0 dp(0_1)
++20.0 dp(0_2)
++20.0 dp(0_3)
++20.0 dp(0_4)
++20.0 dp(0_5)
++20.0 dp(0_6)
++20.0 dp(0_7)
++20.0 dp(0_8)
++20.0 dp(0_9)
++20.0 dp(0_10)
++20.0 dp(0_11)
++20.0 dp(0_12)
++20.0 dp(0_13)
++20.0 dp(0_14)
++20.0 dp(0_15)
++20.0 dp(0_16)
++20.0 dp(0_17)
++20.0 dp(0_18)
++20.0 dp(0_19)
++20.0 dp(0_20)
++20.0 dp(0_21)
++20.0 dp(0_22)
 + [
+-20.0 dp(0_1) * u(0_1)
+-20.0 dp(0_2) * u(0_2)
+-20.0 dp(0_3) * u(0_3)
+-20.0 dp(0_4) * u(0_4)
+-20.0 dp(0_5) * u(0_5)
+-20.0 dp(0_6) * u(0_6)
+-20.0 dp(0_7) * u(0_7)
+-20.0 dp(0_8) * u(0_8)
+-20.0 dp(0_9) * u(0_9)
+-20.0 dp(0_10) * u(0_10)
+-20.0 dp(0_11) * u(0_11)
+-20.0 dp(0_12) * u(0_12)
+-20.0 dp(0_13) * u(0_13)
+-20.0 dp(0_14) * u(0_14)
+-20.0 dp(0_15) * u(0_15)
+-20.0 dp(0_16) * u(0_16)
+-20.0 dp(0_17) * u(0_17)
+-20.0 dp(0_18) * u(0_18)
+-20.0 dp(0_19) * u(0_19)
+-20.0 dp(0_20) * u(0_20)
+-20.0 dp(0_21) * u(0_21)
+-20.0 dp(0_22) * u(0_22)
 -400.0 dp(1_4) * u(1_4)
 -400.0 dp(1_5) * u(1_5)
 -400.0 dp(1_6) * u(1_6)
@@ -2219,9 +2047,9 @@ c_e_con_def_total_congestion_:
 +1 total_congestion
 = 0
 
-c_e_decrease_congestion_:
+c_e_zero_congestion_:
 +1 total_congestion
-= 29.999999999999993
+= 0
 
 bounds
    -inf <= total_costs <= +inf
@@ -2465,30 +2293,6 @@ bounds
    -inf <= p(1_21) <= +inf
    -inf <= p(1_22) <= +inf
    -inf <= p(1_23) <= +inf
-   -inf <= balancing_p(0) <= +inf
-   -inf <= balancing_p(1) <= +inf
-   -inf <= balancing_p(2) <= +inf
-   -inf <= balancing_p(3) <= +inf
-   -inf <= balancing_p(4) <= +inf
-   -inf <= balancing_p(5) <= +inf
-   -inf <= balancing_p(6) <= +inf
-   -inf <= balancing_p(7) <= +inf
-   -inf <= balancing_p(8) <= +inf
-   -inf <= balancing_p(9) <= +inf
-   -inf <= balancing_p(10) <= +inf
-   -inf <= balancing_p(11) <= +inf
-   -inf <= balancing_p(12) <= +inf
-   -inf <= balancing_p(13) <= +inf
-   -inf <= balancing_p(14) <= +inf
-   -inf <= balancing_p(15) <= +inf
-   -inf <= balancing_p(16) <= +inf
-   -inf <= balancing_p(17) <= +inf
-   -inf <= balancing_p(18) <= +inf
-   -inf <= balancing_p(19) <= +inf
-   -inf <= balancing_p(20) <= +inf
-   -inf <= balancing_p(21) <= +inf
-   -inf <= balancing_p(22) <= +inf
-   -inf <= balancing_p(23) <= +inf
    -inf <= total_congestion <= +inf
 binary
   u(0_0)
