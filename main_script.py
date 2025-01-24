@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
+# %%
 
 # #  CBC/RD activation model
 # Joep van Schelven - 2025 
@@ -9,7 +10,7 @@
 
 # ### import packages
 
-# In[1]:
+# %%
 
 
 import pandas as pd
@@ -30,7 +31,7 @@ from network_plotting import draw_network, draw_network_with_power_flows, draw_n
 # 
 # note: generation is negative and load is positive
 
-# In[2]:
+# %%
 
 
 from config_loader import retrieve_config_variables
@@ -46,7 +47,7 @@ df_chp_max = pd.read_excel(input_file,'chp_max', header=0, index_col=0) #Load th
 # ### DC load-flow
 # First, we will use the the D-2 prognoses to perform a 'manual' DC load-flow. This load-flow will be used to visualise the network behaviour nd see where the congestion occurs. 
 
-# In[3]:
+# %%
 
 
 #Make a matrix where every node and every ptu have total load excluding CHP generation
@@ -171,7 +172,7 @@ draw_network(df_lines)
 # ### Localise and deterimine congestion volume
 # Use the flow DF and the capacity of the lines to find the congestion
 
-# In[4]:
+# %%
 
 
 # initieer een DF voor alle overloads
@@ -192,10 +193,10 @@ df_congestion = overload_calculation(df_flows)
 congestion_D2 = sum(df_congestion.sum())
 
 
-# In[5]:
+# %%
 
 
-#%% Vsualization of generation per type and per node of the d-2 prognoses
+# %% Vsualization of generation per type and per node of the d-2 prognoses
 
 #make a dict with all the load per generation type
 load_per_type = {'df_loads_D2': ptus * [0], 'df_RE_D2': ptus * [0], 'chp': ptus * [0]}
@@ -274,7 +275,7 @@ if congestion_D2 == 0:
 # Het Idee is dat eerst CBCs worden afgeroepen (optimalisereend voor de kosten en het congestievolume terugdringend naar een bepaald niveau).
 # Vervolgens word er weer gedispatched met als constraint dat he tcongestievolume niet mag toenemen
 
-# In[6]:
+# %%
 df_CBC_orderbook = pd.read_excel(input_file,'CBC', header=0, index_col=0) #read the orderbook
 
 from CBC import optimal_CBC
@@ -320,7 +321,7 @@ add_to_array(df_dp_CBC, load_per_node_D2)
 # ### Actualise prognoses
 # Introduce 'noise' to the prognoses so they represent the actual T-pofile data to be used for the marketcoupling later the CBC will also be taken into consoderation during this stage, but not yet implemented
 
-# In[7]:
+# %%
 
 
 def add_normal_noise(df_D2 : pd.DataFrame, std : int) -> pd.DataFrame: #function to add normal noise to with provided STD DF with specific shape (mean=0) Only adds noise to non-zero values
@@ -347,10 +348,10 @@ chp_coupling = CHP_dispatch_calc(df_chp_max, load_per_node)
 load_per_node = add_to_array(chp_coupling, load_per_node)
 
 
-# In[8]:
+# %%
 
 
-#%% Vsualization of generation per type and per node before RD
+# %% Vsualization of generation per type and per node before RD
 
 #make a dict with all the load per generation type
 load_per_type = {'df_loads': ptus * [0], 'df_RE': ptus * [0], 'chp_coupling': ptus * [0], 'df_dp_CBC': ptus * [0]}
@@ -394,7 +395,7 @@ else:
 # Using Pyomo, and load-flow constraints, dispatch the optimal set of bids to minimze costs and mitigate any remaining congestion. 
 # Input shouldbe a balanced DF wih load per node per ptu
 
-# In[9]:
+# %%
 #sys.exit('stop before RD')
 
 #read orderbook
@@ -405,7 +406,7 @@ from redispatch import optimal_redispatch
 model = optimal_redispatch(load_per_node, df_RD_orderbook)
 
 
-# In[10]:
+# %%
 
 
 # Get results from the model
@@ -425,7 +426,7 @@ result_df_f = pd.DataFrame.from_dict(f_results, orient='index', columns=['value'
 result_df_congestion = pd.DataFrame.from_dict(congestion_results, orient='index', columns=['value'])
 
 
-# In[ ]:
+# %%
 
 
 
