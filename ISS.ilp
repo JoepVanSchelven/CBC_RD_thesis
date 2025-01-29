@@ -1,0 +1,96 @@
+\ Model objective_function_copy
+\ LP format - for model browsing. Use MPS format to capture full model detail.
+\ Signature: 0xcc3a1e9bb7ebcfb8
+Minimize
+ 
+Subject To
+ c_u_con_def_congestion_1(0_10)_: f(0_10) - congestion(0_10) <= 100
+ c_u_con_def_congestion_1(0_11)_: f(0_11) - congestion(0_11) <= 100
+ c_u_con_def_congestion_1(0_12)_: f(0_12) - congestion(0_12) <= 100
+ c_u_con_def_congestion_1(0_13)_: f(0_13) - congestion(0_13) <= 100
+ c_u_con_def_congestion_1(0_14)_: f(0_14) - congestion(0_14) <= 100
+ c_u_con_def_congestion_1(0_15)_: f(0_15) - congestion(0_15) <= 100
+ c_e_con_nodal_power_balance(0_10)_: - f(0_10) + p(0_10) = 0
+ c_e_con_nodal_power_balance(0_11)_: - f(0_11) + p(0_11) = 0
+ c_e_con_nodal_power_balance(0_12)_: - f(0_12) + p(0_12) = 0
+ c_e_con_nodal_power_balance(0_13)_: - f(0_13) + p(0_13) = 0
+ c_e_con_nodal_power_balance(0_14)_: - f(0_14) + p(0_14) = 0
+ c_e_con_nodal_power_balance(0_15)_: - f(0_15) + p(0_15) = 0
+ c_e_con_def_balancing_p(10)_: - 0.5 dp(0_10_0) - 0.5 dp(1_10_0)
+   + balancing_p(10) = 0
+ c_e_con_def_balancing_p(11)_: - 0.5 dp(0_11_0) - 0.5 dp(1_11_0)
+   + balancing_p(11) = 0
+ c_e_con_def_balancing_p(12)_: - 0.5 dp(0_12_0) - 0.5 dp(1_12_0)
+   + balancing_p(12) = 0
+ c_e_con_def_balancing_p(13)_: - 0.5 dp(0_13_0) - 0.5 dp(1_13_0)
+   + balancing_p(13) = 0
+ c_e_con_def_balancing_p(14)_: - 0.5 dp(0_14_0) - 0.5 dp(1_14_0)
+   + balancing_p(14) = 0
+ c_e_con_def_balancing_p(15)_: - 0.5 dp(0_15_0) - 0.5 dp(1_15_0)
+   + balancing_p(15) = 0
+ c_e_con_def_p(0_10)_: - dp(0_10_0) + p(0_10) + balancing_p(10) = 150
+ c_e_con_def_p(0_11)_: - dp(0_11_0) + p(0_11) + balancing_p(11) = 150
+ c_e_con_def_p(0_12)_: - dp(0_12_0) + p(0_12) + balancing_p(12) = 150
+ c_e_con_def_p(0_13)_: - dp(0_13_0) + p(0_13) + balancing_p(13) = 150
+ c_e_con_def_p(0_14)_: - dp(0_14_0) + p(0_14) + balancing_p(14) = 150
+ c_e_con_def_p(0_15)_: - dp(0_15_0) + p(0_15) + balancing_p(15) = 150
+ c_l_con_lower_bound_dp(0_10_0)_: dp(0_10_0) >= 0
+ c_l_con_lower_bound_dp(0_11_0)_: dp(0_11_0) >= 0
+ c_l_con_lower_bound_dp(0_12_0)_: dp(0_12_0) >= 0
+ c_l_con_lower_bound_dp(0_13_0)_: dp(0_13_0) >= 0
+ c_l_con_lower_bound_dp(0_14_0)_: dp(0_14_0) >= 0
+ c_l_con_lower_bound_dp(0_15_0)_: dp(0_15_0) >= 0
+ c_u_con_upper_bound_dp(1_10_0)_: dp(1_10_0) <= 0
+ c_u_con_upper_bound_dp(1_11_0)_: dp(1_11_0) <= 0
+ c_u_con_upper_bound_dp(1_12_0)_: dp(1_12_0) <= 0
+ c_u_con_upper_bound_dp(1_13_0)_: dp(1_13_0) <= 0
+ c_u_con_upper_bound_dp(1_14_0)_: dp(1_14_0) <= 0
+ c_u_con_upper_bound_dp(1_15_0)_: dp(1_15_0) <= 0
+ c_e_con_def_total_congestion_: - congestion(0_0) - congestion(0_1)
+   - congestion(0_2) - congestion(0_3) - congestion(0_4) - congestion(0_5)
+   - congestion(0_6) - congestion(0_7) - congestion(0_8) - congestion(0_9)
+   - congestion(0_10) - congestion(0_11) - congestion(0_12)
+   - congestion(0_13) - congestion(0_14) - congestion(0_15)
+   - congestion(0_16) - congestion(0_17) - congestion(0_18)
+   - congestion(0_19) - congestion(0_20) - congestion(0_21)
+   - congestion(0_22) - congestion(0_23) + total_congestion = 0
+ c_e_decrease_congestion_: total_congestion = 297
+Bounds
+ dp(0_10_0) free
+ dp(0_11_0) free
+ dp(0_12_0) free
+ dp(0_13_0) free
+ dp(0_14_0) free
+ dp(0_15_0) free
+ dp(1_10_0) free
+ dp(1_11_0) free
+ dp(1_12_0) free
+ dp(1_13_0) free
+ dp(1_14_0) free
+ dp(1_15_0) free
+ f(0_10) free
+ congestion(0_10) free
+ f(0_11) free
+ congestion(0_11) free
+ f(0_12) free
+ congestion(0_12) free
+ f(0_13) free
+ congestion(0_13) free
+ f(0_14) free
+ congestion(0_14) free
+ f(0_15) free
+ congestion(0_15) free
+ p(0_10) free
+ p(0_11) free
+ p(0_12) free
+ p(0_13) free
+ p(0_14) free
+ p(0_15) free
+ balancing_p(10) free
+ balancing_p(11) free
+ balancing_p(12) free
+ balancing_p(13) free
+ balancing_p(14) free
+ balancing_p(15) free
+ total_congestion free
+End
