@@ -393,7 +393,7 @@ def main_function(ratio_itterative: float) -> float:
     ax.set_title("df_loads per node before RD")
 
     # Truncate load_per_node after the th decimal
-    scaling_factor = 10**6
+    scaling_factor = 10**14
     load_per_node = np.trunc(load_per_node * scaling_factor) / scaling_factor
     # check if the system is balanced, exit the script if not the case
     if load_per_node.sum() != 0:
@@ -442,7 +442,7 @@ def main_function(ratio_itterative: float) -> float:
     result_df_dp = pd.DataFrame.from_dict(dp_results, orient='index', columns=['value'])
     result_df_f = pd.DataFrame.from_dict(f_results, orient='index', columns=['value'])
     result_df_congestion = pd.DataFrame.from_dict(congestion_results, orient='index', columns=['value'])
-    return total_costs_RD, total_costs_CBC, total_costs  
+    return total_costs_CBC, total_costs_RD, total_costs  
     
     # %%
     
