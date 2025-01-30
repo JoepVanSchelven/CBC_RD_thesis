@@ -321,18 +321,18 @@ df_CBC_orderbook = add_generation_to_orderbook(chp_prog, df_CBC_orderbook, 'CHP'
 
 from RD_CBC_functions import optimal_CBC
 
-model = optimal_CBC(load_per_node_D2, df_CBC_orderbook,sum(df_congestion_D2.sum()),0)
-
-p_CBC_order_level = {(o, t): sum(pyo.value(model.dp[b, t, o]) for b in model.bus_set) 
-         for o in model.order_set for t in model.time_set}
+model_CBC = optimal_CBC(load_per_node_D2, df_CBC_orderbook,sum(df_congestion_D2.sum()),0)
+total_costs_CBC = pyo.value(model_CBC.total_costs)
+p_CBC_order_level = {(o, t): sum(pyo.value(model_CBC.dp[b, t, o]) for b in model_CBC.bus_set) 
+         for o in model_CBC.order_set for t in model_CBC.time_set}
 df_dp_CBC_order_level = pd.DataFrame(list(p_CBC_order_level.items()), columns=["Index", "dp_value"])
 df_dp_CBC_order_level = df_dp_CBC_order_level[df_dp_CBC_order_level["dp_value"] != 0]
 
       
         
 # Make a df of the activatde CBC to be added to the load profiles. Aggregate over orders (o) to get a sum per (b, t)
-p_CBC = {(b, t): sum(pyo.value(model.dp[b, t, o]) for o in model.order_set) 
-         for b in model.bus_set for t in model.time_set}
+p_CBC = {(b, t): sum(pyo.value(model_CBC.dp[b, t, o]) for o in model_CBC.order_set) 
+         for b in model_CBC.bus_set for t in model_CBC.time_set}
 
 # Convert dictionary to DataFrame
 df_dp_CBC = pd.DataFrame(list(p_CBC.items()), columns=["Index", "dp_value"])
@@ -421,7 +421,7 @@ congestion = sum(df_congestion.sum())
 ratio_actual =  1- (congestion / congestion_D2)
 print(f'The aimed congestion reduction is {ratio}, the actual congestion after introduced noise reduction is {ratio_actual}\n')
 
-sys.exit('stop')
+
 
 # %%
 
@@ -465,7 +465,7 @@ if load_per_node.sum() != 0:
         sys.exit(f' The system is inherently unbalanced because to much RE after CBC activation. {load_per_node.sum()} MWh "curtailement" is required.\n')
 else:
     print('Balanced market coupling succesful, load flow calculation will be performed\n')
-sys.exit('Stop before cbc')
+
 # ### Redispatch
 # Using Pyomo, and load-flow constraints, dispatch the optimal set of bids to minimze costs and mitigate any remaining congestion. 
 # Input shouldbe a balanced DF wih load per node per ptu
@@ -478,19 +478,19 @@ df_RD_orderbook = pd.read_excel(input_file,'RD', header=0, index_col=0) #read th
 
 from RD_CBC_functions import optimal_redispatch
 
-model = optimal_redispatch(load_per_node, df_RD_orderbook)
+model_RD = optimal_redispatch(load_per_node, df_RD_orderbook)
 
 
 # %%
 
 
-# Get results from the model
-dp_results = {(b, t): pyo.value(model.dp[b, t]) for b in model.bus_set for t in model.time_set}
-f_results = {(l, t): pyo.value(model.f[l, t]) for l in model.line_set for t in model.time_set}
-congestion_results = {(l, t): pyo.value(model.congestion[l, t]) for l in model.line_set for t in model.time_set}
+# Get results from the model_RD
+dp_results = {(b, t): pyo.value(model_RD.dp[b, t]) for b in model_RD.bus_set for t in model_RD.time_set}
+f_results = {(l, t): pyo.value(model_RD.f[l, t]) for l in model_RD.line_set for t in model_RD.time_set}
+congestion_results = {(l, t): pyo.value(model_RD.congestion[l, t]) for l in model_RD.line_set for t in model_RD.time_set}
 
-total_congestion_results = pyo.value(model.total_congestion)
-total_costs_RD = pyo.value(model.total_costs)
+total_congestion_results = pyo.value(model_RD.total_congestion)
+total_costs_RD = pyo.value(model_RD.total_costs)
 
 
 total_costs = total_costs_RD + total_costs_CBC
