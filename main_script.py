@@ -69,42 +69,63 @@ load_per_node_D2 = add_to_array(df_loads_D2, load_per_node_D2)
 
 #This is a function that identifies the imbalnce at every PTU and dispatches the CHPs to balance the system
     # The CHPs are dispatched in order, to mimic a merit order (highset = cheapest)
-    
-def CHP_dispatch_calc(df_chp_max: pd.DataFrame, load_per_node:pd.DataFrame) -> pd.DataFrame:
+df_dp_CBC_order_level = pd.DataFrame()  
+
+def CHP_dispatch_calc(df_chp_max: pd.DataFrame, load_per_node: pd.DataFrame) -> pd.DataFrame:
     # Initialize an array for CHP dispatch
     chp_dispatch = np.zeros((len(df_chp_max), ptus))
-    #find total imbalance per ptu this is the power the chp_maxS have to deliver for a balanced grid
-    imbalance_per_ptu = load_per_node.sum(axis=0)
-    # Calculate power required per ptu
-    p_chp_required = -imbalance_per_ptu
     
+    # Find total imbalance per PTU (power CHPs need to deliver to balance the grid)
+    imbalance_per_ptu = load_per_node.sum(axis=0)
+    p_chp_required = -imbalance_per_ptu  # Negative values indicate required generation
+
     # Loop over each PTU
     for t in range(ptus):
-        p = p_chp_required[t]
-        chp = 0
-    
+        p = p_chp_required[t]  # Power required for this PTU
+        chp = 0  # Start with the first CHP unit
+
         # Balance the power for this PTU
         while p < 0 and chp < len(df_chp_max):  # Ensure we don't exceed available CHPs
-            max_dispatch = df_chp_max.iloc[chp, 1]  # Maximum dispatch capacity for this CHP
-            
-            if abs(p) <= abs(max_dispatch):  # If the current CHP can fully balance the power
+            max_dispatch = df_chp_max.iloc[chp, 1]  # Max dispatch capacity for this CHP
+            bus = df_chp_max.iloc[chp, 0]  # Bus associated with this CHP
+
+            # Adjust max_dispatch if there's an order for this bus & PTU
+            if not df_dp_CBC_order_level.empty:
+                for _, orders in df_dp_CBC_order_level.iterrows():
+                    order, hour = orders['Index']  # Unpack tuple index
+
+                    # Find the corresponding order in the orderbook
+                    condition = (
+                        (df_CBC_orderbook['type'] == 'CHP') & 
+                        (df_CBC_orderbook['delivery_start'] == t) & 
+                        (df_CBC_orderbook['bus'] == bus)
+                    )
+                    filtered_orders = df_CBC_orderbook.loc[condition].copy()  # Explicitly copy to avoid warnings
+                    
+                    if not filtered_orders.empty and orders['Index'][0] in filtered_orders.index:
+                        max_dispatch = chp_prog.loc[chp, t]+orders['dp_value']
+                       
+            # Dispatch power from this CHP
+            if abs(p) <= abs(max_dispatch):  # If this CHP can fully balance the power
                 chp_dispatch[chp, t] = p
                 p = 0  # Fully balanced
-            else:  # Dispatch as much as possible from the current CHP
+            else:  # Dispatch as much as possible from this CHP
                 chp_dispatch[chp, t] = max_dispatch
                 p -= max_dispatch  # Remaining imbalance
                 chp += 1  # Move to the next CHP
-    
+
         p_chp_required[t] = p  # Update remaining imbalance for this PTU (should not become positive)
-    
-    #make a DF where the location of the CHPs is also included
-    chp = pd.DataFrame(chp_dispatch)
-    chp.insert(0, 'node', df_chp_max.iloc[:,0])
-    return chp
+
+    # Convert to DataFrame and include node (bus) information
+    chp_df = pd.DataFrame(chp_dispatch, columns=range(ptus))
+    chp_df.insert(0, 'node', df_chp_max.iloc[:, 0])
+
+    return chp_df
+
 
 #use both functions to add the CHP to the load per node.
-chp = CHP_dispatch_calc(df_chp_max, load_per_node_D2)
-load_per_node_D2 = add_to_array(chp, load_per_node_D2)
+chp_prog = CHP_dispatch_calc(df_chp_max, load_per_node_D2)
+load_per_node_D2 = add_to_array(chp_prog, load_per_node_D2)
 
 # check if the system is balanced, exit the script if not the case
 if load_per_node_D2.sum() != 0:
@@ -199,7 +220,7 @@ congestion_D2 = sum(df_congestion_D2.sum())
 # %% Vsualization of generation per type and per node of the d-2 prognoses
 
 #make a dict with all the load per generation type
-load_per_type = {'df_loads_D2': ptus * [0], 'df_RE_D2': ptus * [0], 'chp': ptus * [0]}
+load_per_type = {'df_loads_D2': ptus * [0], 'df_RE_D2': ptus * [0], 'chp_prog': ptus * [0]}
 for key in load_per_type.keys():
     load_per_type[key] = globals()[key].iloc[:,1:].sum()
     
@@ -279,249 +300,37 @@ if congestion_D2 == 0:
 df_CBC_orderbook = pd.read_excel(input_file,'CBC', header=0, index_col=0) #read the orderbook
 
 #add all activated RE and CHP to the CBC orderbook, in order to do this, an assumption about the D-1 price is made
-prognosis_wholesale_price = df_chp_max.loc[len(chp[chp.iloc[:, 1:].sum(axis=1) < 0])-1,'price']
+prognosis_wholesale_price = df_chp_max.loc[len(chp_prog[chp_prog.iloc[:, 1:].sum(axis=1) < 0])-1,'price']
 CBC_RE_premium = 0.1*prognosis_wholesale_price #compensation on top off the wholesale market prognosis for RE
 CBC_CHP_premium = 10*prognosis_wholesale_price #compensation on top off the wholesale market prognosis for CHPs
 
-def add_generation_to_orderbook(generation:pd.DataFrame,orderbook:pd.DataFrame,premium:float = 0)->pd.DataFrame:
+def add_generation_to_orderbook(generation:pd.DataFrame,orderbook:pd.DataFrame,source:str)->pd.DataFrame:
     for index, row in generation.iloc[:, 1:].iterrows(): #This loop adds a bid for all expected RE production
         for t, value in row.items():
             if value < 0:
-                list_order = [[generation.iloc[index, 0], t, t+1, 'buy', prognosis_wholesale_price+premium, -value]]
+                list_order = [[generation.iloc[index, 0], t, t + 1,'buy',(prognosis_wholesale_price + CBC_RE_premium) if source == 'RE' 
+                               else prognosis_wholesale_price if source == 'CHP' else prognosis_wholesale_price, -value, source]]
+                
                 orderbook = pd.concat([orderbook, pd.DataFrame(list_order, columns=orderbook.columns)], ignore_index=True)
     return orderbook
 
-df_CBC_orderbook = add_generation_to_orderbook(df_RE_D2, df_CBC_orderbook, CBC_RE_premium)
-df_CBC_orderbook = add_generation_to_orderbook(chp, df_CBC_orderbook, CBC_CHP_premium)
+df_CBC_orderbook = add_generation_to_orderbook(df_RE_D2, df_CBC_orderbook, 'RE')
+df_CBC_orderbook = add_generation_to_orderbook(chp_prog, df_CBC_orderbook, 'CHP')
 
 
 
+from RD_CBC_functions import optimal_CBC
 
+model = optimal_CBC(load_per_node_D2, df_CBC_orderbook,sum(df_congestion_D2.sum()),0)
 
-(load_per_node, df_CBC_orderbook, congestion) = (load_per_node_D2, df_CBC_orderbook,sum(df_congestion_D2.sum()))
-Tee = 0
-ratio = ratio
+p_CBC_order_level = {(o, t): sum(pyo.value(model.dp[b, t, o]) for b in model.bus_set) 
+         for o in model.order_set for t in model.time_set}
+df_dp_CBC_order_level = pd.DataFrame(list(p_CBC_order_level.items()), columns=["Index", "dp_value"])
+df_dp_CBC_order_level = df_dp_CBC_order_level[df_dp_CBC_order_level["dp_value"] != 0]
 
-df_lines['susceptance'] = 1/(df_lines['len']*(1/susceptance)) #not a global parameter, so also have to do this function locally
-
-p_prognosis = load_per_node.copy()
-
-# Convert to dicts for pyomo initialization
-max_CLC_up_dict = {}
-max_CLC_down_dict = {}
-CLC_price_up_dict = {}
-CLC_price_down_dict = {}
-p_prognosis_dict = {index: value for index, value in np.ndenumerate(p_prognosis)}
- 
-for bus in buses: #loop to construct the max_CLC_up_dict
-    for t in range(0,ptus):
-        for order,row in df_CBC_orderbook.iterrows():
-            key = (bus,t,order)
-            if len(key)==3:
-                max_CLC_up_dict[key] = row['power'] if row['power']>=0 and row['bus'] == bus and row['buy/sell']=='buy' and row['delivery_start']<=t<row['delivery_end'] else 0
-
-for bus in buses: #loop to construct the max_CLC_down_dict
-    for t in range(0,ptus):
-        for order,row in df_CBC_orderbook.iterrows():
-            key = (bus,t,order)
-            if len(key)==3:
-                max_CLC_down_dict[key] = -row['power'] if row['power']>=0 and row['bus'] == bus and row['buy/sell']=='sell' and row['delivery_start']<=t<row['delivery_end'] else 0
-
-for bus in buses: #loop to construct the CLC_price_down_dict
-    for t in range(0,ptus):
-        for order,row in df_CBC_orderbook.iterrows():
-            key = (bus,t,order)
-            if len(key)==3:
-                CLC_price_down_dict[key] = row['price'] if row['price']<=0 and row['bus'] == bus and row['delivery_start']<=t<row['delivery_end'] else 0
-
-for bus in buses: #loop to construct the CLC_price_up_dict
-    for t in range(0,ptus):
-        for order,row in df_CBC_orderbook.iterrows():
-            key = (bus,t,order)
-            if len(key)==3:
-                CLC_price_up_dict[key] = row['price'] if row['price']>=0 and row['bus'] == bus and row['delivery_start']<=t<row['delivery_end'] else 0
-
-model = pyo.ConcreteModel() # build the model
-# Define sets (indices)
-model.bus_set = pyo.RangeSet(0, n_buses - 1) #includes final value unlike normal python (hence -1)
-model.line_set = pyo.RangeSet(0, n_lines - 1)
-model.time_set = pyo.RangeSet(0, ptus - 1)  
-model.order_set = pyo.RangeSet(0,len(df_CBC_orderbook)-1)
-
-# Define parameters
-model.dt = pyo.Param(initialize=1.0)  # 1 hour time resolution
-model.max_dp_up = pyo.Param(model.bus_set, model.time_set, model.order_set, within=pyo.Reals, initialize=max_CLC_up_dict)
-model.price_up = pyo.Param(model.bus_set, model.time_set, model.order_set, within=pyo.Reals, initialize=CLC_price_up_dict)
-model.max_dp_down = pyo.Param(model.bus_set, model.time_set,model.order_set, within=pyo.Reals, initialize=max_CLC_down_dict)
-model.price_down = pyo.Param(model.bus_set, model.time_set, model.order_set, within=pyo.Reals, initialize=CLC_price_down_dict)
-model.p_prognosis = pyo.Param(model.bus_set, model.time_set, within=pyo.Reals, initialize=p_prognosis_dict)
-
-# Define variables
-model.theta = pyo.Var(model.bus_set, model.time_set, within=pyo.Reals) # angle for DCLF
-model.f = pyo.Var(model.line_set, model.time_set, within=pyo.Reals) #flow
-model.congestion = pyo.Var(model.line_set, model.time_set, within=pyo.NonNegativeReals)  # >= 0
-model.p = pyo.Var(model.bus_set, model.time_set, within=pyo.Reals)  # power
-model.dp = pyo.Var(model.bus_set, model.time_set, model.order_set, within=pyo.Reals)  # dp after CLC
-model.balancing_p = pyo.Var(model.time_set, within=pyo.Reals)  # Power uesd for distributed slackbus
-model.u = pyo.Var(model.bus_set, model.time_set, within=pyo.Binary)  # Binary variable for condition
-
-model.total_congestion = pyo.Var(within=pyo.Reals) #sum of congestion
-model.total_costs = pyo.Var(within=pyo.Reals)   #costs
-
-
-# Constraints to link `u` and `dp`. u is binary (0/1)  the following expresisons determine that if u is 1, dp has to be any value between 0 an 1e6
-    #if u==0, dp is a negative price. This allow the objective funciton to add negative and positve prices. and allos for an upward bid and downward bid per location
-def link_u_dp_rule(m, b, t, o):
-    return m.dp[b, t, o] <= m.u[b, t] * 1e9  # Arbitrarily large value             dp is kliener dan 0 (u=0) of 1e9 (u=1)
-model.link_u_dp = pyo.Constraint(model.bus_set, model.time_set, model.order_set, rule=link_u_dp_rule)
-
-def link_u_dp_neg_rule(m, b, t, o):
-    return m.dp[b, t, o] >= -1e9 * (1 - m.u[b, t])  # Arbitrarily large value      dp is groter dan -1e9 (u=0) of 0 (u=1)
-model.link_u_dp_neg = pyo.Constraint(model.bus_set, model.time_set, model.order_set, rule=link_u_dp_neg_rule)
-
-
-# Define Constraints
-def def_congestion_1(m, l, t): #Congestion in case flow is positive
-    capacity = df_lines.iloc[l]['capacity']
-    return m.congestion[l, t] >= m.f[l, t] - capacity 
-
-model.con_def_congestion_1 = pyo.Constraint(model.line_set, model.time_set, rule=def_congestion_1)
-
-def def_congestion_2(m, l, t):  #Congestion in case flow is negative
-    capacity = df_lines.iloc[l]['capacity']
-    return m.congestion[l, t] >= -m.f[l, t] - capacity 
-
-model.con_def_congestion_2 = pyo.Constraint(model.line_set, model.time_set, rule=def_congestion_2)
-'''
-# Define the zero congestion constraint
-def zero_congestion_constraint(m):
-    return sum(m.congestion[l, t] for l in m.line_set for t in m.time_set) == 0
-
-# Add the constraint to the model
-model.zero_congestion = pyo.Constraint(rule=zero_congestion_constraint)
-'''
-# DC powerflow equations
-def ref_theta(m, t):
-    return m.theta[0, t] == 0.0
-
-model.con_ref_theta = pyo.Constraint(model.time_set, rule=ref_theta)
-
-def DC_flow(m, l, t):
-    from_bus = df_lines.iloc[l]['from_bus'] 
-    to_bus = df_lines.iloc[l]['to_bus'] 
-    susceptances = df_lines.iloc[l]['susceptance']
-    return m.f[l, t] == susceptances * (m.theta[from_bus, t] - m.theta[to_bus, t])
-
-model.con_DC_flow = pyo.Constraint(model.line_set, model.time_set, rule=DC_flow)
-
-def nodal_power_balance(m, b, t):
-    inflows = sum(m.f[l, t] for l in model.line_set if df_lines.iloc[l]['to_bus'] == b)
-    outflows = sum(m.f[l, t] for l in model.line_set if df_lines.iloc[l]['from_bus'] == b)
-    return inflows - outflows + m.p[b, t] == 0
-
-model.con_nodal_power_balance = pyo.Constraint(model.bus_set, model.time_set, rule=nodal_power_balance)
-
-# Define balancing_p (distributed slack)
-def def_balancing_p(m, t):
-    total_imbalance = sum(m.dp[b, t, o] for b in m.bus_set for o in m.order_set)
-    n_buses = len(m.bus_set)
-    return m.balancing_p[t] == total_imbalance / n_buses
-
-model.con_def_balancing_p = pyo.Constraint(model.time_set, rule=def_balancing_p)
-
-def def_p(m, b, t):
-    return m.p[b, t] == m.p_prognosis[b, t] + sum(m.dp[b, t, o] for o in m.order_set) - m.balancing_p[t]
-
-model.con_def_p = pyo.Constraint(model.bus_set, model.time_set, rule=def_p)
-
-# Bound dp from below and above
-def lower_bound_dp(m, b, t, o):
-    if m.max_dp_down[b, t, o] >= 0:
-        return m.dp[b, t, o] >= 0
-    else:
-        return m.dp[b, t, o] >= m.max_dp_down[b, t, o]
-    
-model.con_lower_bound_dp = pyo.Constraint(model.bus_set, model.time_set, model.order_set, rule=lower_bound_dp)
-    
-def upper_bound_dp(m, b, t, o):
-    if m.max_dp_up[b, t, o] >= 0:
-        return m.dp[b, t, o] <= m.max_dp_up[b, t, o]
-    else:
-        return m.dp[b, t, o] <= 0.0
-
-model.con_upper_bound_dp = pyo.Constraint(model.bus_set, model.time_set, model.order_set, rule=upper_bound_dp)
-
-
-# Objective function
-def total_costs_def(m):
-    return m.total_costs == sum(
-        m.dp[b, t, o] * (m.price_up[b, t, o] * m.u[b, t] + m.price_down[b, t, o] * (1 - m.u[b, t])) * m.dt
-        for b in m.bus_set
-        for t in m.time_set
-        for o in m.order_set
-    )
-
-model.total_costs_constraint = pyo.Constraint(rule=total_costs_def)
-# Add congestion defition
-def def_total_congestion(m):
-    return m.total_congestion ==  sum(sum(m.congestion[l, t] * m.dt for l in m.line_set) for t in m.time_set)
-
-model.con_def_total_congestion = pyo.Constraint(rule=def_total_congestion)
-
-#'''
-#Objective function only costs
-def decrease_congestion_constraint(m):
-    return m.total_congestion == congestion * (1-ratio)
-
-# Add the constraint to the model
-model.decrease_congestion = pyo.Constraint(rule=decrease_congestion_constraint)
-
-def objective_function(m):
-    return m.total_costs
-
-#'''
-
-
-'''
-#Objective function, congestion and costs mixxed
-def objective_function(m):
-   return (1.0 - epsilon) * m.total_congestion + epsilon * m.total_costs
-'''
-
-
-
-model.objective_function = pyo.Objective(sense=pyo.minimize, expr=objective_function)
-
-
-# Store model (convenient for debugging)
-path = os.getcwd() + '\\'
-model.write(path + "model_CBC.lp", io_options={"symbolic_solver_labels": True})
-
-#%% Solve the model
-opt = SolverFactory('gurobi')
-opt.options['mipgap'] = 0.001
-opt.options['DualReductions'] = 0
-results = opt.solve(model, tee=Tee)
-
-termination_condition = results.solver.termination_condition
-
-if termination_condition == pyo.TerminationCondition.infeasible:
-    sys.exit("Model is infeasible.\n")
-elif termination_condition == pyo.TerminationCondition.unbounded:
-    sys.exit("Model is unbounded.\n")
-elif termination_condition == pyo.TerminationCondition.infeasibleOrUnbounded:
-    sys.exit("Model is either infeasible or unbounded.\n")
-else:
-    print(f"Termination condition: {termination_condition}\n")
-
-total_congestion_results = pyo.value(model.total_congestion)
-total_costs_results = pyo.value(model.total_costs)    
-print(total_costs_results)
-#print(f"Cost term is {round(100.0 * total_costs_results * epsilon/of_results, 2)}% of the total OF (should be small)\n")
-#print(f"congestion volume X avg_Price = {total_congestion_results} X {(np.mean(CLC_price_up[CLC_price_up > 0]) if np.any(CLC_price_up > 0) else 0 + np.mean(CLC_price_down[CLC_price_down > 0]) if np.any(CLC_price_down > 0) else 0)} = {total_congestion_results * (np.mean(CLC_price_up[CLC_price_up > 0]) if np.any(CLC_price_up > 0) else 0 + np.mean(CLC_price_down[CLC_price_down > 0]) if np.any(CLC_price_down > 0) else 0)}\n")
-print(f"total costs are {total_costs_results}\n")    
-print(ratio)
-
+      
+        
+# Make a df of the activatde CBC to be added to the load profiles. Aggregate over orders (o) to get a sum per (b, t)
 p_CBC = {(b, t): sum(pyo.value(model.dp[b, t, o]) for o in model.order_set) 
          for b in model.bus_set for t in model.time_set}
 
@@ -529,44 +338,14 @@ p_CBC = {(b, t): sum(pyo.value(model.dp[b, t, o]) for o in model.order_set)
 df_dp_CBC = pd.DataFrame(list(p_CBC.items()), columns=["Index", "dp_value"])
 
 # Expand the tuple index into separate columns (bus and time)
-df_dp_CBC[["Bus", "Time"]] = pd.DataFrame(df_dp_CBC["Index"].tolist(), index=df_dp_CBC.index)
+df_dp_CBC[["node", "Time"]] = pd.DataFrame(df_dp_CBC["Index"].tolist(), index=df_dp_CBC.index)
 df_dp_CBC = df_dp_CBC.drop(columns=["Index"])  # Drop old index column
 
 # Pivot to get time steps as columns and buses as rows
-df_dp_CBC = df_dp_CBC.pivot(index="Bus", columns="Time", values="dp_value")
-sys.exit('stop after CBC')
-"""
-from RD_CBC_functions import optimal_CBC
+df_dp_CBC = df_dp_CBC.pivot(index="node", columns="Time", values="dp_value").reset_index()
 
-model = optimal_CBC(load_per_node_D2, df_CBC_orderbook,sum(df_congestion_D2.sum()),0)
-
-# Get results from the model
-p_CBC = {(b, t): pyo.value(model.dp[b, t]) for b in model.bus_set for t in model.time_set}
-congestion_hypotheses_CBC = {(l, t): pyo.value(model.congestion[l, t]) for l in model.line_set for t in model.time_set}
-
-total_congestion_results = pyo.value(model.total_congestion)
-total_costs_CBC = pyo.value(model.total_costs)
-
-
-# Create a DataFrame from the dictionary
-df_dp_CBC = pd.DataFrame.from_dict(p_CBC, orient='index', columns=['value'])
-# Reset the index and expand the tuple keys into separate columns
-df_dp_CBC.index = pd.MultiIndex.from_tuples(df_dp_CBC.index, names=["node", "hour"])
-df_dp_CBC = df_dp_CBC.unstack(level="hour")
-
-# Clean up the column names
-df_dp_CBC.columns = df_dp_CBC.columns.droplevel(0)
-df_dp_CBC = df_dp_CBC.reset_index()
-
-
-# Transform the dictionary into a DataFrame
-df_congestion_hypotheses_CBC = pd.DataFrame.from_dict(congestion_hypotheses_CBC, orient="index", columns=["congestion"])
-# Reset the index and expand the tuple keys into separate columns
-df_congestion_hypotheses_CBC.index = pd.MultiIndex.from_tuples(df_congestion_hypotheses_CBC.index, names=["node", "hour"])
-df_congestion_hypotheses_CBC = df_congestion_hypotheses_CBC.unstack(level="hour")
-# Clean up the column names
-df_congestion_hypotheses_CBC.columns = df_congestion_hypotheses_CBC.columns.droplevel(0)
-
+# Ensure 'node' remains as a regular column
+df_dp_CBC.columns.name = None  # Remove multi-index column name
 
 
 #add CBC result to load array
@@ -581,9 +360,9 @@ for t in range(ptus):
 df_congestion_D1 = overload_calculation(df_flows_D1)
 congestion_D1 = sum(df_congestion_D1.sum())
 
-tot_congestion_hypotheses_CBC = sum(df_congestion_hypotheses_CBC.sum()) # how much congestion was expected to be left after distributed slack CBC activtion
+#tot_congestion_hypotheses_CBC = sum(df_congestion_hypotheses_CBC.sum()) # how much congestion was expected to be left after distributed slack CBC activtion
 ratio_actual =  1- (congestion_D1 / congestion_D2)
-print(f'The aimed congestion reduction is {1-(tot_congestion_hypotheses_CBC/congestion_D2)}, the actual congestion redution is {ratio_actual}\n')
+#print(f'The aimed congestion reduction is {ratio}, the actual congestion reduction is {ratio_actual}\n')
 
 
 # ### Actualise prognoses
@@ -592,12 +371,27 @@ print(f'The aimed congestion reduction is {1-(tot_congestion_hypotheses_CBC/cong
 # %%
 
 
-def add_normal_noise(df_D2 : pd.DataFrame, std : int) -> pd.DataFrame: #function to add normal noise to with provided STD DF with specific shape (mean=0) Only adds noise to non-zero values
+import numpy as np
+import pandas as pd
+
+def add_normal_noise(df_D2: pd.DataFrame, std: int) -> pd.DataFrame:
     df_output = df_D2.copy()
+    
     for load in range(len(df_D2)):
-        noise = np.random.normal(0, std, (df_D2.columns != 'node').sum())
-        noise = np.trunc(noise * 10**2) / 10**2
-        df_output.iloc[load,1:] += (df_output.iloc[load, 1:] != 0) * noise
+        # Generate noise only for numerical columns (excluding 'node' column if present)
+        num_cols = df_D2.columns[df_D2.columns != 'node']
+        noise = np.random.normal(0, std, size=len(num_cols))
+        noise = np.trunc(noise * 10**2) / 10**2  # Truncate to 2 decimal places
+        
+        # Get row values
+        row_values = df_output.iloc[load, 1:]
+        max_val = row_values.max()
+        min_val = row_values.min()
+        
+        # Apply noise to all values except min and max, and non-zero values
+        mask = (row_values != 0) & (row_values != max_val) & (row_values != min_val)
+        df_output.iloc[load, 1:] += mask * noise  # Apply noise only where mask is True
+    
     return df_output
 
 # add noise to the D-2 to make 'actual' data. use these to make new load per node, and new CHP dispatch (marketcoupling). Results in a new load per node and new congestion 
@@ -609,13 +403,26 @@ load_per_node = add_to_array(df_RE, load_per_node)
 load_per_node = add_to_array(df_loads, load_per_node)
 load_per_node = add_to_array(df_dp_CBC, load_per_node)
 
-
 chp_coupling = CHP_dispatch_calc(df_chp_max, load_per_node)
 #find total load per node per CHP 
 
 load_per_node = add_to_array(chp_coupling, load_per_node)
 
-"""
+
+#calculate congestion after noise was introduced
+df_flows = pd.DataFrame(columns = range(ptus))
+for t in range(ptus):
+    df_flows[t] = calculate_powerflow(load_per_node[:,t])
+    
+df_congestion = overload_calculation(df_flows)
+congestion = sum(df_congestion.sum())
+
+#tot_congestion_hypotheses_CBC = sum(df_congestion_hypotheses_CBC.sum()) # how much congestion was expected to be left after distributed slack CBC activtion
+ratio_actual =  1- (congestion / congestion_D2)
+print(f'The aimed congestion reduction is {ratio}, the actual congestion after introduced noise reduction is {ratio_actual}\n')
+
+sys.exit('stop')
+
 # %%
 
 
