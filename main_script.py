@@ -302,14 +302,14 @@ df_CBC_orderbook = pd.read_excel(input_file,'CBC', header=0, index_col=0) #read 
 #add all activated RE and CHP to the CBC orderbook, in order to do this, an assumption about the D-1 price is made
 prognosis_wholesale_price = df_chp_max.loc[len(chp_prog[chp_prog.iloc[:, 1:].sum(axis=1) < 0])-1,'price']
 CBC_RE_premium = 0.1*prognosis_wholesale_price #compensation on top off the wholesale market prognosis for RE
-CBC_CHP_premium = 10*prognosis_wholesale_price #compensation on top off the wholesale market prognosis for CHPs
+CBC_CHP_premium = 0.2*prognosis_wholesale_price #compensation on top off the wholesale market prognosis for CHPs
 
 def add_generation_to_orderbook(generation:pd.DataFrame,orderbook:pd.DataFrame,source:str)->pd.DataFrame:
     for index, row in generation.iloc[:, 1:].iterrows(): #This loop adds a bid for all expected RE production
         for t, value in row.items():
             if value < 0:
                 list_order = [[generation.iloc[index, 0], t, t + 1,'buy',(prognosis_wholesale_price + CBC_RE_premium) if source == 'RE' 
-                               else prognosis_wholesale_price if source == 'CHP' else prognosis_wholesale_price, -value, source]]
+                               else (prognosis_wholesale_price + CBC_CHP_premium) if source == 'CHP' else prognosis_wholesale_price , -value, source]]
                 
                 orderbook = pd.concat([orderbook, pd.DataFrame(list_order, columns=orderbook.columns)], ignore_index=True)
     return orderbook
@@ -347,22 +347,8 @@ df_dp_CBC = df_dp_CBC.pivot(index="node", columns="Time", values="dp_value").res
 # Ensure 'node' remains as a regular column
 df_dp_CBC.columns.name = None  # Remove multi-index column name
 
-
-#add CBC result to load array
-load_per_node_D1 = add_to_array(df_dp_CBC, load_per_node_D2.copy())
-
-# Perform load to to see how the congestion is after CBC acivation
-
-df_flows_D1 = pd.DataFrame(columns = range(ptus))
-for t in range(ptus):
-    df_flows_D1[t] = calculate_powerflow(load_per_node_D1[:,t])
-    
-df_congestion_D1 = overload_calculation(df_flows_D1)
-congestion_D1 = sum(df_congestion_D1.sum())
-
-#tot_congestion_hypotheses_CBC = sum(df_congestion_hypotheses_CBC.sum()) # how much congestion was expected to be left after distributed slack CBC activtion
-ratio_actual =  1- (congestion_D1 / congestion_D2)
-#print(f'The aimed congestion reduction is {ratio}, the actual congestion reduction is {ratio_actual}\n')
+#truncate decimals to prevent arethatic errors
+df_dp_CBC.iloc[:, 1:] = np.trunc(df_dp_CBC.iloc[:, :] * 10**4) / 10**4
 
 
 # ### Actualise prognoses
@@ -370,16 +356,14 @@ ratio_actual =  1- (congestion_D1 / congestion_D2)
 
 # %%
 
-
-import numpy as np
-import pandas as pd
-
-def add_normal_noise(df_D2: pd.DataFrame, std: int) -> pd.DataFrame:
+def add_normal_noise(df_D2: pd.DataFrame, MAPE: float) -> pd.DataFrame:
     df_output = df_D2.copy()
     
     for load in range(len(df_D2)):
         # Generate noise only for numerical columns (excluding 'node' column if present)
         num_cols = df_D2.columns[df_D2.columns != 'node']
+        
+        std = abs(1.25* MAPE * np.mean(df_output.iloc[load, 1:]))       
         noise = np.random.normal(0, std, size=len(num_cols))
         noise = np.trunc(noise * 10**2) / 10**2  # Truncate to 2 decimal places
         
@@ -395,9 +379,9 @@ def add_normal_noise(df_D2: pd.DataFrame, std: int) -> pd.DataFrame:
     return df_output
 
 # add noise to the D-2 to make 'actual' data. use these to make new load per node, and new CHP dispatch (marketcoupling). Results in a new load per node and new congestion 
-df_loads = add_normal_noise(df_loads_D2, 0)
-df_RE    = add_normal_noise(df_RE_D2, 0)
-
+df_loads = add_normal_noise(df_loads_D2, 0.3)
+df_RE    = add_normal_noise(df_RE_D2, 0.21)
+sys.exit()
 load_per_node = np.zeros((n_buses,ptus))
 load_per_node = add_to_array(df_RE, load_per_node)
 load_per_node = add_to_array(df_loads, load_per_node)
@@ -450,8 +434,8 @@ ax.set_ylabel("Active Power [MW]")
 ax.set_title("df_loads per node before RD")
 
 # Truncate load_per_node after the th decimal
-scaling_factor = 10**6
-load_per_node = np.trunc(load_per_node * scaling_factor) / scaling_factor
+#scaling_factor = 10**4
+#load_per_node = np.trunc(load_per_node * scaling_factor) / scaling_factor
 # check if the system is balanced, exit the script if not the case
 if load_per_node.sum() != 0:
     fig, ax = plt.subplots()
@@ -460,9 +444,9 @@ if load_per_node.sum() != 0:
     ax.set_ylabel("Unbalance [MW]")
     ax.set_title("Unbalance per hour ")
     if load_per_node.sum() > 0:
-        sys.exit(f' The system is inherently unbalanced because too little generation after CBC activation {load_per_node.sum()} MWh additional generation is required is required.\n')
+        print(f' The system is inherently unbalanced because too little generation after CBC activation {load_per_node.sum()} MWh additional generation is required is required.\n')
     elif load_per_node.sum() < 0:
-        sys.exit(f' The system is inherently unbalanced because to much RE after CBC activation. {load_per_node.sum()} MWh "curtailement" is required.\n')
+        print(f' The system is inherently unbalanced because to much RE after CBC activation. {load_per_node.sum()} MWh "curtailement" is required.\n')
 else:
     print('Balanced market coupling succesful, load flow calculation will be performed\n')
 
