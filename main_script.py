@@ -12,6 +12,11 @@
 
 # %%
 
+from time import monotonic
+
+
+start_time = monotonic()
+
 
 import pandas as pd
 import numpy as np
@@ -203,7 +208,7 @@ df_congestion_D2 = pd.DataFrame(index=df_lines.index, columns = range(ptus))
 def overload_calculation(df_flows : pd.DataFrame) -> pd.DataFrame:
     for line in df_congestion_D2.index:  # Iterate over line indices
         for t in range(ptus):  # Iterate over PTUs (time steps)
-            overload = abs(df_flows.iloc[line,t]) - df_lines['capacity'].loc[line]
+            overload = (df_flows.iloc[line,t]) - df_lines['capacity'].loc[line]
             if overload > 0:
                 df_congestion_D2.iloc[line, t] = float(overload)
             else:
@@ -319,9 +324,14 @@ df_CBC_orderbook = add_generation_to_orderbook(chp_prog, df_CBC_orderbook, 'CHP'
 
 
 
+start_time = monotonic()
+# something
+print(f"time untill CBC funtion is {monotonic() - start_time} seconds")
+
 from RD_CBC_functions import optimal_CBC
 
 model_CBC = optimal_CBC(load_per_node_D2, df_CBC_orderbook,sum(df_congestion_D2.sum()),0)
+print(f"Run time of CBC function {monotonic() - start_time} seconds\n")
 total_costs_CBC = pyo.value(model_CBC.total_costs)
 p_CBC_order_level = {(o, t): sum(pyo.value(model_CBC.dp[b, t, o]) for b in model_CBC.bus_set) 
          for o in model_CBC.order_set for t in model_CBC.time_set}
@@ -381,7 +391,7 @@ def add_normal_noise(df_D2: pd.DataFrame, MAPE: float) -> pd.DataFrame:
 # add noise to the D-2 to make 'actual' data. use these to make new load per node, and new CHP dispatch (marketcoupling). Results in a new load per node and new congestion 
 df_loads = add_normal_noise(df_loads_D2, 0.3)
 df_RE    = add_normal_noise(df_RE_D2, 0.21)
-sys.exit()
+
 load_per_node = np.zeros((n_buses,ptus))
 load_per_node = add_to_array(df_RE, load_per_node)
 load_per_node = add_to_array(df_loads, load_per_node)
@@ -443,10 +453,12 @@ if load_per_node.sum() != 0:
     ax.set_xlabel("Hour on day D")
     ax.set_ylabel("Unbalance [MW]")
     ax.set_title("Unbalance per hour ")
-    if load_per_node.sum() > 0:
-        print(f' The system is inherently unbalanced because too little generation after CBC activation {load_per_node.sum()} MWh additional generation is required is required.\n')
-    elif load_per_node.sum() < 0:
-        print(f' The system is inherently unbalanced because to much RE after CBC activation. {load_per_node.sum()} MWh "curtailement" is required.\n')
+    if abs(load_per_node.sum()) > 1e-10:
+        print(f' The system is inherently unbalanced  {load_per_node.sum()} MWh additional generation/load is required is required.\n')
+    elif abs(load_per_node.sum()) < 1e-10:
+        imbalance = load_per_node.sum(axis=0)
+        load_per_node+= imbalance
+        print(f'imbalance smaller then 1e-10 dtetceted and compensated to {load_per_node.sum()}')
 else:
     print('Balanced market coupling succesful, load flow calculation will be performed\n')
 
@@ -460,10 +472,14 @@ else:
 #read orderbook
 df_RD_orderbook = pd.read_excel(input_file,'RD', header=0, index_col=0) #read the orderbook
 
+
+start_time = monotonic()
+# something
 from RD_CBC_functions import optimal_redispatch
 
 model_RD = optimal_redispatch(load_per_node, df_RD_orderbook)
 
+print(f"RD funciton runtime is {monotonic() - start_time} seconds")
 
 # %%
 

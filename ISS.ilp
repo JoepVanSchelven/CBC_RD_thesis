@@ -1,51 +1,61 @@
 \ Model objective_function_copy
 \ LP format - for model browsing. Use MPS format to capture full model detail.
-\ Signature: 0xcc3a1e9bb7ebcfb8
+\ Signature: 0x8300e32f198eb2af
 Minimize
  
 Subject To
- c_u_con_def_congestion_1(0_10)_: f(0_10) - congestion(0_10) <= 100
- c_u_con_def_congestion_1(0_11)_: f(0_11) - congestion(0_11) <= 100
- c_u_con_def_congestion_1(0_12)_: f(0_12) - congestion(0_12) <= 100
- c_u_con_def_congestion_1(0_13)_: f(0_13) - congestion(0_13) <= 100
- c_u_con_def_congestion_1(0_14)_: f(0_14) - congestion(0_14) <= 100
- c_u_con_def_congestion_1(0_15)_: f(0_15) - congestion(0_15) <= 100
- c_e_con_nodal_power_balance(0_10)_: - f(0_10) + p(0_10) = 0
- c_e_con_nodal_power_balance(0_11)_: - f(0_11) + p(0_11) = 0
- c_e_con_nodal_power_balance(0_12)_: - f(0_12) + p(0_12) = 0
- c_e_con_nodal_power_balance(0_13)_: - f(0_13) + p(0_13) = 0
- c_e_con_nodal_power_balance(0_14)_: - f(0_14) + p(0_14) = 0
- c_e_con_nodal_power_balance(0_15)_: - f(0_15) + p(0_15) = 0
- c_e_con_def_balancing_p(10)_: - 0.5 dp(0_10_0) - 0.5 dp(1_10_0)
-   + balancing_p(10) = 0
- c_e_con_def_balancing_p(11)_: - 0.5 dp(0_11_0) - 0.5 dp(1_11_0)
-   + balancing_p(11) = 0
- c_e_con_def_balancing_p(12)_: - 0.5 dp(0_12_0) - 0.5 dp(1_12_0)
-   + balancing_p(12) = 0
- c_e_con_def_balancing_p(13)_: - 0.5 dp(0_13_0) - 0.5 dp(1_13_0)
-   + balancing_p(13) = 0
- c_e_con_def_balancing_p(14)_: - 0.5 dp(0_14_0) - 0.5 dp(1_14_0)
-   + balancing_p(14) = 0
- c_e_con_def_balancing_p(15)_: - 0.5 dp(0_15_0) - 0.5 dp(1_15_0)
-   + balancing_p(15) = 0
- c_e_con_def_p(0_10)_: - dp(0_10_0) + p(0_10) + balancing_p(10) = 150
- c_e_con_def_p(0_11)_: - dp(0_11_0) + p(0_11) + balancing_p(11) = 150
- c_e_con_def_p(0_12)_: - dp(0_12_0) + p(0_12) + balancing_p(12) = 150
- c_e_con_def_p(0_13)_: - dp(0_13_0) + p(0_13) + balancing_p(13) = 150
- c_e_con_def_p(0_14)_: - dp(0_14_0) + p(0_14) + balancing_p(14) = 150
- c_e_con_def_p(0_15)_: - dp(0_15_0) + p(0_15) + balancing_p(15) = 150
- c_l_con_lower_bound_dp(0_10_0)_: dp(0_10_0) >= 0
- c_l_con_lower_bound_dp(0_11_0)_: dp(0_11_0) >= 0
- c_l_con_lower_bound_dp(0_12_0)_: dp(0_12_0) >= 0
- c_l_con_lower_bound_dp(0_13_0)_: dp(0_13_0) >= 0
- c_l_con_lower_bound_dp(0_14_0)_: dp(0_14_0) >= 0
- c_l_con_lower_bound_dp(0_15_0)_: dp(0_15_0) >= 0
- c_u_con_upper_bound_dp(1_10_0)_: dp(1_10_0) <= 0
- c_u_con_upper_bound_dp(1_11_0)_: dp(1_11_0) <= 0
- c_u_con_upper_bound_dp(1_12_0)_: dp(1_12_0) <= 0
- c_u_con_upper_bound_dp(1_13_0)_: dp(1_13_0) <= 0
- c_u_con_upper_bound_dp(1_14_0)_: dp(1_14_0) <= 0
- c_u_con_upper_bound_dp(1_15_0)_: dp(1_15_0) <= 0
+ c_u_con_def_congestion_1(3_0)_: f(3_0) - congestion(3_0) <= 500
+ c_e_con_DC_flow(1_0)_: f(1_0) - 50 theta(2_0) + 50 theta(4_0) = 0
+ c_e_con_DC_flow(2_0)_: f(2_0) - 100 theta(2_0) + 100 theta(5_0) = 0
+ c_e_con_DC_flow(3_0)_: f(3_0) + 142.8571428571429 theta(4_0)
+   - 142.8571428571429 theta(3_0) = 0
+ c_e_con_DC_flow(5_0)_: f(5_0) - 100 theta(3_0) + 100 theta(6_0) = 0
+ c_e_con_DC_flow(6_0)_: f(6_0) - 1000 theta(6_0) + 1000 theta(7_0) = 0
+ c_e_con_DC_flow(7_0)_: f(7_0) - 142.8571428571429 theta(7_0)
+   + 142.8571428571429 theta(8_0) = 0
+ c_e_con_DC_flow(8_0)_: f(8_0) - 66.66666666666666 theta(3_0)
+   + 66.66666666666666 theta(8_0) = 0
+ c_e_con_DC_flow(10_0)_: f(10_0) - 100 theta(8_0) + 100 theta(9_0) = 0
+ c_e_con_DC_flow(11_0)_: f(11_0) + 142.8571428571429 theta(0_0)
+   - 142.8571428571429 theta(9_0) = 0
+ c_e_con_DC_flow(12_0)_: f(12_0) - 100 theta(0_0) + 100 theta(10_0) = 0
+ c_e_con_DC_flow(13_0)_: f(13_0) + 166.6666666666667 theta(5_0)
+   - 166.6666666666667 theta(10_0) = 0
+ c_e_con_nodal_power_balance(0_0)_: f(11_0) - f(12_0) + p(0_0) = 0
+ c_e_con_nodal_power_balance(3_0)_: - f(3_0) + f(4_0) - f(5_0) - f(8_0)
+   + p(3_0) = 0
+ c_e_con_nodal_power_balance(4_0)_: f(1_0) + f(3_0) + p(4_0) = 0
+ c_e_con_nodal_power_balance(5_0)_: f(2_0) + f(13_0) + p(5_0) = 0
+ c_e_con_nodal_power_balance(6_0)_: f(5_0) - f(6_0) + p(6_0) = 0
+ c_e_con_nodal_power_balance(7_0)_: f(6_0) - f(7_0) + p(7_0) = 0
+ c_e_con_nodal_power_balance(8_0)_: f(7_0) + f(8_0) + f(9_0) - f(10_0)
+   + p(8_0) = 0
+ c_e_con_nodal_power_balance(9_0)_: f(10_0) - f(11_0) + p(9_0) = 0
+ c_e_con_nodal_power_balance(10_0)_: f(12_0) - f(13_0) + p(10_0) = 0
+ c_e_con_nodal_power_balance(11_0)_: - f(9_0) + p(11_0) = 0
+ c_e_con_nodal_power_balance(12_0)_: - f(4_0) + p(12_0) = 0
+ c_e_con_def_p(0_0)_: - dp(0_0) + p(0_0) = 0
+ c_e_con_def_p(3_0)_: - dp(3_0) + p(3_0) = 3
+ c_e_con_def_p(4_0)_: - dp(4_0) + p(4_0) = -859.2
+ c_e_con_def_p(5_0)_: - dp(5_0) + p(5_0) = 180
+ c_e_con_def_p(6_0)_: - dp(6_0) + p(6_0) = 181
+ c_e_con_def_p(7_0)_: - dp(7_0) + p(7_0) = 177
+ c_e_con_def_p(8_0)_: - dp(8_0) + p(8_0) = 183
+ c_e_con_def_p(9_0)_: - dp(9_0) + p(9_0) = 0.2
+ c_e_con_def_p(10_0)_: - dp(10_0) + p(10_0) = 10
+ c_e_con_def_p(11_0)_: - dp(11_0) + p(11_0) = 11
+ c_e_con_def_p(12_0)_: - dp(12_0) + p(12_0) = 12
+ c_l_con_lower_bound_dp(0_0)_: dp(0_0) >= 0
+ c_l_con_lower_bound_dp(3_0)_: dp(3_0) >= 0
+ c_l_con_lower_bound_dp(5_0)_: dp(5_0) >= 0
+ c_l_con_lower_bound_dp(6_0)_: dp(6_0) >= 0
+ c_l_con_lower_bound_dp(7_0)_: dp(7_0) >= 0
+ c_l_con_lower_bound_dp(8_0)_: dp(8_0) >= 0
+ c_l_con_lower_bound_dp(9_0)_: dp(9_0) >= 0
+ c_l_con_lower_bound_dp(10_0)_: dp(10_0) >= 0
+ c_l_con_lower_bound_dp(11_0)_: dp(11_0) >= 0
+ c_l_con_lower_bound_dp(12_0)_: dp(12_0) >= 0
+ c_u_con_upper_bound_dp(4_0)_: dp(4_0) <= 0
  c_e_con_def_total_congestion_: - congestion(0_0) - congestion(0_1)
    - congestion(0_2) - congestion(0_3) - congestion(0_4) - congestion(0_5)
    - congestion(0_6) - congestion(0_7) - congestion(0_8) - congestion(0_9)
@@ -53,44 +63,150 @@ Subject To
    - congestion(0_13) - congestion(0_14) - congestion(0_15)
    - congestion(0_16) - congestion(0_17) - congestion(0_18)
    - congestion(0_19) - congestion(0_20) - congestion(0_21)
-   - congestion(0_22) - congestion(0_23) + total_congestion = 0
- c_e_decrease_congestion_: total_congestion = 297
+   - congestion(0_22) - congestion(0_23) - congestion(1_0)
+   - congestion(1_1) - congestion(1_2) - congestion(1_3) - congestion(1_4)
+   - congestion(1_5) - congestion(1_6) - congestion(1_7) - congestion(1_8)
+   - congestion(1_9) - congestion(1_10) - congestion(1_11)
+   - congestion(1_12) - congestion(1_13) - congestion(1_14)
+   - congestion(1_15) - congestion(1_16) - congestion(1_17)
+   - congestion(1_18) - congestion(1_19) - congestion(1_20)
+   - congestion(1_21) - congestion(1_22) - congestion(1_23)
+   - congestion(2_0) - congestion(2_1) - congestion(2_2) - congestion(2_3)
+   - congestion(2_4) - congestion(2_5) - congestion(2_6) - congestion(2_7)
+   - congestion(2_8) - congestion(2_9) - congestion(2_10)
+   - congestion(2_11) - congestion(2_12) - congestion(2_13)
+   - congestion(2_14) - congestion(2_15) - congestion(2_16)
+   - congestion(2_17) - congestion(2_18) - congestion(2_19)
+   - congestion(2_20) - congestion(2_21) - congestion(2_22)
+   - congestion(2_23) - congestion(3_0) - congestion(3_1) - congestion(3_2)
+   - congestion(3_3) - congestion(3_4) - congestion(3_5) - congestion(3_6)
+   - congestion(3_7) - congestion(3_8) - congestion(3_9) - congestion(3_10)
+   - congestion(3_11) - congestion(3_12) - congestion(3_13)
+   - congestion(3_14) - congestion(3_15) - congestion(3_16)
+   - congestion(3_17) - congestion(3_18) - congestion(3_19)
+   - congestion(3_20) - congestion(3_21) - congestion(3_22)
+   - congestion(3_23) - congestion(4_0) - congestion(4_1) - congestion(4_2)
+   - congestion(4_3) - congestion(4_4) - congestion(4_5) - congestion(4_6)
+   - congestion(4_7) - congestion(4_8) - congestion(4_9) - congestion(4_10)
+   - congestion(4_11) - congestion(4_12) - congestion(4_13)
+   - congestion(4_14) - congestion(4_15) - congestion(4_16)
+   - congestion(4_17) - congestion(4_18) - congestion(4_19)
+   - congestion(4_20) - congestion(4_21) - congestion(4_22)
+   - congestion(4_23) - congestion(5_0) - congestion(5_1) - congestion(5_2)
+   - congestion(5_3) - congestion(5_4) - congestion(5_5) - congestion(5_6)
+   - congestion(5_7) - congestion(5_8) - congestion(5_9) - congestion(5_10)
+   - congestion(5_11) - congestion(5_12) - congestion(5_13)
+   - congestion(5_14) - congestion(5_15) - congestion(5_16)
+   - congestion(5_17) - congestion(5_18) - congestion(5_19)
+   - congestion(5_20) - congestion(5_21) - congestion(5_22)
+   - congestion(5_23) - congestion(6_0) - congestion(6_1) - congestion(6_2)
+   - congestion(6_3) - congestion(6_4) - congestion(6_5) - congestion(6_6)
+   - congestion(6_7) - congestion(6_8) - congestion(6_9) - congestion(6_10)
+   - congestion(6_11) - congestion(6_12) - congestion(6_13)
+   - congestion(6_14) - congestion(6_15) - congestion(6_16)
+   - congestion(6_17) - congestion(6_18) - congestion(6_19)
+   - congestion(6_20) - congestion(6_21) - congestion(6_22)
+   - congestion(6_23) - congestion(7_0) - congestion(7_1) - congestion(7_2)
+   - congestion(7_3) - congestion(7_4) - congestion(7_5) - congestion(7_6)
+   - congestion(7_7) - congestion(7_8) - congestion(7_9) - congestion(7_10)
+   - congestion(7_11) - congestion(7_12) - congestion(7_13)
+   - congestion(7_14) - congestion(7_15) - congestion(7_16)
+   - congestion(7_17) - congestion(7_18) - congestion(7_19)
+   - congestion(7_20) - congestion(7_21) - congestion(7_22)
+   - congestion(7_23) - congestion(8_0) - congestion(8_1) - congestion(8_2)
+   - congestion(8_3) - congestion(8_4) - congestion(8_5) - congestion(8_6)
+   - congestion(8_7) - congestion(8_8) - congestion(8_9) - congestion(8_10)
+   - congestion(8_11) - congestion(8_12) - congestion(8_13)
+   - congestion(8_14) - congestion(8_15) - congestion(8_16)
+   - congestion(8_17) - congestion(8_18) - congestion(8_19)
+   - congestion(8_20) - congestion(8_21) - congestion(8_22)
+   - congestion(8_23) - congestion(9_0) - congestion(9_1) - congestion(9_2)
+   - congestion(9_3) - congestion(9_4) - congestion(9_5) - congestion(9_6)
+   - congestion(9_7) - congestion(9_8) - congestion(9_9) - congestion(9_10)
+   - congestion(9_11) - congestion(9_12) - congestion(9_13)
+   - congestion(9_14) - congestion(9_15) - congestion(9_16)
+   - congestion(9_17) - congestion(9_18) - congestion(9_19)
+   - congestion(9_20) - congestion(9_21) - congestion(9_22)
+   - congestion(9_23) - congestion(10_0) - congestion(10_1)
+   - congestion(10_2) - congestion(10_3) - congestion(10_4)
+   - congestion(10_5) - congestion(10_6) - congestion(10_7)
+   - congestion(10_8) - congestion(10_9) - congestion(10_10)
+   - congestion(10_11) - congestion(10_12) - congestion(10_13)
+   - congestion(10_14) - congestion(10_15) - congestion(10_16)
+   - congestion(10_17) - congestion(10_18) - congestion(10_19)
+   - congestion(10_20) - congestion(10_21) - congestion(10_22)
+   - congestion(10_23) - congestion(11_0) - congestion(11_1)
+   - congestion(11_2) - congestion(11_3) - congestion(11_4)
+   - congestion(11_5) - congestion(11_6) - congestion(11_7)
+   - congestion(11_8) - congestion(11_9) - congestion(11_10)
+   - congestion(11_11) - congestion(11_12) - congestion(11_13)
+   - congestion(11_14) - congestion(11_15) - congestion(11_16)
+   - congestion(11_17) - congestion(11_18) - congestion(11_19)
+   - congestion(11_20) - congestion(11_21) - congestion(11_22)
+   - congestion(11_23) - congestion(12_0) - congestion(12_1)
+   - congestion(12_2) - congestion(12_3) - congestion(12_4)
+   - congestion(12_5) - congestion(12_6) - congestion(12_7)
+   - congestion(12_8) - congestion(12_9) - congestion(12_10)
+   - congestion(12_11) - congestion(12_12) - congestion(12_13)
+   - congestion(12_14) - congestion(12_15) - congestion(12_16)
+   - congestion(12_17) - congestion(12_18) - congestion(12_19)
+   - congestion(12_20) - congestion(12_21) - congestion(12_22)
+   - congestion(12_23) - congestion(13_0) - congestion(13_1)
+   - congestion(13_2) - congestion(13_3) - congestion(13_4)
+   - congestion(13_5) - congestion(13_6) - congestion(13_7)
+   - congestion(13_8) - congestion(13_9) - congestion(13_10)
+   - congestion(13_11) - congestion(13_12) - congestion(13_13)
+   - congestion(13_14) - congestion(13_15) - congestion(13_16)
+   - congestion(13_17) - congestion(13_18) - congestion(13_19)
+   - congestion(13_20) - congestion(13_21) - congestion(13_22)
+   - congestion(13_23) + total_congestion = 0
+ c_e_zero_congestion_: total_congestion = 0
 Bounds
- dp(0_10_0) free
- dp(0_11_0) free
- dp(0_12_0) free
- dp(0_13_0) free
- dp(0_14_0) free
- dp(0_15_0) free
- dp(1_10_0) free
- dp(1_11_0) free
- dp(1_12_0) free
- dp(1_13_0) free
- dp(1_14_0) free
- dp(1_15_0) free
- f(0_10) free
- congestion(0_10) free
- f(0_11) free
- congestion(0_11) free
- f(0_12) free
- congestion(0_12) free
- f(0_13) free
- congestion(0_13) free
- f(0_14) free
- congestion(0_14) free
- f(0_15) free
- congestion(0_15) free
- p(0_10) free
- p(0_11) free
- p(0_12) free
- p(0_13) free
- p(0_14) free
- p(0_15) free
- balancing_p(10) free
- balancing_p(11) free
- balancing_p(12) free
- balancing_p(13) free
- balancing_p(14) free
- balancing_p(15) free
+ dp(0_0) free
+ dp(3_0) free
+ dp(4_0) free
+ dp(5_0) free
+ dp(6_0) free
+ dp(7_0) free
+ dp(8_0) free
+ dp(9_0) free
+ dp(10_0) free
+ dp(11_0) free
+ dp(12_0) free
+ f(1_0) free
+ f(2_0) free
+ f(3_0) free
+ congestion(3_0) free
+ f(4_0) free
+ f(5_0) free
+ f(6_0) free
+ f(7_0) free
+ f(8_0) free
+ f(9_0) free
+ f(10_0) free
+ f(11_0) free
+ f(12_0) free
+ f(13_0) free
+ theta(0_0) free
+ theta(2_0) free
+ theta(4_0) free
+ theta(5_0) free
+ theta(3_0) free
+ theta(6_0) free
+ theta(7_0) free
+ theta(8_0) free
+ theta(9_0) free
+ theta(10_0) free
+ p(0_0) free
+ p(3_0) free
+ p(4_0) free
+ p(5_0) free
+ p(6_0) free
+ p(7_0) free
+ p(8_0) free
+ p(9_0) free
+ p(10_0) free
+ p(11_0) free
+ p(12_0) free
  total_congestion free
 End
