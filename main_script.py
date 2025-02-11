@@ -139,10 +139,10 @@ if load_per_node_D2.sum() != 0:
     ax.set_xlabel("Hour on day D")
     ax.set_ylabel("Unbalance [MW]")
     ax.set_title("Unbalance per hour ")
-    if load_per_node_D2.sum() > 0:
-        sys.exit(f' The system is inherently unbalanced because too little generation. {load_per_node_D2.sum()} MWh additional generation is required is required.\n')
-    elif load_per_node_D2.sum < 0:
-        sys.exit(f' The system is inherently unbalanced because to much RE. {load_per_node_D2.sum()} MWh "curtailement" is required.\n')
+    if load_per_node_D2.sum() > 1e10:
+        print(f' The system is inherently unbalanced because too little generation. {load_per_node_D2.sum()} MWh additional generation is required is required.\n')
+    elif load_per_node_D2.sum() < 1e-10:
+        print(f' The system is inherently unbalanced because to much RE. {load_per_node_D2.sum()} MWh "curtailement" is required.\n')
     else:
         print('D-2 prognosis is balanced, load flow calculation will be performed\n')
 #build the susceptance matrix
@@ -208,7 +208,7 @@ df_congestion_D2 = pd.DataFrame(index=df_lines.index, columns = range(ptus))
 def overload_calculation(df_flows : pd.DataFrame) -> pd.DataFrame:
     for line in df_congestion_D2.index:  # Iterate over line indices
         for t in range(ptus):  # Iterate over PTUs (time steps)
-            overload = (df_flows.iloc[line,t]) - df_lines['capacity'].loc[line]
+            overload = abs(df_flows.iloc[line,t]) - df_lines['capacity'].loc[line]
             if overload > 0:
                 df_congestion_D2.iloc[line, t] = float(overload)
             else:
@@ -306,7 +306,7 @@ df_CBC_orderbook = pd.read_excel(input_file,'CBC', header=0, index_col=0) #read 
 
 #add all activated RE and CHP to the CBC orderbook, in order to do this, an assumption about the D-1 price is made
 prognosis_wholesale_price = df_chp_max.loc[len(chp_prog[chp_prog.iloc[:, 1:].sum(axis=1) < 0])-1,'price']
-CBC_RE_premium = 0.1*prognosis_wholesale_price #compensation on top off the wholesale market prognosis for RE
+CBC_RE_premium = 0.05*prognosis_wholesale_price #compensation on top off the wholesale market prognosis only missed profits from certificates
 CBC_CHP_premium = 0.2*prognosis_wholesale_price #compensation on top off the wholesale market prognosis for CHPs
 
 def add_generation_to_orderbook(generation:pd.DataFrame,orderbook:pd.DataFrame,source:str)->pd.DataFrame:
@@ -320,7 +320,7 @@ def add_generation_to_orderbook(generation:pd.DataFrame,orderbook:pd.DataFrame,s
     return orderbook
 
 df_CBC_orderbook = add_generation_to_orderbook(df_RE_D2, df_CBC_orderbook, 'RE')
-df_CBC_orderbook = add_generation_to_orderbook(chp_prog, df_CBC_orderbook, 'CHP')
+#df_CBC_orderbook = add_generation_to_orderbook(chp_prog, df_CBC_orderbook, 'CHP') #CHPs are assumed not to partake in CBC
 
 
 
@@ -359,8 +359,21 @@ df_dp_CBC.columns.name = None  # Remove multi-index column name
 
 #truncate decimals to prevent arethatic errors
 df_dp_CBC.iloc[:, 1:] = np.trunc(df_dp_CBC.iloc[:, :] * 10**4) / 10**4
+'''
+# Define number of rows and columns
+num_rows = 13  # Adjust based on actual data
+num_cols = 24  # Time columns from 0 to 23
 
+# Create the DataFrame
+df_dp_CBC = pd.DataFrame(
+    np.zeros((num_rows, num_cols + 1)),  # +1 for 'node' column
+    columns=['node'] + list(range(num_cols))
+)
 
+# Set the 'node' column to index values
+df_dp_CBC['node'] = np.arange(num_rows)
+
+'''
 # ### Actualise prognoses
 # Introduce 'noise' to the prognoses so they represent the actual T-pofile data to be used for the marketcoupling later the CBC will also be taken into consoderation during this stage, but not yet implemented
 

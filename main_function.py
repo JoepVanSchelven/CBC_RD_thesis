@@ -135,17 +135,7 @@ def main_function(ratio_itterative: float) -> float:
     load_per_node_D2 = add_to_array(chp_prog, load_per_node_D2)
 
     # check if the system is balanced, exit the script if not the case
-    if load_per_node_D2.sum() != 0:
-        fig, ax = plt.subplots()
-        pd. DataFrame(load_per_node_D2.sum(axis = 0)).plot(ax=ax)
-        ax.set_xlabel("Hour on day D")
-        ax.set_ylabel("Unbalance [MW]")
-        ax.set_title("Unbalance per hour ")
-        if load_per_node_D2.sum() > 0.0001:
-            sys.exit(f' The system is inherently unbalanced because too little generation. {load_per_node_D2.sum()} MWh additional generation is required is required.\n')
-        elif load_per_node_D2.sum < 0.0001:
-            sys.exit(f' The system is inherently unbalanced because to much RE. {load_per_node_D2.sum()} MWh "curtailement" is required.\n')
-        
+    
     #build the susceptance matrix
     df_lines['susceptance'] = 1/(df_lines['len']*(1/susceptance))
     B = np.zeros((n_buses, n_buses))
@@ -234,68 +224,16 @@ def main_function(ratio_itterative: float) -> float:
     load_per_type['imbalance'] = load_per_type.sum(axis=1)
 
 
-    # Create a 2x2 grid of subplots
-    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(14, 10))
-
-    # Plot 1: df_loads_D2 per type before RD and CLC
-    load_per_type.plot(ax=axes[0, 0])
-    axes[0, 0].set_xlabel("Hour on day D")
-    axes[0, 0].set_ylabel("Active Power [MW]")
-    axes[0, 0].set_title("df_loads_D2 per type before RD and CLC")
-
-    # Plot 2: df_loads_D2 per node before RD and CLC
-    pd.DataFrame(load_per_node_D2).T.plot(ax=axes[0, 1])
-    axes[0, 1].set_xlabel("Hour on day D")
-    axes[0, 1].set_ylabel("Active Power [MW]")
-    axes[0, 1].set_title("df_loads_D2 per node before RD and CLC")
-
-    # Plot 3: absolute flow per line before RD and CLC
-    pd.DataFrame(abs(df_flows_D2)).T.plot(ax=axes[1, 0])
-    axes[1, 0].set_xlabel("Hour on day D")
-    axes[1, 0].set_ylabel("Absolute Flow [MW]")
-    axes[1, 0].set_title("Absolute Flow per line before RD and CLC")
-
-    # Plot 4: Congestion per line before RD and CLC
-    pd.DataFrame(df_congestion_D2).T.plot(ax=axes[1, 1])
-    axes[1, 1].set_xlabel("Hour on day D")
-    axes[1, 1].set_ylabel("Congestion [MW]")
-    axes[1, 1].set_title(f"Congestion per line before RD and CLC (total: {round(congestion_D2, 2)})")
-
-    # Adjust layout to prevent overlap
-    plt.tight_layout()
-
-    # Display the plots
-    plt.show()
-
-    # Create 2x2 grid of subplots
-    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(14, 10))
-
-    # Plot 1: Network with total congestion
-    congestion_per_bus = df_congestion_D2.sum(axis='columns')
-    congestion_per_bus = congestion_per_bus.rename_axis('line').reset_index(name='flow')
-    #draw_network_with_power_flows(df_lines, congestion_per_bus, 'Network with total congestion', axes[0, 0])
-
-    # Plot 2: Network with peak congestion
-    congestion_peak_per_bus = df_congestion_D2.max(axis='columns')
-    congestion_peak_per_bus = congestion_peak_per_bus.rename_axis('line').reset_index(name='flow')
-    #draw_network_with_power_flows(df_lines, congestion_peak_per_bus, 'Network with peak congestion', axes[0, 1])
-
-    # Plot 3: Congestion per hour
-    df_congestion_D2[df_congestion_D2.sum(axis=1) != 0].transpose().plot(ax=axes[1, 0])
-    axes[1, 0].set_xlabel("Hour on day D")
-    axes[1, 0].set_ylabel("Congestion [MW]")
-    axes[1, 0].set_title("Congestion per hour")
 
     # Leave the last subplot empty
-    axes[1, 1].axis('off')
+
 
     # Adjust layout
-    plt.tight_layout()
-    plt.show()
+
 
     #check if there is congstion in the system
     if congestion_D2 == 0:
-        sys.exit('No congestion is the system\n')
+        print('No congestion is the system\n')
 
 
     # ### Activate CBCs
@@ -383,8 +321,8 @@ def main_function(ratio_itterative: float) -> float:
         return df_output
 
     # add noise to the D-2 to make 'actual' data. use these to make new load per node, and new CHP dispatch (marketcoupling). Results in a new load per node and new congestion 
-    df_loads = add_normal_noise(df_loads_D2, 0)
-    df_RE    = add_normal_noise(df_RE_D2, 0)
+    df_loads = add_normal_noise(df_loads_D2, 0.3)
+    df_RE    = add_normal_noise(df_RE_D2, 0.21)
 
     load_per_node = np.zeros((n_buses,ptus))
     load_per_node = add_to_array(df_RE, load_per_node)
@@ -425,33 +363,11 @@ def main_function(ratio_itterative: float) -> float:
     load_per_type['imbalance'] = load_per_type.sum(axis=1)
 
 
-    fig, ax = plt.subplots()
-    load_per_type.plot(ax=ax)
-    ax.set_xlabel("Hour on day D")
-    ax.set_ylabel("Active Power [MW]")
-    ax.set_title("df_loads per type before RD ")
-
-    fig, ax = plt.subplots()
-    pd.DataFrame(load_per_node).T.plot(ax=ax)
-    ax.set_xlabel("Hour on day D")
-    ax.set_ylabel("Active Power [MW]")
-    ax.set_title("df_loads per node before RD")
-
+   
     # Truncate load_per_node after the th decimal
     #scaling_factor = 10**4
     #load_per_node = np.trunc(load_per_node * scaling_factor) / scaling_factor
-    # check if the system is balanced, exit the script if not the case
-    if load_per_node.sum() != 0:
-        fig, ax = plt.subplots()
-        pd. DataFrame(load_per_node_D2.sum(axis = 0)).plot(ax=ax)
-        ax.set_xlabel("Hour on day D")
-        ax.set_ylabel("Unbalance [MW]")
-        ax.set_title("Unbalance per hour ")
-        if load_per_node.sum() > 0.0001:
-            print(f' The system is inherently unbalanced because too little generation after CBC activation {load_per_node.sum()} MWh additional generation is required is required.\n')
-        elif load_per_node.sum() < 0.001:
-            print(f' The system is inherently unbalanced because to much RE after CBC activation. {load_per_node.sum()} MWh "curtailement" is required.\n')
-     
+    
 
     # ### Redispatch
     # Using Pyomo, and load-flow constraints, dispatch the optimal set of bids to minimze costs and mitigate any remaining congestion. 
