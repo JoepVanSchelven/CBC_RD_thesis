@@ -25,11 +25,11 @@ def main_function(ratio_itterative: float) -> float:
     import matplotlib.pyplot as plt
     import sys
     import pyomo.environ as pyo
-    #from pyomo.opt import SolverFactory
-    #import os  
+    from pyomo.opt import SolverFactory
+    import os  
 
     #this is a custom script used to plot different networks
-    #from network_plotting import draw_network, draw_network_with_power_flows, draw_network_with_absolute_power_flows, draw_network_with_congestion
+    from network_plotting import draw_network, draw_network_with_power_flows, draw_network_with_absolute_power_flows, draw_network_with_congestion
 
 
 
@@ -92,7 +92,7 @@ def main_function(ratio_itterative: float) -> float:
             chp = 0  # Start with the first CHP unit
 
             # Balance the power for this PTU
-            while p < 0 and chp < len(df_chp_max):  # Ensure we don't exceed available CHPs
+            while p < 0.0 and chp < len(df_chp_max):  # Ensure we don't exceed available CHPs
                 max_dispatch = df_chp_max.iloc[chp, 1]  # Max dispatch capacity for this CHP
                 bus = df_chp_max.iloc[chp, 0]  # Bus associated with this CHP
 
@@ -135,7 +135,18 @@ def main_function(ratio_itterative: float) -> float:
     load_per_node_D2 = add_to_array(chp_prog, load_per_node_D2)
 
     # check if the system is balanced, exit the script if not the case
-    
+    if load_per_node_D2.sum() != 0:
+        fig, ax = plt.subplots()
+        pd. DataFrame(load_per_node_D2.sum(axis = 0)).plot(ax=ax)
+        ax.set_xlabel("Hour on day D")
+        ax.set_ylabel("Unbalance [MW]")
+        ax.set_title("Unbalance per hour ")
+        if load_per_node_D2.sum() > 1e10:
+            print(f' The system is inherently unbalanced because too little generation. {load_per_node_D2.sum()} MWh additional generation is required is required.\n')
+        elif load_per_node_D2.sum() < 1e-10:
+            print(f' The system is inherently unbalanced because to much RE. {load_per_node_D2.sum()} MWh "curtailement" is required.\n')
+        else:
+            print('D-2 prognosis is balanced, load flow calculation will be performed\n')
     #build the susceptance matrix
     df_lines['susceptance'] = 1/(df_lines['len']*(1/susceptance))
     B = np.zeros((n_buses, n_buses))
@@ -183,7 +194,7 @@ def main_function(ratio_itterative: float) -> float:
         df_flows_D2[t] = calculate_powerflow(load_per_node_D2[:,t])
 
     #draw your network
-    #draw_network(df_lines)
+    draw_network(df_lines)
 
 
     # ### Localise and deterimine congestion volume
@@ -201,13 +212,13 @@ def main_function(ratio_itterative: float) -> float:
             for t in range(ptus):  # Iterate over PTUs (time steps)
                 overload = abs(df_flows.iloc[line,t]) - df_lines['capacity'].loc[line]
                 if overload > 0:
-                    df_congestion_D2.iloc[line, t] = float(overload)
+                    df_congestion_D2.iloc[line, t] = float(overload) if df_flows.iloc[line,t]>0 else float(-overload)
                 else:
                     df_congestion_D2.iloc[line, t] = 0
         return df_congestion_D2
 
     df_congestion_D2 = overload_calculation(df_flows_D2)
-    congestion_D2 = sum(df_congestion_D2.sum())
+    congestion_D2 = sum(abs(df_congestion_D2).sum())
 
 
     # %%
@@ -224,16 +235,68 @@ def main_function(ratio_itterative: float) -> float:
     load_per_type['imbalance'] = load_per_type.sum(axis=1)
 
 
+    # Create a 2x2 grid of subplots
+    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(14, 10))
+
+    # Plot 1: df_loads_D2 per type before RD and CLC
+    load_per_type.plot(ax=axes[0, 0])
+    axes[0, 0].set_xlabel("Hour on day D")
+    axes[0, 0].set_ylabel("Active Power [MW]")
+    axes[0, 0].set_title("df_loads_D2 per type before RD and CLC")
+
+    # Plot 2: df_loads_D2 per node before RD and CLC
+    pd.DataFrame(load_per_node_D2).T.plot(ax=axes[0, 1])
+    axes[0, 1].set_xlabel("Hour on day D")
+    axes[0, 1].set_ylabel("Active Power [MW]")
+    axes[0, 1].set_title("df_loads_D2 per node before RD and CLC")
+
+    # Plot 3: absolute flow per line before RD and CLC
+    pd.DataFrame(abs(df_flows_D2)).T.plot(ax=axes[1, 0])
+    axes[1, 0].set_xlabel("Hour on day D")
+    axes[1, 0].set_ylabel("Absolute Flow [MW]")
+    axes[1, 0].set_title("Absolute Flow per line before RD and CLC")
+
+    # Plot 4: Congestion per line before RD and CLC
+    pd.DataFrame(df_congestion_D2).T.plot(ax=axes[1, 1])
+    axes[1, 1].set_xlabel("Hour on day D")
+    axes[1, 1].set_ylabel("Congestion [MW]")
+    axes[1, 1].set_title(f"Congestion per line before RD and CLC (total: {round(congestion_D2, 2)})")
+
+    # Adjust layout to prevent overlap
+    plt.tight_layout()
+
+    # Display the plots
+    plt.show()
+
+    # Create 2x2 grid of subplots
+    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(14, 10))
+
+    # Plot 1: Network with total congestion
+    congestion_per_bus = df_congestion_D2.sum(axis='columns')
+    congestion_per_bus = congestion_per_bus.rename_axis('line').reset_index(name='flow')
+    draw_network_with_power_flows(df_lines, congestion_per_bus, 'Network with total congestion', axes[0, 0])
+
+    # Plot 2: Network with peak congestion
+    congestion_peak_per_bus = df_congestion_D2.max(axis='columns')
+    congestion_peak_per_bus = congestion_peak_per_bus.rename_axis('line').reset_index(name='flow')
+    draw_network_with_power_flows(df_lines, congestion_peak_per_bus, 'Network with peak congestion', axes[0, 1])
+
+    # Plot 3: Congestion per hour
+    df_congestion_D2[df_congestion_D2.sum(axis=1) != 0].transpose().plot(ax=axes[1, 0])
+    axes[1, 0].set_xlabel("Hour on day D")
+    axes[1, 0].set_ylabel("Congestion [MW]")
+    axes[1, 0].set_title("Congestion per hour")
 
     # Leave the last subplot empty
-
+    axes[1, 1].axis('off')
 
     # Adjust layout
-
+    plt.tight_layout()
+    plt.show()
 
     #check if there is congstion in the system
     if congestion_D2 == 0:
-        print('No congestion is the system\n')
+        sys.exit('No congestion is the system\n')
 
 
     # ### Activate CBCs
@@ -245,7 +308,7 @@ def main_function(ratio_itterative: float) -> float:
 
     #add all activated RE and CHP to the CBC orderbook, in order to do this, an assumption about the D-1 price is made
     prognosis_wholesale_price = df_chp_max.loc[len(chp_prog[chp_prog.iloc[:, 1:].sum(axis=1) < 0])-1,'price']
-    CBC_RE_premium = 0.1*prognosis_wholesale_price #compensation on top off the wholesale market prognosis for RE
+    CBC_RE_premium = 0.05*prognosis_wholesale_price #compensation on top off the wholesale market prognosis only missed profits from certificates
     CBC_CHP_premium = 0.2*prognosis_wholesale_price #compensation on top off the wholesale market prognosis for CHPs
 
     def add_generation_to_orderbook(generation:pd.DataFrame,orderbook:pd.DataFrame,source:str)->pd.DataFrame:
@@ -259,13 +322,16 @@ def main_function(ratio_itterative: float) -> float:
         return orderbook
 
     df_CBC_orderbook = add_generation_to_orderbook(df_RE_D2, df_CBC_orderbook, 'RE')
-    df_CBC_orderbook = add_generation_to_orderbook(chp_prog, df_CBC_orderbook, 'CHP')
+    #df_CBC_orderbook = add_generation_to_orderbook(chp_prog, df_CBC_orderbook, 'CHP') #CHPs are assumed not to partake in CBC
 
 
+
+    
 
     from RD_CBC_functions import optimal_CBC
 
-    model_CBC = optimal_CBC(load_per_node_D2, df_CBC_orderbook,sum(df_congestion_D2.sum()),0,ratio_itterative)
+    model_CBC,termination_condition_CBC = optimal_CBC(load_per_node_D2, df_CBC_orderbook,sum(abs(df_congestion_D2.sum())),0)
+   
     total_costs_CBC = pyo.value(model_CBC.total_costs)
     p_CBC_order_level = {(o, t): sum(pyo.value(model_CBC.dp[b, t, o]) for b in model_CBC.bus_set) 
              for o in model_CBC.order_set for t in model_CBC.time_set}
@@ -289,23 +355,39 @@ def main_function(ratio_itterative: float) -> float:
     df_dp_CBC = df_dp_CBC.pivot(index="node", columns="Time", values="dp_value").reset_index()
 
     # Ensure 'node' remains as a regular column
-    df_dp_CBC.columns.name = None  # Remove multi-index column name
+    #df_dp_CBC.columns.name = None  # Remove multi-index column name
 
     #truncate decimals to prevent arethatic errors
-    df_dp_CBC.iloc[:, 1:] = np.trunc(df_dp_CBC.iloc[:, :] * 10**4) / 10**4
+    df_dp_CBC.iloc[:, 1:] = np.trunc(df_dp_CBC.iloc[:, 1:] * 10**4) / 10**4
+    '''
+    # Define number of rows and columns
+    num_rows = 13  # Adjust based on actual data
+    num_cols = 24  # Time columns from 0 to 23
 
+    # Create the DataFrame
+    df_dp_CBC = pd.DataFrame(
+        np.zeros((num_rows, num_cols + 1)),  # +1 for 'node' column
+        columns=['node'] + list(range(num_cols))
+    )
+
+    # Set the 'node' column to index values
+    df_dp_CBC['node'] = np.arange(num_rows)
+
+    '''
 
     # ### Actualise prognoses
     # Introduce 'noise' to the prognoses so they represent the actual T-pofile data to be used for the marketcoupling later the CBC will also be taken into consoderation during this stage, but not yet implemented
 
     # %%
 
-    def add_normal_noise(df_D2: pd.DataFrame, std: int) -> pd.DataFrame:
+    def add_normal_noise(df_D2: pd.DataFrame, MAPE: float) -> pd.DataFrame:
         df_output = df_D2.copy()
         
         for load in range(len(df_D2)):
             # Generate noise only for numerical columns (excluding 'node' column if present)
             num_cols = df_D2.columns[df_D2.columns != 'node']
+            
+            std = abs(1.25* MAPE * np.mean(df_output.iloc[load, 1:]))       
             noise = np.random.normal(0, std, size=len(num_cols))
             noise = np.trunc(noise * 10**2) / 10**2  # Truncate to 2 decimal places
             
@@ -341,11 +423,11 @@ def main_function(ratio_itterative: float) -> float:
         df_flows[t] = calculate_powerflow(load_per_node[:,t])
         
     df_congestion = overload_calculation(df_flows)
-    congestion = sum(df_congestion.sum())
+    congestion = sum(abs(df_congestion).sum())
 
     #tot_congestion_hypotheses_CBC = sum(df_congestion_hypotheses_CBC.sum()) # how much congestion was expected to be left after distributed slack CBC activtion
-    ratio_actual =  1- (congestion / congestion_D2)
-    #print(f'The aimed congestion reduction is {ratio}, the actual congestion after introduced noise reduction is {ratio_actual}\n')
+    ratio_actual =  1 - (congestion / congestion_D2)
+    print(f'The aimed congestion reduction is {ratio}, the actual congestion after introduced noise reduction is {ratio_actual}\n')
 
 
 
@@ -363,11 +445,36 @@ def main_function(ratio_itterative: float) -> float:
     load_per_type['imbalance'] = load_per_type.sum(axis=1)
 
 
-   
+    fig, ax = plt.subplots()
+    load_per_type.plot(ax=ax)
+    ax.set_xlabel("Hour on day D")
+    ax.set_ylabel("Active Power [MW]")
+    ax.set_title("df_loads per type before RD ")
+
+    fig, ax = plt.subplots()
+    pd.DataFrame(load_per_node).T.plot(ax=ax)
+    ax.set_xlabel("Hour on day D")
+    ax.set_ylabel("Active Power [MW]")
+    ax.set_title("df_loads per node before RD")
+
     # Truncate load_per_node after the th decimal
     #scaling_factor = 10**4
     #load_per_node = np.trunc(load_per_node * scaling_factor) / scaling_factor
-    
+    # check if the system is balanced, exit the script if not the case
+    if load_per_node.sum() != 0:
+        fig, ax = plt.subplots()
+        pd. DataFrame(load_per_node_D2.sum(axis = 0)).plot(ax=ax)
+        ax.set_xlabel("Hour on day D")
+        ax.set_ylabel("Unbalance [MW]")
+        ax.set_title("Unbalance per hour ")
+        if abs(load_per_node.sum()) > 1e-10:
+            print(f' The system is inherently unbalanced  {load_per_node.sum()} MWh additional generation/load is required is required.\n')
+        elif abs(load_per_node.sum()) < 1e-10:
+            imbalance = load_per_node.sum(axis=0)
+            load_per_node+= imbalance
+            print(f'imbalance smaller then 1e-10 dtetceted and compensated to {load_per_node.sum()}')
+    else:
+        print('Balanced market coupling succesful, load flow calculation will be performed\n')
 
     # ### Redispatch
     # Using Pyomo, and load-flow constraints, dispatch the optimal set of bids to minimze costs and mitigate any remaining congestion. 
@@ -379,29 +486,33 @@ def main_function(ratio_itterative: float) -> float:
     #read orderbook
     df_RD_orderbook = pd.read_excel(input_file,'RD', header=0, index_col=0) #read the orderbook
 
+    # something
     from RD_CBC_functions import optimal_redispatch
 
-    model_RD = optimal_redispatch(load_per_node, df_RD_orderbook)
-
-
-    # %%
-
-
-    # Get results from the model_RD
-    dp_results = {(b, t): pyo.value(model_RD.dp[b, t]) for b in model_RD.bus_set for t in model_RD.time_set}
-    f_results = {(l, t): pyo.value(model_RD.f[l, t]) for l in model_RD.line_set for t in model_RD.time_set}
-    congestion_results = {(l, t): pyo.value(model_RD.congestion[l, t]) for l in model_RD.line_set for t in model_RD.time_set}
-
-    total_congestion_results = pyo.value(model_RD.total_congestion)
-    total_costs_RD = pyo.value(model_RD.total_costs)
+    model_RD, termination_condition_RD = optimal_redispatch(load_per_node, df_RD_orderbook)
+    
+    
+    if termination_condition_RD == pyo.TerminationCondition.infeasible:
+        total_costs_RD = 0
+   
+        # %%
+    else:
+    
+        # Get results from the model_RD
+        dp_results = {(b, t): pyo.value(model_RD.dp[b, t]) for b in model_RD.bus_set for t in model_RD.time_set}
+        f_results = {(l, t): pyo.value(model_RD.f[l, t]) for l in model_RD.line_set for t in model_RD.time_set}
+        congestion_results = {(l, t): pyo.value(model_RD.congestion[l, t]) for l in model_RD.line_set for t in model_RD.time_set}
+    
+        total_congestion_results = pyo.value(model_RD.total_congestion)
+        total_costs_RD = pyo.value(model_RD.total_costs)
 
 
     total_costs = total_costs_RD + total_costs_CBC
 
     # Create a DataFrame from the dictionary
-    result_df_dp = pd.DataFrame.from_dict(dp_results, orient='index', columns=['value'])
-    result_df_f = pd.DataFrame.from_dict(f_results, orient='index', columns=['value'])
-    result_df_congestion = pd.DataFrame.from_dict(congestion_results, orient='index', columns=['value'])
+    #result_df_dp = pd.DataFrame.from_dict(dp_results, orient='index', columns=['value'])
+    #result_df_f = pd.DataFrame.from_dict(f_results, orient='index', columns=['value'])
+    #result_df_congestion = pd.DataFrame.from_dict(congestion_results, orient='index', columns=['value'])
     return total_costs_CBC, total_costs_RD, total_costs  
     
     # %%

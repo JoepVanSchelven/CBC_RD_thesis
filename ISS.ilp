@@ -1,65 +1,9 @@
 \ Model objective_function_copy
 \ LP format - for model browsing. Use MPS format to capture full model detail.
-\ Signature: 0x9e7694bc4a199339
+\ Signature: 0x2af99c9700346868
 Minimize
  
 Subject To
- c_u_con_def_congestion_1(3_23)_: f(3_23) - congestion(3_23) <= 500
- c_e_con_DC_flow(1_23)_: f(1_23) - 50 theta(2_23) + 50 theta(4_23) = 0
- c_e_con_DC_flow(2_23)_: f(2_23) - 100 theta(2_23) + 100 theta(5_23) = 0
- c_e_con_DC_flow(3_23)_: f(3_23) + 142.8571428571429 theta(4_23)
-   - 142.8571428571429 theta(3_23) = 0
- c_e_con_DC_flow(5_23)_: f(5_23) - 100 theta(3_23) + 100 theta(6_23) = 0
- c_e_con_DC_flow(6_23)_: f(6_23) - 1000 theta(6_23) + 1000 theta(7_23) = 0
- c_e_con_DC_flow(7_23)_: f(7_23) - 142.8571428571429 theta(7_23)
-   + 142.8571428571429 theta(8_23) = 0
- c_e_con_DC_flow(8_23)_: f(8_23) - 66.66666666666666 theta(3_23)
-   + 66.66666666666666 theta(8_23) = 0
- c_e_con_DC_flow(10_23)_: f(10_23) - 100 theta(8_23) + 100 theta(9_23) = 0
- c_e_con_DC_flow(11_23)_: f(11_23) + 142.8571428571429 theta(0_23)
-   - 142.8571428571429 theta(9_23) = 0
- c_e_con_DC_flow(12_23)_: f(12_23) - 100 theta(0_23) + 100 theta(10_23)
-   = 0
- c_e_con_DC_flow(13_23)_: f(13_23) + 166.6666666666667 theta(5_23)
-   - 166.6666666666667 theta(10_23) = 0
- c_e_con_nodal_power_balance(0_23)_: f(11_23) - f(12_23) + p(0_23) = 0
- c_e_con_nodal_power_balance(1_23)_: - f(0_23) + p(1_23) = 0
- c_e_con_nodal_power_balance(2_23)_: f(0_23) - f(1_23) - f(2_23) + p(2_23)
-   = 0
- c_e_con_nodal_power_balance(4_23)_: f(1_23) + f(3_23) + p(4_23) = 0
- c_e_con_nodal_power_balance(5_23)_: f(2_23) + f(13_23) + p(5_23) = 0
- c_e_con_nodal_power_balance(6_23)_: f(5_23) - f(6_23) + p(6_23) = 0
- c_e_con_nodal_power_balance(7_23)_: f(6_23) - f(7_23) + p(7_23) = 0
- c_e_con_nodal_power_balance(8_23)_: f(7_23) + f(8_23) + f(9_23) - f(10_23)
-   + p(8_23) = 0
- c_e_con_nodal_power_balance(9_23)_: f(10_23) - f(11_23) + p(9_23) = 0
- c_e_con_nodal_power_balance(10_23)_: f(12_23) - f(13_23) + p(10_23) = 0
- c_e_con_nodal_power_balance(11_23)_: - f(9_23) + p(11_23) = 0
- c_e_con_def_p(0_23)_: - dp(0_23) + p(0_23) = 0
- c_e_con_def_p(1_23)_: - dp(1_23) + p(1_23) = 94
- c_e_con_def_p(2_23)_: - dp(2_23) + p(2_23) = 0
- c_e_con_def_p(4_23)_: - dp(4_23) + p(4_23) = -772
- c_e_con_def_p(5_23)_: - dp(5_23) + p(5_23) = 175
- c_e_con_def_p(6_23)_: - dp(6_23) + p(6_23) = 175
- c_e_con_def_p(7_23)_: - dp(7_23) + p(7_23) = 165
- c_e_con_def_p(8_23)_: - dp(8_23) + p(8_23) = 175
- c_e_con_def_p(9_23)_: - dp(9_23) + p(9_23) = -12
- c_e_con_def_p(10_23)_: - dp(10_23) + p(10_23) = 0
- c_e_con_def_p(11_23)_: - dp(11_23) + p(11_23) = 0
- c_l_con_lower_bound_dp(0_23)_: dp(0_23) >= 0
- c_l_con_lower_bound_dp(3_23)_: dp(3_23) >= 0
- c_l_con_lower_bound_dp(5_23)_: dp(5_23) >= 0
- c_l_con_lower_bound_dp(6_23)_: dp(6_23) >= 0
- c_l_con_lower_bound_dp(7_23)_: dp(7_23) >= 0
- c_l_con_lower_bound_dp(8_23)_: dp(8_23) >= 0
- c_l_con_lower_bound_dp(9_23)_: dp(9_23) >= 0
- c_l_con_lower_bound_dp(10_23)_: dp(10_23) >= 0
- c_l_con_lower_bound_dp(11_23)_: dp(11_23) >= 0
- c_l_con_lower_bound_dp(12_23)_: dp(12_23) >= 0
- c_u_con_upper_bound_dp(4_23)_: dp(4_23) <= 0
- c_e_con_dp_balance(23)_: dp(0_23) + dp(1_23) + dp(2_23) + dp(3_23)
-   + dp(4_23) + dp(5_23) + dp(6_23) + dp(7_23) + dp(8_23) + dp(9_23)
-   + dp(10_23) + dp(11_23) + dp(12_23) = 0
  c_e_con_def_total_congestion_: - congestion(0_0) - congestion(0_1)
    - congestion(0_2) - congestion(0_3) - congestion(0_4) - congestion(0_5)
    - congestion(0_6) - congestion(0_7) - congestion(0_8) - congestion(0_9)
@@ -164,55 +108,7 @@ Subject To
    - congestion(13_17) - congestion(13_18) - congestion(13_19)
    - congestion(13_20) - congestion(13_21) - congestion(13_22)
    - congestion(13_23) + total_congestion = 0
- c_e_zero_congestion_: total_congestion = 0
+ c_e_decrease_congestion_: total_congestion = -10.67613200611291
 Bounds
- dp(0_23) free
- dp(1_23) free
- dp(2_23) free
- dp(3_23) free
- dp(4_23) free
- dp(5_23) free
- dp(6_23) free
- dp(7_23) free
- dp(8_23) free
- dp(9_23) free
- dp(10_23) free
- dp(11_23) free
- dp(12_23) free
- f(0_23) free
- f(1_23) free
- f(2_23) free
- f(3_23) free
- congestion(3_23) free
- f(5_23) free
- f(6_23) free
- f(7_23) free
- f(8_23) free
- f(9_23) free
- f(10_23) free
- f(11_23) free
- f(12_23) free
- f(13_23) free
- theta(0_23) free
- theta(2_23) free
- theta(4_23) free
- theta(5_23) free
- theta(3_23) free
- theta(6_23) free
- theta(7_23) free
- theta(8_23) free
- theta(9_23) free
- theta(10_23) free
- p(0_23) free
- p(1_23) free
- p(2_23) free
- p(4_23) free
- p(5_23) free
- p(6_23) free
- p(7_23) free
- p(8_23) free
- p(9_23) free
- p(10_23) free
- p(11_23) free
  total_congestion free
 End

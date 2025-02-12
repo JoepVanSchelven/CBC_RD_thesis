@@ -90,7 +90,7 @@ def CHP_dispatch_calc(df_chp_max: pd.DataFrame, load_per_node: pd.DataFrame) -> 
         chp = 0  # Start with the first CHP unit
 
         # Balance the power for this PTU
-        while p < 0 and chp < len(df_chp_max):  # Ensure we don't exceed available CHPs
+        while p < 0.0 and chp < len(df_chp_max):  # Ensure we don't exceed available CHPs
             max_dispatch = df_chp_max.iloc[chp, 1]  # Max dispatch capacity for this CHP
             bus = df_chp_max.iloc[chp, 0]  # Bus associated with this CHP
 
@@ -210,13 +210,13 @@ def overload_calculation(df_flows : pd.DataFrame) -> pd.DataFrame:
         for t in range(ptus):  # Iterate over PTUs (time steps)
             overload = abs(df_flows.iloc[line,t]) - df_lines['capacity'].loc[line]
             if overload > 0:
-                df_congestion_D2.iloc[line, t] = float(overload)
+                df_congestion_D2.iloc[line, t] = float(overload) if df_flows.iloc[line,t]>0 else float(-overload)
             else:
                 df_congestion_D2.iloc[line, t] = 0
     return df_congestion_D2
 
 df_congestion_D2 = overload_calculation(df_flows_D2)
-congestion_D2 = sum(df_congestion_D2.sum())
+congestion_D2 = sum(abs(df_congestion_D2).sum())
 
 
 # %%
@@ -330,8 +330,9 @@ print(f"time untill CBC funtion is {monotonic() - start_time} seconds")
 
 from RD_CBC_functions import optimal_CBC
 
-model_CBC = optimal_CBC(load_per_node_D2, df_CBC_orderbook,sum(df_congestion_D2.sum()),0)
+model_CBC, termination_condition_CBC = optimal_CBC(load_per_node_D2, df_CBC_orderbook,sum(abs(df_congestion_D2.sum())),0)
 print(f"Run time of CBC function {monotonic() - start_time} seconds\n")
+
 total_costs_CBC = pyo.value(model_CBC.total_costs)
 p_CBC_order_level = {(o, t): sum(pyo.value(model_CBC.dp[b, t, o]) for b in model_CBC.bus_set) 
          for o in model_CBC.order_set for t in model_CBC.time_set}
@@ -355,10 +356,10 @@ df_dp_CBC = df_dp_CBC.drop(columns=["Index"])  # Drop old index column
 df_dp_CBC = df_dp_CBC.pivot(index="node", columns="Time", values="dp_value").reset_index()
 
 # Ensure 'node' remains as a regular column
-df_dp_CBC.columns.name = None  # Remove multi-index column name
+#df_dp_CBC.columns.name = None  # Remove multi-index column name
 
 #truncate decimals to prevent arethatic errors
-df_dp_CBC.iloc[:, 1:] = np.trunc(df_dp_CBC.iloc[:, :] * 10**4) / 10**4
+df_dp_CBC.iloc[:, 1:] = np.trunc(df_dp_CBC.iloc[:, 1:] * 10**4) / 10**4
 '''
 # Define number of rows and columns
 num_rows = 13  # Adjust based on actual data
@@ -374,6 +375,7 @@ df_dp_CBC = pd.DataFrame(
 df_dp_CBC['node'] = np.arange(num_rows)
 
 '''
+
 # ### Actualise prognoses
 # Introduce 'noise' to the prognoses so they represent the actual T-pofile data to be used for the marketcoupling later the CBC will also be taken into consoderation during this stage, but not yet implemented
 
@@ -386,7 +388,7 @@ def add_normal_noise(df_D2: pd.DataFrame, MAPE: float) -> pd.DataFrame:
         # Generate noise only for numerical columns (excluding 'node' column if present)
         num_cols = df_D2.columns[df_D2.columns != 'node']
         
-        std = abs(1.25* MAPE * np.mean(df_output.iloc[load, 1:]))       
+        std = abs(1.25 * MAPE * np.mean(df_output.iloc[load, 1:]))       
         noise = np.random.normal(0, std, size=len(num_cols))
         noise = np.trunc(noise * 10**2) / 10**2  # Truncate to 2 decimal places
         
@@ -395,9 +397,12 @@ def add_normal_noise(df_D2: pd.DataFrame, MAPE: float) -> pd.DataFrame:
         max_val = row_values.max()
         min_val = row_values.min()
         
-        # Apply noise to all values except min and max, and non-zero values
+        # Apply noise to all values except min, max, and zero values
         mask = (row_values != 0) & (row_values != max_val) & (row_values != min_val)
-        df_output.iloc[load, 1:] += mask * noise  # Apply noise only where mask is True
+        modified_values = row_values + mask * noise  # Apply noise only where mask is True
+        
+        # Ensure values stay within the original range
+        df_output.iloc[load, 1:] = np.clip(modified_values, min_val, max_val)
     
     return df_output
 
@@ -422,10 +427,10 @@ for t in range(ptus):
     df_flows[t] = calculate_powerflow(load_per_node[:,t])
     
 df_congestion = overload_calculation(df_flows)
-congestion = sum(df_congestion.sum())
+congestion = sum(abs(df_congestion).sum())
 
 #tot_congestion_hypotheses_CBC = sum(df_congestion_hypotheses_CBC.sum()) # how much congestion was expected to be left after distributed slack CBC activtion
-ratio_actual =  1- (congestion / congestion_D2)
+ratio_actual =  1 - (congestion / congestion_D2)
 print(f'The aimed congestion reduction is {ratio}, the actual congestion after introduced noise reduction is {ratio_actual}\n')
 
 
@@ -490,7 +495,7 @@ start_time = monotonic()
 # something
 from RD_CBC_functions import optimal_redispatch
 
-model_RD = optimal_redispatch(load_per_node, df_RD_orderbook)
+model_RD, termination_condition_RD = optimal_redispatch(load_per_node, df_RD_orderbook)
 
 print(f"RD funciton runtime is {monotonic() - start_time} seconds")
 

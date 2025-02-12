@@ -31,5 +31,5 @@ def write_iis(path: str, file_name: str):
 
 if __name__ == "__main__":
     path = os.getcwd() + '\\'
-    file_name = 'model_RD.lp'
+    file_name = 'model_CBC.lp'
     write_iis(path, file_name)

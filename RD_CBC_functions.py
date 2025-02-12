@@ -214,14 +214,15 @@ def optimal_redispatch(load_per_node:pd.DataFrame, df_RD_orderbook:pd.DataFrame,
         print("Model is either infeasible or unbounded.\n")
     else:
         print(f"Termination condition: {termination_condition}\n")
+        print(f"total costs for RD are {pyo.value(model.total_costs)}\n")  
     
     #total_congestion_results = pyo.value(model.total_congestion)
     #total_costs_results = pyo.value(model.total_costs)    
     #print(total_costs_results)
     #print(f"Cost term is {round(100.0 * total_costs_results * epsilon/of_results, 2)}% of the total OF (should be small)\n")
     #print(f"congestion volume X avg_Price = {total_congestion_results} X {(np.mean(redispatch_price_up[redispatch_price_up > 0]) if np.any(redispatch_price_up > 0) else 0 + np.mean(redispatch_price_down[redispatch_price_down > 0]) if np.any(redispatch_price_down > 0) else 0)} = {total_congestion_results * (np.mean(redispatch_price_up[redispatch_price_up > 0]) if np.any(redispatch_price_up > 0) else 0 + np.mean(redispatch_price_down[redispatch_price_down > 0]) if np.any(redispatch_price_down > 0) else 0)}\n")
-    print(f"total costs for RD are {pyo.value(model.total_costs)}\n")    
-    return model
+      
+    return model, termination_condition
 
 #%% CBC function
 def optimal_CBC(load_per_node:pd.DataFrame, df_CBC_orderbook:pd.DataFrame, congestion:float, Tee:int = 0, ratio: int= ratio) -> pyo.ConcreteModel:
@@ -387,6 +388,7 @@ def optimal_CBC(load_per_node:pd.DataFrame, df_CBC_orderbook:pd.DataFrame, conge
         )
     
     model.total_costs_constraint = pyo.Constraint(rule=total_costs_def)
+    
     # Add congestion defition
     def def_total_congestion(m):
         return m.total_congestion ==  sum(sum(m.congestion[l, t] * m.dt for l in m.line_set) for t in m.time_set)
@@ -396,7 +398,7 @@ def optimal_CBC(load_per_node:pd.DataFrame, df_CBC_orderbook:pd.DataFrame, conge
     #'''
     #Objective function only costs
     def decrease_congestion_constraint(m):
-        return m.total_congestion == congestion * (1-ratio)
+        return m.total_congestion == congestion * (1 - ratio)
     
     # Add the constraint to the model
     model.decrease_congestion = pyo.Constraint(rule=decrease_congestion_constraint)
@@ -431,7 +433,7 @@ def optimal_CBC(load_per_node:pd.DataFrame, df_CBC_orderbook:pd.DataFrame, conge
     termination_condition = results.solver.termination_condition
     
     if termination_condition == pyo.TerminationCondition.infeasible:
-        sys.exit("Model is infeasible.\n")
+        print("Model is infeasible.\n")
     elif termination_condition == pyo.TerminationCondition.unbounded:
         sys.exit("Model is unbounded.\n")
     elif termination_condition == pyo.TerminationCondition.infeasibleOrUnbounded:
@@ -439,10 +441,10 @@ def optimal_CBC(load_per_node:pd.DataFrame, df_CBC_orderbook:pd.DataFrame, conge
     else:
         print(f"Termination condition: {termination_condition}\n")
     
-    total_congestion_results = pyo.value(model.total_congestion)
-    total_costs_results = pyo.value(model.total_costs)    
+        total_congestion_results = pyo.value(model.total_congestion)
+        total_costs_results = pyo.value(model.total_costs)    
     #print(total_costs_results)
     #print(f"Cost term is {round(100.0 * total_costs_results * epsilon/of_results, 2)}% of the total OF (should be small)\n")
     #print(f"congestion volume X avg_Price = {total_congestion_results} X {(np.mean(CLC_price_up[CLC_price_up > 0]) if np.any(CLC_price_up > 0) else 0 + np.mean(CLC_price_down[CLC_price_down > 0]) if np.any(CLC_price_down > 0) else 0)} = {total_congestion_results * (np.mean(CLC_price_up[CLC_price_up > 0]) if np.any(CLC_price_up > 0) else 0 + np.mean(CLC_price_down[CLC_price_down > 0]) if np.any(CLC_price_down > 0) else 0)}\n")
     print(f"total costs for CBC are {total_costs_results}\n") 
-    return model
+    return model, termination_condition
