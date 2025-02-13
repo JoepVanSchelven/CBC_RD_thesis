@@ -490,6 +490,38 @@ else:
 #read orderbook
 df_RD_orderbook = pd.read_excel(input_file,'RD', header=0, index_col=0) #read the orderbook
 
+#Add the renewable generation that is not CBC'd
+df_dp_CBC_pos = df_dp_CBC.copy()  # Ensure we don't modify the original DataFrame
+df_dp_CBC_pos.iloc[:, 1:] = df_dp_CBC.iloc[:, 1:].where(df_dp_CBC.iloc[:, 1:] > 0, 0) #now we have the CBC DF of oly the CBCs for generation
+
+np_RE_CBC = np.zeros((n_buses,ptus))
+np_RE_CBC = add_to_array(df_RE,np_RE_CBC)
+np_RE_CBC = add_to_array(df_dp_CBC_pos,np_RE_CBC) #an array with the limited RE generation
+np_RE_CBC[np_RE_CBC > 0] = 0
+df_RE_CBC = df_dp_CBC_pos.copy()
+df_RE_CBC.iloc[:,1:] = np_RE_CBC
+
+df_RD_orderbook = add_generation_to_orderbook(df_RE_CBC, df_RD_orderbook, 'RE') #renewable generation added to orderbook
+df_RD_orderbook = add_generation_to_orderbook(chp_coupling, df_RD_orderbook, 'CHP') #CHP generation added to orderbook
+
+#now we add the remainder of the CHP capacity to the orderbook for upward orders
+df_chp_remainder = chp_coupling.copy()
+
+for row, values in df_chp_remainder.iterrows():
+    df_chp_remainder.iloc[row, 1:] = values.iloc[1:].values - df_chp_max.loc[row, 'max']
+
+for row, values in df_chp_remainder.iterrows(): # aloop that adds all the remaining CHP capacity to the RD market
+    start = -1
+    for p in values[1:].values:
+        start += 1
+        
+        if p > 0:
+            power = p
+            price = df_chp_max.loc[row,'price']*1.1 #how much does an upward actio cost?
+            bus = values['node']
+
+            order_tuple = (bus, start, start+1, 'sell', price, power, 'CHP')
+            df_RD_orderbook.loc[len(df_RD_orderbook)] = order_tuple   
 
 start_time = monotonic()
 # something
@@ -503,7 +535,7 @@ print(f"RD funciton runtime is {monotonic() - start_time} seconds")
 
 
 # Get results from the model_RD
-dp_results = {(b, t): pyo.value(model_RD.dp[b, t]) for b in model_RD.bus_set for t in model_RD.time_set}
+dp_results = {(b, t, o): pyo.value(model_RD.dp[b, t, o]) for b in model_RD.bus_set for t in model_RD.time_set for o in model_RD.order_set}
 f_results = {(l, t): pyo.value(model_RD.f[l, t]) for l in model_RD.line_set for t in model_RD.time_set}
 congestion_results = {(l, t): pyo.value(model_RD.congestion[l, t]) for l in model_RD.line_set for t in model_RD.time_set}
 
