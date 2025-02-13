@@ -22,39 +22,39 @@ def optimal_redispatch(load_per_node:pd.DataFrame, df_RD_orderbook:pd.DataFrame,
     p_prognosis = load_per_node.copy()
     
     # Convert to dicts for pyomo initialization
-    max_CLC_up_dict = {}
-    max_CLC_down_dict = {}
-    CLC_price_up_dict = {}
-    CLC_price_down_dict = {}
+    max_RD_up_dict = {}
+    max_RD_down_dict = {}
+    RD_price_up_dict = {}
+    RD_price_down_dict = {}
     p_prognosis_dict = {index: value for index, value in np.ndenumerate(p_prognosis)}
      
-    for bus in buses: #loop to construct the max_CLC_up_dict
+    for bus in buses: #loop to construct the max_RD_up_dict
         for t in range(0,ptus):
             for order,row in df_RD_orderbook.iterrows():
                 key = (bus,t,order)
                 if len(key)==3:
-                    max_CLC_up_dict[key] = row['power'] if row['power']>=0 and row['bus'] == bus and row['buy/sell']=='buy' and row['delivery_start']<=t<row['delivery_end'] else 0
+                    max_RD_up_dict[key] = row['power'] if row['power']>=0 and row['bus'] == bus and row['buy/sell']=='buy' and row['delivery_start']<=t<row['delivery_end'] else 0
     
-    for bus in buses: #loop to construct the max_CLC_down_dict
+    for bus in buses: #loop to construct the max_RD_down_dict
         for t in range(0,ptus):
             for order,row in df_RD_orderbook.iterrows():
                 key = (bus,t,order)
                 if len(key)==3:
-                    max_CLC_down_dict[key] = -row['power'] if row['power']>=0 and row['bus'] == bus and row['buy/sell']=='sell' and row['delivery_start']<=t<row['delivery_end'] else 0
+                    max_RD_down_dict[key] = -row['power'] if row['power']>=0 and row['bus'] == bus and row['buy/sell']=='sell' and row['delivery_start']<=t<row['delivery_end'] else 0
     
-    for bus in buses: #loop to construct the CLC_price_down_dict
+    for bus in buses: #loop to construct the RD_price_down_dict
         for t in range(0,ptus):
             for order,row in df_RD_orderbook.iterrows():
                 key = (bus,t,order)
                 if len(key)==3:
-                    CLC_price_down_dict[key] = row['price'] if row['price']<=0 and row['bus'] == bus and row['delivery_start']<=t<row['delivery_end'] else 0
+                    RD_price_down_dict[key] = row['price'] if row['price']<=0 and row['bus'] == bus and row['delivery_start']<=t<row['delivery_end'] else 0
     
-    for bus in buses: #loop to construct the CLC_price_up_dict
+    for bus in buses: #loop to construct the RD_price_up_dict
         for t in range(0,ptus):
             for order,row in df_RD_orderbook.iterrows():
                 key = (bus,t,order)
                 if len(key)==3:
-                    CLC_price_up_dict[key] = row['price'] if row['price']>=0 and row['bus'] == bus and row['delivery_start']<=t<row['delivery_end'] else 0
+                    RD_price_up_dict[key] = row['price'] if row['price']>=0 and row['bus'] == bus and row['delivery_start']<=t<row['delivery_end'] else 0
     
     
     model = pyo.ConcreteModel() # build the model
@@ -66,10 +66,10 @@ def optimal_redispatch(load_per_node:pd.DataFrame, df_RD_orderbook:pd.DataFrame,
     
     # Define parameters
     model.dt = pyo.Param(initialize=1.0)  # 1 hour time resolution
-    model.max_dp_up = pyo.Param(model.bus_set, model.time_set, model.order_set, within=pyo.Reals, initialize=max_CLC_up_dict)
-    model.price_up = pyo.Param(model.bus_set, model.time_set, model.order_set, within=pyo.Reals, initialize=CLC_price_up_dict)
-    model.max_dp_down = pyo.Param(model.bus_set, model.time_set, model.order_set, within=pyo.Reals, initialize=max_CLC_down_dict)
-    model.price_down = pyo.Param(model.bus_set, model.time_set, model.order_set, within=pyo.Reals, initialize=CLC_price_down_dict)
+    model.max_dp_up = pyo.Param(model.bus_set, model.time_set, model.order_set, within=pyo.Reals, initialize=max_RD_up_dict)
+    model.price_up = pyo.Param(model.bus_set, model.time_set, model.order_set, within=pyo.Reals, initialize=RD_price_up_dict)
+    model.max_dp_down = pyo.Param(model.bus_set, model.time_set, model.order_set, within=pyo.Reals, initialize=max_RD_down_dict)
+    model.price_down = pyo.Param(model.bus_set, model.time_set, model.order_set, within=pyo.Reals, initialize=RD_price_down_dict)
     model.p_prognosis = pyo.Param(model.bus_set, model.time_set, within=pyo.Reals, initialize=p_prognosis_dict)
     
     # Define variables
@@ -77,7 +77,7 @@ def optimal_redispatch(load_per_node:pd.DataFrame, df_RD_orderbook:pd.DataFrame,
     model.f = pyo.Var(model.line_set, model.time_set, within=pyo.Reals) #flow
     model.congestion = pyo.Var(model.line_set, model.time_set, within=pyo.NonNegativeReals)  # >= 0
     model.p = pyo.Var(model.bus_set, model.time_set, within=pyo.Reals)  # power
-    model.dp = pyo.Var(model.bus_set, model.time_set, model.order_set, within=pyo.Reals)  # dp after CLC
+    model.dp = pyo.Var(model.bus_set, model.time_set, model.order_set, within=pyo.Reals)  # dp after RD
     model.u = pyo.Var(model.bus_set, model.time_set, within=pyo.Binary)  # Binary variable for condition
     
     model.total_congestion = pyo.Var(within=pyo.Reals) #sum of congestion
