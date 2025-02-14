@@ -22,45 +22,40 @@ def optimal_redispatch(load_per_node:pd.DataFrame, df_RD_orderbook:pd.DataFrame,
     p_prognosis = load_per_node.copy()
     
     max_RD_up_dict = {}
+    
     max_RD_down_dict = {}
     RD_price_up_dict = {}
     RD_price_down_dict = {}
-    
     p_prognosis_dict = {index: value for index, value in np.ndenumerate(p_prognosis)}
     
+    for bus in buses: #loop to construct the max_RD_up_dict
+        for t in range(0,ptus):
+            for order,row in df_RD_orderbook.iterrows():
+                key = (bus,t,order)
+                if len(key)==3:
+                    max_RD_up_dict[key] = row['power'] if row['power']>=0 and row['bus'] == bus and row['buy/sell']=='buy' and row['delivery_start']<=t<row['delivery_end'] else 0
     
-    for bus in buses:
-        for t in range(ptus):
-            for order, row in df_RD_orderbook.iterrows():
-                if row['bus'] != bus or not (row['delivery_start'] <= t < row['delivery_end']):
-                    continue  # Skip irrelevant rows early (efficiency boost)
+    for bus in buses: #loop to construct the max_RD_down_dict
+        for t in range(0,ptus):
+            for order,row in df_RD_orderbook.iterrows():
+                key = (bus,t,order)
+                if len(key)==3:
+                    max_RD_down_dict[key] = -row['power'] if row['power']>=0 and row['bus'] == bus and row['buy/sell']=='sell' and row['delivery_start']<=t<row['delivery_end'] else 0
     
-                key = (bus, t, order)
-                values = [0, 0, 0, 0]  # Stores values for all 4 dicts
+    for bus in buses: #loop to construct the RD_price_down_dict
+        for t in range(0,ptus):
+            for order,row in df_RD_orderbook.iterrows():
+                key = (bus,t,order)
+                if len(key)==3:
+                    RD_price_down_dict[key] = row['price'] if row['price']<=0 and row['bus'] == bus and row['delivery_start']<=t<row['delivery_end'] else 0
     
-                # Max RD up
-                if row['power'] >= 0 and row['buy/sell'] == 'buy':
-                    values[0] = row['power']
-    
-                # Max RD down
-                if row['power'] >= 0 and row['buy/sell'] == 'sell':
-                    values[1] = -row['power']
-    
-                # RD price up
-                if row['price'] >= 0:
-                    values[2] = row['price']
-    
-                # RD price down
-                if row['price'] <= 0:
-                    values[3] = row['price']
-    
-                if any(values):  # Only add if at least one value is nonzero
-                    max_RD_up_dict[key] = values[0]
-                    max_RD_down_dict[key] = values[1]
-                    RD_price_up_dict[key] = values[2]
-                    RD_price_down_dict[key] = values[3]
-
-    
+    for bus in buses: #loop to construct the RD_price_up_dict
+        for t in range(0,ptus):
+            for order,row in df_RD_orderbook.iterrows():
+                key = (bus,t,order)
+                if len(key)==3:
+                    RD_price_up_dict[key] = row['price'] if row['price']>=0 and row['bus'] == bus and row['delivery_start']<=t<row['delivery_end'] else 0
+        
     model = pyo.ConcreteModel() # build the model
     # Define sets (indices)
     model.bus_set = pyo.RangeSet(0, n_buses - 1) #includes final value unlike normal python (hence -1)
@@ -151,7 +146,7 @@ def optimal_redispatch(load_per_node:pd.DataFrame, df_RD_orderbook:pd.DataFrame,
         if m.max_dp_down[b, t, o] >= 0:
             return m.dp[b, t, o] >= 0
         else:
-            return m.dp[b, t, o] >= m.max_dp_down[b, t]
+            return m.dp[b, t, o] >= m.max_dp_down[b, t,o]
         
     model.con_lower_bound_dp = pyo.Constraint(model.bus_set, model.time_set, model.order_set, rule=lower_bound_dp)
         
