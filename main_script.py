@@ -70,6 +70,7 @@ def add_to_array(df_in: pd.DataFrame, np_out: np.array) -> np.array:
 
 # use the function to add RE and load profiels to the load per node
 load_per_node_D2 = add_to_array(df_RE_D2, load_per_node_D2)
+
 load_per_node_D2 = add_to_array(df_loads_D2, load_per_node_D2)
 
 #This is a function that identifies the imbalnce at every PTU and dispatches the CHPs to balance the system
