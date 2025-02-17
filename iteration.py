@@ -9,7 +9,7 @@ from main_function import main_function
 import matplotlib.pyplot as plt
 
 ratios = list(range(0,100,10))
-ratios = [30]*10
+#ratios = [30]*10
 costs = pd.DataFrame({'CBC costs': len(ratios)*0.0,'RD costs': len(ratios)*0.0,'total_costs': len(ratios)*0.0},index = ratios)  
 index = 0
 for i in ratios:

@@ -331,7 +331,7 @@ print(f"time untill CBC funtion is {monotonic() - start_time} seconds")
 
 from RD_CBC_functions import optimal_CBC
 
-model_CBC, termination_condition_CBC = optimal_CBC(load_per_node_D2, df_CBC_orderbook,sum(abs(df_congestion_D2.sum())),0)
+model_CBC, termination_condition_CBC = optimal_CBC(load_per_node_D2, df_CBC_orderbook,congestion_D2,0,ratio)
 print(f"Run time of CBC function {monotonic() - start_time} seconds\n")
 
 total_costs_CBC = pyo.value(model_CBC.total_costs)
@@ -408,8 +408,8 @@ def add_normal_noise(df_D2: pd.DataFrame, MAPE: float) -> pd.DataFrame:
     return df_output
 
 # add noise to the D-2 to make 'actual' data. use these to make new load per node, and new CHP dispatch (marketcoupling). Results in a new load per node and new congestion 
-df_loads = add_normal_noise(df_loads_D2, 0.3)
-df_RE    = add_normal_noise(df_RE_D2, 0.21)
+df_loads = add_normal_noise(df_loads_D2, 0)#0.3)
+df_RE    = add_normal_noise(df_RE_D2,0)# 0.21)
 
 load_per_node = np.zeros((n_buses,ptus))
 load_per_node = add_to_array(df_RE, load_per_node)
