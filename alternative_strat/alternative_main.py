@@ -1,14 +1,9 @@
-#!/usr/bin/env python
-# coding: utf-8
-# %%
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Feb 26 10:20:57 2025
 
-# #  CBC/RD activation model
-# Joep van Schelven - 2025 
-# 
-# This model is aimed to simulate different activation strategies of Capacity limitng contracts (CLC/CBC) and redispatch contracts. The main goal is to effectively mitigate congestion against optimal costs.
-# 
-
-# ### import packages
+@author: 304723
+"""
 
 # %%
 
@@ -26,10 +21,6 @@ import pyomo.environ as pyo
 from pyomo.opt import SolverFactory
 import os  
 
-#this is a custom script used to plot different networks
-from network_plotting import draw_network, draw_network_with_power_flows, draw_network_with_absolute_power_flows, draw_network_with_congestion
-
-
 
 # ### Load variables and input data
 # The input data needs to be a seperate Excel with specified lay-out
@@ -37,11 +28,13 @@ from network_plotting import draw_network, draw_network_with_power_flows, draw_n
 # note: generation is negative and load is positive
 
 #%% IMPORTANT VAIRABLES
-noise_MAPE = 0
+noise_mape = 0
 certificate_price= 6
 CHP_buy_price = 30
 
-# %%
+# %% initliase data
+
+
 from config_loader import retrieve_config_variables
 
 # Retrieve variables as a tuple, use this line in sperate files to get teh same gloabl variables
@@ -51,18 +44,25 @@ df_loads_D2 = pd.read_excel(input_file,'loads', header=0, index_col=0)  #load D-
 df_RE_D2 = pd.read_excel(input_file,'re', header=0, index_col=0)        #Load D-2 prognoses for renewable generation
 df_chp_max = pd.read_excel(input_file,'chp_max', header=0, index_col=0) #Load the maximum power output of CHPs
 
+#%% functions
 
-# %% DC load-flow
-# First, we will use the the D-2 prognoses to perform a 'manual' DC load-flow. This load-flow will be used to visualise the network behaviour nd see where the congestion occurs. 
-
-#
-
-
-#Make a matrix where every node and every ptu have total load excluding CHP generation
-load_per_node_D2 = np.zeros((n_buses,ptus))
-
-# This is afunction to add the values of one DF to another array, based on the nodes provided in the DF
 def add_to_array(df_in: pd.DataFrame, np_out: np.array) -> np.array:
+    '''
+    This is a function to add the values of one DF to another array, based on the nodes provided in the DF
+
+    Parameters
+    ----------
+    df_in : pd.DataFrame
+        DESCRIPTION.
+    np_out : np.array
+        DESCRIPTION.
+
+    Returns
+    -------
+    np_out : TYPE
+        DESCRIPTION.
+
+    '''
     for idx, row in df_in.iterrows():  # Iterate over DataFrame rows
         node = row["node"]  # Use the "node" column explicitly
         if node in buses:  # Check if the node is in the buses list
@@ -71,16 +71,24 @@ def add_to_array(df_in: pd.DataFrame, np_out: np.array) -> np.array:
             np_out[bus_idx, :] += values  # Add values to the corresponding row in np_out
     return np_out
 
-# use the function to add RE and load profiels to the load per node
-load_per_node_D2 = add_to_array(df_RE_D2, load_per_node_D2)
-
-load_per_node_D2 = add_to_array(df_loads_D2, load_per_node_D2)
-
-#This is a function that identifies the imbalnce at every PTU and dispatches the CHPs to balance the system
-    # The CHPs are dispatched in order, to mimic a merit order (highset = cheapest)
-df_dp_CBC_order_level = pd.DataFrame()  
 
 def CHP_dispatch_calc(df_chp_max: pd.DataFrame, load_per_node: pd.DataFrame) -> pd.DataFrame:
+    '''
+    Function to calculate how much CHP capacity has to be dispatched, simulation of market coupling
+
+    Parameters
+    ----------
+    df_chp_max : pd.DataFrame
+        DESCRIPTION.
+    load_per_node : pd.DataFrame
+        DESCRIPTION.
+
+    Returns
+    -------
+    chp_df : TYPE
+        DESCRIPTION.
+
+    '''
     # Initialize an array for CHP dispatch
     chp_dispatch = np.zeros((len(df_chp_max), ptus))
     
@@ -131,39 +139,22 @@ def CHP_dispatch_calc(df_chp_max: pd.DataFrame, load_per_node: pd.DataFrame) -> 
 
     return chp_df
 
-
-#use both functions to add the CHP to the load per node.
-chp_prog = CHP_dispatch_calc(df_chp_max, load_per_node_D2)
-load_per_node_D2 = add_to_array(chp_prog, load_per_node_D2)
-
-# check if the system is balanced, exit the script if not the case
-if load_per_node_D2.sum() != 0:
-    fig, ax = plt.subplots()
-    pd. DataFrame(load_per_node_D2.sum(axis = 0)).plot(ax=ax)
-    ax.set_xlabel("Hour on day D")
-    ax.set_ylabel("Unbalance [MW]")
-    ax.set_title("Unbalance per hour ")
-    if load_per_node_D2.sum() > 1e10:
-        print(f' The system is inherently unbalanced because too little generation. {load_per_node_D2.sum()} MWh additional generation is required is required.\n')
-    elif load_per_node_D2.sum() < 1e-10:
-        print(f' The system is inherently unbalanced because to much RE. {load_per_node_D2.sum()} MWh "curtailement" is required.\n')
-    else:
-        print('D-2 prognosis is balanced, load flow calculation will be performed\n')
-#build the susceptance matrix
-df_lines['susceptance'] = 1/(df_lines['len']*(1/susceptance))
-B = np.zeros((n_buses, n_buses))
-
-for _, row in df_lines.iterrows():
-    from_idx = buses.index(row['from_bus'])
-    to_idx = buses.index(row['to_bus'])
-    B[from_idx, to_idx] -= row['susceptance']
-    B[to_idx, from_idx] -= row['susceptance']
-    B[from_idx, from_idx] += row['susceptance']
-    B[to_idx, to_idx] += row['susceptance']
-    
-    
-#define a function to calculate the powerflows according to DC powerflow approach
+ 
 def calculate_powerflow(df_loads_D2: np.array) -> pd.DataFrame:
+    '''
+    A function to calculate the powerflows according to DC powerflow approach
+
+    Parameters
+    ----------
+    df_loads_D2 : np.array
+        DESCRIPTION.
+
+    Returns
+    -------
+    df_results : TYPE
+        DESCRIPTION.
+
+    '''
     # Initialize results df
     df_results = pd.DataFrame({'flow': n_lines * [0.0]}, index=df_lines.index)
 
@@ -189,27 +180,22 @@ def calculate_powerflow(df_loads_D2: np.array) -> pd.DataFrame:
     ]
     return df_results
 
-#use function to create a DF with all the flows per line 
 
-df_flows_D2 = pd.DataFrame(columns = range(ptus))
-for t in range(ptus):
-    df_flows_D2[t] = calculate_powerflow(load_per_node_D2[:,t])
-
-#draw your network
-draw_network(df_lines)
-
-
-# ### Localise and deterimine congestion volume
-# Use the flow DF and the capacity of the lines to find the congestion
-
-# %%
-
-
-# initieer een DF voor alle overloads
-df_congestion_D2 = pd.DataFrame(index=df_lines.index, columns = range(ptus))
-
-# definieer een functie die de overload kan bereken aan de hand van line capacity en flows
 def overload_calculation(df_flows : pd.DataFrame) -> pd.DataFrame:
+    '''
+    een functie die de overload kan bereken aan de hand van line capacity en flows
+
+    Parameters
+    ----------
+    df_flows : pd.DataFrame
+        DESCRIPTION.
+
+    Returns
+    -------
+    df_congestion_D2 : TYPE
+        DESCRIPTION.
+
+    '''
     for line in df_congestion_D2.index:  # Iterate over line indices
         for t in range(ptus):  # Iterate over PTUs (time steps)
             overload = abs(df_flows.iloc[line,t]) - df_lines['capacity'].loc[line]
@@ -218,117 +204,6 @@ def overload_calculation(df_flows : pd.DataFrame) -> pd.DataFrame:
             else:
                 df_congestion_D2.iloc[line, t] = 0
     return df_congestion_D2
-
-df_congestion_D2 = overload_calculation(df_flows_D2)
-congestion_D2 = sum(abs(df_congestion_D2).sum())
-
-
-# %%
-
-
-# %% Vsualization of generation per type and per node of the d-2 prognoses
-
-#make a dict with all the load per generation type
-load_per_type = {'df_loads_D2': ptus * [0], 'df_RE_D2': ptus * [0], 'chp_prog': ptus * [0]}
-for key in load_per_type.keys():
-    load_per_type[key] = globals()[key].iloc[:,1:].sum()
-    
-load_per_type = pd.DataFrame(load_per_type)
-load_per_type['imbalance'] = load_per_type.sum(axis=1)
-
-
-# Create a 2x2 grid of subplots
-fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(14, 10))
-
-# Plot 1: df_loads_D2 per type before RD and CLC
-load_per_type.plot(ax=axes[0, 0])
-axes[0, 0].set_xlabel("Hour on day D")
-axes[0, 0].set_ylabel("Active Power [MW]")
-axes[0, 0].set_title("df_loads_D2 per type before RD and CLC")
-
-# Plot 2: df_loads_D2 per node before RD and CLC
-pd.DataFrame(load_per_node_D2).T.plot(ax=axes[0, 1])
-axes[0, 1].set_xlabel("Hour on day D")
-axes[0, 1].set_ylabel("Active Power [MW]")
-axes[0, 1].set_title("df_loads_D2 per node before RD and CLC")
-
-# Plot 3: absolute flow per line before RD and CLC
-pd.DataFrame(abs(df_flows_D2)).T.plot(ax=axes[1, 0])
-axes[1, 0].set_xlabel("Hour on day D")
-axes[1, 0].set_ylabel("Absolute Flow [MW]")
-axes[1, 0].set_title("Absolute Flow per line before RD and CLC")
-
-# Plot 4: Congestion per line before RD and CLC
-pd.DataFrame(df_congestion_D2).T.plot(ax=axes[1, 1])
-axes[1, 1].set_xlabel("Hour on day D")
-axes[1, 1].set_ylabel("Congestion [MW]")
-axes[1, 1].set_title(f"Congestion per line before RD and CLC (total: {round(congestion_D2, 2)})")
-
-# Adjust layout to prevent overlap
-plt.tight_layout()
-
-# Display the plots
-plt.show()
-
-# Create 2x2 grid of subplots
-fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(14, 10))
-
-# Plot 1: Network with total congestion
-congestion_per_bus = df_congestion_D2.sum(axis='columns')
-congestion_per_bus = congestion_per_bus.rename_axis('line').reset_index(name='flow')
-draw_network_with_power_flows(df_lines, congestion_per_bus, 'Network with total congestion', axes[0, 0])
-
-# Plot 2: Network with peak congestion
-congestion_peak_per_bus = df_congestion_D2.max(axis='columns')
-congestion_peak_per_bus = congestion_peak_per_bus.rename_axis('line').reset_index(name='flow')
-draw_network_with_power_flows(df_lines, congestion_peak_per_bus, 'Network with peak congestion', axes[0, 1])
-
-# Plot 3: Congestion per hour
-df_congestion_D2[df_congestion_D2.sum(axis=1) != 0].transpose().plot(ax=axes[1, 0])
-axes[1, 0].set_xlabel("Hour on day D")
-axes[1, 0].set_ylabel("Congestion [MW]")
-axes[1, 0].set_title("Congestion per hour")
-
-# Leave the last subplot empty
-axes[1, 1].axis('off')
-
-# Adjust layout
-plt.tight_layout()
-plt.show()
-
-#check if there is congstion in the system
-if congestion_D2 == 0:
-    sys.exit('No congestion is the system\n')
-
-
-# ### Activate CBCs
-# Het Idee is dat eerst CBCs worden afgeroepen (optimalisereend voor de kosten en het congestievolume terugdringend naar een bepaald niveau).
-# Vervolgens word er weer gedispatched met als constraint dat he tcongestievolume niet mag toenemen
-
-# %%
-df_CBC_orderbook = pd.read_excel(input_file,'CBC', header=0) #read the orderbook
-
-#add all activated RE and CHP to the CBC orderbook, in order to do this, an assumption about the D-1 price is made
-prognosis_wholesale_price = df_chp_max.loc[len(chp_prog[chp_prog.iloc[:, 1:].sum(axis=1) < 0])-1,'price']
-CBC_RE_premium = 0.0*prognosis_wholesale_price #compensation on top off the wholesale market prognosis only missed profits from certificates
-CBC_CHP_premium = 0.2*prognosis_wholesale_price #compensation on top off the wholesale market prognosis for CHPs
-
-def add_generation_to_orderbook(generation:pd.DataFrame,orderbook:pd.DataFrame,source:str)->pd.DataFrame:
-    if len(orderbook)>0:
-        asset = max(orderbook.iloc[:,0])+1
-    else:
-        asset = 0
-    for index, row in generation.iloc[:, 1:].iterrows(): #This loop adds a bid for all expected RE production
-        for t, value in row.items():
-            if value < 0:
-                list_order = [[asset+index,generation.iloc[index, 0], t, t + 1,'buy',(prognosis_wholesale_price + CBC_RE_premium) if source == 'RE' 
-                               else (prognosis_wholesale_price + CBC_CHP_premium) if source == 'CHP' else prognosis_wholesale_price , -value, source]]
-                
-                orderbook = pd.concat([orderbook, pd.DataFrame(list_order, columns=orderbook.columns)], ignore_index=True)
-    return orderbook
-
-df_CBC_orderbook = add_generation_to_orderbook(df_RE_D2, df_CBC_orderbook, 'RE')
-#df_CBC_orderbook = add_generation_to_orderbook(chp_prog, df_CBC_orderbook, 'CHP') #CHPs are assumed not to partake in CBC
 
 def merge_orders(orderbook:pd.DataFrame):
     """
@@ -377,16 +252,274 @@ def merge_orders(orderbook:pd.DataFrame):
 
     return pd.DataFrame(merged_orders).reset_index(drop=True)
 
+def add_generation_to_orderbook(generation:pd.DataFrame,orderbook:pd.DataFrame,source:str)->pd.DataFrame:
+    '''
+    Funcion to add generation DFs to the orderbooks
 
+    Parameters
+    ----------
+    generation : pd.DataFrame
+        DESCRIPTION.
+    orderbook : pd.DataFrame
+        DESCRIPTION.
+    source : str
+        What label do you want to give to the genretation type (i.e. RE, CHP)
+
+    Returns
+    -------
+    orderbook : TYPE
+        DESCRIPTION.
+
+    '''
+    if len(orderbook)>0:
+        asset = max(orderbook.iloc[:,0])+1
+    else:
+        asset = 0
+    for index, row in generation.iloc[:, 1:].iterrows(): #This loop adds a bid for all expected RE production
+        for t, value in row.items():
+            if value < 0:
+                list_order = [[asset+index,generation.iloc[index, 0], t, t + 1,'buy',(prognosis_wholesale_price + CBC_RE_premium) if source == 'RE' 
+                               else (prognosis_wholesale_price + CBC_CHP_premium) if source == 'CHP' else prognosis_wholesale_price , -value, source]]
+                
+                orderbook = pd.concat([orderbook, pd.DataFrame(list_order, columns=orderbook.columns)], ignore_index=True)
+    return orderbook
+
+def add_normal_noise(df_D2: pd.DataFrame, MAPE: float) -> pd.DataFrame:
+    '''
+    Add noise to a load or generation DF
+
+    Parameters
+    ----------
+    df_D2 : pd.DataFrame
+        DESCRIPTION.
+    MAPE : float
+        DESCRIPTION.
+
+    Returns
+    -------
+    df_output : TYPE
+        DESCRIPTION.
+
+    '''
+    df_output = df_D2.copy()
+    
+    for load in range(len(df_D2)):
+        # Generate noise only for numerical columns (excluding 'node' column if present)
+        num_cols = df_D2.columns[df_D2.columns != 'node']
+        
+        std = abs(1.25 * MAPE * np.mean(df_output.iloc[load, 1:]))       
+        noise = np.random.normal(0, std, size=len(num_cols))
+        noise = np.trunc(noise * 10**2) / 10**2  # Truncate to 2 decimal places
+        
+        # Get row values
+        row_values = df_output.iloc[load, 1:]
+        max_val = row_values.max()
+        min_val = row_values.min()
+        
+        # Apply noise to all values except min, max, and zero values
+        mask = (row_values != 0) & (row_values != max_val) & (row_values != min_val)
+        modified_values = row_values + mask * noise  # Apply noise only where mask is True
+        
+        # Ensure values stay within the original range
+        df_output.iloc[load, 1:] = np.clip(modified_values, min_val, max_val)
+    
+    return df_output
+
+# %% DC load-flow
+# First, we will use the the D-2 prognoses to perform a 'manual' DC load-flow. This load-flow will be used to visualise the network behaviour nd see where the congestion occurs. 
+
+#Make a matrix where every node and every ptu have total load excluding CHP generation
+load_per_node_D2 = np.zeros((n_buses,ptus))
+
+
+# use the function to add RE and load profiels to the load per node
+load_per_node_D2 = add_to_array(df_RE_D2, load_per_node_D2)
+
+load_per_node_D2 = add_to_array(df_loads_D2, load_per_node_D2)
+
+#This is a function that identifies the imbalnce at every PTU and dispatches the CHPs to balance the system
+    # The CHPs are dispatched in order, to mimic a merit order (highset = cheapest)
+df_dp_CBC_order_level = pd.DataFrame()  
+
+
+
+#use both functions to add the CHP to the load per node.
+chp_prog = CHP_dispatch_calc(df_chp_max, load_per_node_D2)
+load_per_node_D2 = add_to_array(chp_prog, load_per_node_D2)
+
+
+#build the susceptance matrix
+df_lines['susceptance'] = 1/(df_lines['len']*(1/susceptance))
+B = np.zeros((n_buses, n_buses))
+
+for _, row in df_lines.iterrows():
+    from_idx = buses.index(row['from_bus'])
+    to_idx = buses.index(row['to_bus'])
+    B[from_idx, to_idx] -= row['susceptance']
+    B[to_idx, from_idx] -= row['susceptance']
+    B[from_idx, from_idx] += row['susceptance']
+    B[to_idx, to_idx] += row['susceptance']
+    
+    
+
+
+#use function to create a DF with all the flows per line 
+
+df_flows_D2 = pd.DataFrame(columns = range(ptus))
+for t in range(ptus):
+    df_flows_D2[t] = calculate_powerflow(load_per_node_D2[:,t])
+
+
+# ### Localise and deterimine congestion volume
+# Use the flow DF and the capacity of the lines to find the congestion
+
+# %% initieer een DF voor alle overloads
+df_congestion_D2 = pd.DataFrame(index=df_lines.index, columns = range(ptus))
+
+df_congestion_D2 = overload_calculation(df_flows_D2)
+congestion_D2 = sum(abs(df_congestion_D2).sum())
+
+#check if there is congstion in the system
+if congestion_D2 == 0:
+    sys.exit('No congestion is the system\n')
+    
+#%% Make prelim RD orderbook based on biedplichtcontracten
+#read orderbook
+df_RD_bp_orderbook = pd.read_excel(input_file,'RD', header=0) #read the orderbook
+df_RD_bp_orderbook = df_RD_bp_orderbook.iloc[0:0]
+
+#define prememiums and the expected D-1 price for price prognoses in the orederbooks
+prognosis_wholesale_price = df_chp_max.loc[len(chp_prog[chp_prog.iloc[:, 1:].sum(axis=1) < 0])-1,'price']
+CBC_RE_premium = 0.0*prognosis_wholesale_price #compensation on top off the wholesale market prognosis only missed profits from certificates
+CBC_CHP_premium = 0.2*prognosis_wholesale_price #compensation on top off the wholesale market prognosis for CHPs
+
+#Add the expected renewable generation
+df_RD_bp_orderbook = add_generation_to_orderbook(df_RE_D2, df_RD_bp_orderbook, 'RE') #renewable generation added to orderbook
+df_RD_bp_orderbook = add_generation_to_orderbook(chp_prog, df_RD_bp_orderbook, 'CHP') #CHP generation added to orderbook
+
+#change the pricing of RE and CHP RD orders
+for index, row in df_RD_bp_orderbook.iterrows():
+    if row['type']=='RE':
+        row['price'] = 6.0 #price of green certficates
+        df_RD_bp_orderbook.iloc[index,:] = row
+    if row['type']=='CHP' and row['buy/sell']=='buy':
+        row['price'] = 20 #price of green fuel
+        df_RD_bp_orderbook.iloc[index,:] = row
+                                        
+#now we add the remainder of the CHP capacity to the orderbook for upward orders
+df_chp_remainder = chp_prog.copy()
+
+for row, values in df_chp_remainder.iterrows():
+    df_chp_remainder.iloc[row, 1:] = values.iloc[1:].values - df_chp_max.loc[row, 'max']
+
+asset = max(df_RD_bp_orderbook.iloc[:,0])
+for row, values in df_chp_remainder.iterrows(): # aloop that adds all the remaining CHP capacity to the RD market
+    asset += 1
+    start = -1
+    for p in values[1:].values:
+        start += 1
+        
+        if p > 0:
+            power = p
+            price = df_chp_max.loc[row,'price']*1.1 #how much does an upward actio cost?
+            bus = values['node']
+
+            order_tuple = (asset, bus, start, start+1, 'sell', price, power, 'CHP')
+            df_RD_bp_orderbook.loc[len(df_RD_bp_orderbook)] = order_tuple   
+
+df_RD_bp_orderbook = merge_orders(df_RD_bp_orderbook)
+
+#%% Use optimilisation to find what congestion is not/difficult to be solved by the epexcted RD posibilities
+
+from RD_CBC_functionsV3 import optimal_redispatch_congestion_cost
+
+model_RD_prog, termination_condition_RD = optimal_redispatch_congestion_cost(load_per_node_D2,df_RD_bp_orderbook,0)
+
+#%% Get relevant data from model (dp and remaining congestion)
+total_costs_RD_prog = pyo.value(model_RD_prog.total_costs)
+
+#get delta power for eacht asset/bus
+dp_RD_prog_values = {
+    (a, t): pyo.value(model_RD_prog.dp[a, t]) 
+    for a in model_RD_prog.asset_set 
+    for t in model_RD_prog.time_set
+}
+
+# Step 1: Extract asset-to-bus mapping from df_CBC_orderbook
+asset_to_bus = df_RD_bp_orderbook[['asset', 'bus']].drop_duplicates().set_index('asset')['bus']
+
+# Step 2: Aggregate dp values per bus
+dp_per_bus = {}
+
+for (a, t), dp_value in dp_RD_prog_values.items():
+    bus = asset_to_bus[a]  # Get the bus corresponding to the asset
+    if (bus, t) not in dp_per_bus:
+        dp_per_bus[(bus, t)] = 0  # Initialize if not present
+    dp_per_bus[(bus, t)] += dp_value  # Sum dp values per bus per time
+
+# Step 3: Convert aggregated dictionary to DataFrame
+df_RD_prog_dp = pd.DataFrame.from_dict(dp_per_bus, orient='index', columns=['dp'])
+df_RD_prog_dp.index = pd.MultiIndex.from_tuples(df_RD_prog_dp.index, names=['bus', 'time'])
+
+# Step 4: Pivot to have one row per bus, one column per time step
+df_RD_prog_dp = df_RD_prog_dp.unstack(level='time').fillna(0)
+df_RD_prog_dp.columns = df_RD_prog_dp.columns.droplevel()  # Remove extra level from columns
+
+# Step 5: Ensure all nodes (buses) are included, using `buses` list
+df_RD_prog_dp = df_RD_prog_dp.reindex(buses, fill_value=0)  # Include all buses
+
+# Step 6: Reset index and rename columns
+df_RD_prog_dp.reset_index(inplace=True)
+df_RD_prog_dp.rename(columns={'bus': 'node'}, inplace=True)  # Rename column
+
+#Get remanining congestion for each line
+congestion_RD_prog_values = {
+     (l, t): pyo.value(model_RD_prog.congestion[l, t]) 
+     for l in model_RD_prog.line_set 
+     for t in model_RD_prog.time_set
+ }
+
+#ONLY FOR TESTS ADD ARTIFICIAL PROBLEM VOLUME REMOVE LATER
+#congestion_RD_prog_values[15,0]=0.01
+print(f'Amount of congestion not sovlable by RD {sum(congestion_RD_prog_values.values())}')
+
+CBC_problem_volume = sum(congestion_RD_prog_values.values())
+
+
+#%% create a new fictionary line-capacity df that is based on the remanider of the congestion volume not solvable by RD
+
+safety_margin = 0.1 #How much does the flow in congested lines not salvable by RD have to be reduced on top of the congestion to account for pronogses error
+df_lines_CBC = df_lines.copy()
+
+df_lines_CBC.loc[:,'capacity'] = 9999
+for (l,t) in congestion_RD_prog_values:
+    if congestion_RD_prog_values[l,t] != 0 :
+        df_lines_CBC.loc[l,'capacity'] = abs(df_flows_D2.iloc[l,t])- (congestion_RD_prog_values[l,t]*(1+safety_margin))
+        
+        
+# ### Activate CBCs
+# Het Idee is dat eerst CBCs worden afgeroepen (optimalisereend voor de kosten en het congestievolume terugdringend naar een bepaald niveau).
+# Vervolgens word er weer gedispatched met als constraint dat he tcongestievolume niet mag toenemen
+
+# %%
+df_CBC_orderbook = pd.read_excel(input_file,'CBC', header=0) #read the orderbook
+
+#add all activated RE and CHP to the CBC orderbook, in order to do this, an assumption about the D-1 price is made
+prognosis_wholesale_price = df_chp_max.loc[len(chp_prog[chp_prog.iloc[:, 1:].sum(axis=1) < 0])-1,'price']
+CBC_RE_premium = 0.0*prognosis_wholesale_price #compensation on top off the wholesale market prognosis only missed profits from certificates
+CBC_CHP_premium = 0.2*prognosis_wholesale_price #compensation on top off the wholesale market prognosis for CHPs
+
+
+df_CBC_orderbook = add_generation_to_orderbook(df_RE_D2, df_CBC_orderbook, 'RE')
 
 df_CBC_orderbook = merge_orders(df_CBC_orderbook)
 
 start_time = monotonic()
 print(f"time untill CBC funtion is {monotonic() - start_time} seconds")
 
-from RD_CBC_functionsV2 import optimal_CBC
+from RD_CBC_functionsV3 import optimal_CBC
 
-model_CBC, termination_condition_CBC = optimal_CBC(load_per_node_D2, df_CBC_orderbook,congestion_D2, chp_prog, 0, ratio)
+model_CBC, termination_condition_CBC = optimal_CBC(load_per_node_D2, df_CBC_orderbook,congestion_D2, chp_prog, df_lines_CBC)
 print(f"Run time of CBC function {monotonic() - start_time} seconds\n")
 
 
@@ -427,60 +560,16 @@ df_dp_CBC.reset_index(inplace=True)
 df_dp_CBC.rename(columns={'bus': 'node'}, inplace=True)  # Rename column
 
 
-
-
-      
-        
-
-'''
-# Define number of rows and columns
-num_rows = 13  # Adjust based on actual data
-num_cols = 24  # Time columns from 0 to 23
-
-# Create the DataFrame
-df_dp_CBC = pd.DataFrame(
-    np.zeros((num_rows, num_cols + 1)),  # +1 for 'node' column
-    columns=['node'] + list(range(num_cols))
-)
-
-# Set the 'node' column to index values
-df_dp_CBC['node'] = np.arange(num_rows)
-
-'''
-
 # ### Actualise prognoses
 # Introduce 'noise' to the prognoses so they represent the actual T-pofile data to be used for the marketcoupling later the CBC will also be taken into consoderation during this stage, but not yet implemented
 
 # %%
 
-def add_normal_noise(df_D2: pd.DataFrame, MAPE: float) -> pd.DataFrame:
-    df_output = df_D2.copy()
-    
-    for load in range(len(df_D2)):
-        # Generate noise only for numerical columns (excluding 'node' column if present)
-        num_cols = df_D2.columns[df_D2.columns != 'node']
-        
-        std = abs(1.25 * MAPE * np.mean(df_output.iloc[load, 1:]))       
-        noise = np.random.normal(0, std, size=len(num_cols))
-        noise = np.trunc(noise * 10**2) / 10**2  # Truncate to 2 decimal places
-        
-        # Get row values
-        row_values = df_output.iloc[load, 1:]
-        max_val = row_values.max()
-        min_val = row_values.min()
-        
-        # Apply noise to all values except min, max, and zero values
-        mask = (row_values != 0) & (row_values != max_val) & (row_values != min_val)
-        modified_values = row_values + mask * noise  # Apply noise only where mask is True
-        
-        # Ensure values stay within the original range
-        df_output.iloc[load, 1:] = np.clip(modified_values, min_val, max_val)
-    
-    return df_output
+
 
 # add noise to the D-2 to make 'actual' data. use these to make new load per node, and new CHP dispatch (marketcoupling). Results in a new load per node and new congestion 
-df_loads = add_normal_noise(df_loads_D2, noise_MAPE*(30/21))#0.3)
-df_RE    = add_normal_noise(df_RE_D2,noise_MAPE)# 0.21)
+df_loads = add_normal_noise(df_loads_D2, noise_mape *(30/21))#0.3)
+df_RE    = add_normal_noise(df_RE_D2,noise_mape)# 0.21)
 
 load_per_node = np.zeros((n_buses,ptus))
 load_per_node = add_to_array(df_RE, load_per_node)
@@ -501,9 +590,6 @@ for t in range(ptus):
 df_congestion = overload_calculation(df_flows)
 congestion = sum(abs(df_congestion).sum())
 
-#tot_congestion_hypotheses_CBC = sum(df_congestion_hypotheses_CBC.sum()) # how much congestion was expected to be left after distributed slack CBC activtion
-ratio_actual =  1 - (congestion / congestion_D2)
-print(f'The aimed congestion reduction is {ratio}, the actual congestion after introduced noise reduction is {ratio_actual}\n')
 
 #Calculate how much is paid for electricity in the entire market
 costs_market = 0
@@ -528,37 +614,6 @@ for key in load_per_type.keys():
 load_per_type = pd.DataFrame(load_per_type)
 load_per_type['imbalance'] = load_per_type.sum(axis=1)
 
-
-fig, ax = plt.subplots()
-load_per_type.plot(ax=ax)
-ax.set_xlabel("Hour on day D")
-ax.set_ylabel("Active Power [MW]")
-ax.set_title("df_loads per type before RD ")
-
-fig, ax = plt.subplots()
-pd.DataFrame(load_per_node).T.plot(ax=ax)
-ax.set_xlabel("Hour on day D")
-ax.set_ylabel("Active Power [MW]")
-ax.set_title("df_loads per node before RD")
-
-# Truncate load_per_node after the th decimal
-#scaling_factor = 10**4
-#load_per_node = np.trunc(load_per_node * scaling_factor) / scaling_factor
-# check if the system is balanced, exit the script if not the case
-if load_per_node.sum() != 0:
-    fig, ax = plt.subplots()
-    pd. DataFrame(load_per_node_D2.sum(axis = 0)).plot(ax=ax)
-    ax.set_xlabel("Hour on day D")
-    ax.set_ylabel("Unbalance [MW]")
-    ax.set_title("Unbalance per hour ")
-    if abs(load_per_node.sum()) > 1e-10:
-        print(f' The system is inherently unbalanced  {load_per_node.sum()} MWh additional generation/load is required is required.\n')
-    elif abs(load_per_node.sum()) < 1e-10:
-        imbalance = load_per_node.sum(axis=0)
-        load_per_node+= imbalance
-        print(f'imbalance smaller then 1e-10 dtetceted and compensated to {load_per_node.sum()}')
-else:
-    print('Balanced market coupling succesful, load flow calculation will be performed\n')
 
 # ### Redispatch
 # Using Pyomo, and load-flow constraints, dispatch the optimal set of bids to minimze costs and mitigate any remaining congestion. 
@@ -588,10 +643,10 @@ df_RD_orderbook = add_generation_to_orderbook(chp_coupling, df_RD_orderbook, 'CH
 #change the pricing of RE and CHP RD orders
 for index, row in df_RD_orderbook.iterrows():
     if row['type']=='RE':
-        row['price'] = certificate_price #price of green certficates
+        row['price'] = 6.0 #price of green certficates
         df_RD_orderbook.iloc[index,:] = row
     if row['type']=='CHP' and row['buy/sell']=='buy':
-        row['price'] = CHP_buy_price #price of fuel
+        row['price'] = -20 #price of green certficates
         df_RD_orderbook.iloc[index,:] = row
                                         
 #now we add the remainder of the CHP capacity to the orderbook for upward orders
@@ -618,7 +673,7 @@ for row, values in df_chp_remainder.iterrows(): # aloop that adds all the remain
 df_RD_orderbook = merge_orders(df_RD_orderbook)
 start_time = monotonic()
 # something
-from RD_CBC_functionsV2 import optimal_redispatch
+from RD_CBC_functionsV3 import optimal_redispatch
 
 model_RD, termination_condition_RD = optimal_redispatch(load_per_node, df_RD_orderbook)
 
@@ -668,7 +723,6 @@ total_costs = total_costs_RD + total_costs_CBC
 print(f'\nTotal costs are {total_costs}.\n-RD costs = {total_costs_RD} \n-CBC costs = {total_costs_CBC}')
 
 
-# %%
 
 
 

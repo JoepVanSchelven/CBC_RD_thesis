@@ -1,114 +1,2131 @@
 \ Model objective_function_copy
 \ LP format - for model browsing. Use MPS format to capture full model detail.
-\ Signature: 0x2af99c9700346868
+\ Signature: 0xba7c56b8386ab860
 Minimize
  
 Subject To
+ c_u_con_def_congestion_1(16_0)_: f(16_0) - congestion(16_0) <= 0.6
+ c_u_con_def_congestion_1(16_1)_: f(16_1) - congestion(16_1) <= 0.6
+ c_u_con_def_congestion_1(16_2)_: f(16_2) - congestion(16_2) <= 0.6
+ c_u_con_def_congestion_1(16_3)_: f(16_3) - congestion(16_3) <= 0.6
+ c_u_con_def_congestion_1(16_4)_: f(16_4) - congestion(16_4) <= 0.6
+ c_u_con_def_congestion_1(16_6)_: f(16_6) - congestion(16_6) <= 0.6
+ c_u_con_def_congestion_1(42_0)_: f(42_0) - congestion(42_0) <= 0.275
+ c_u_con_def_congestion_1(42_1)_: f(42_1) - congestion(42_1) <= 0.275
+ c_u_con_def_congestion_1(42_2)_: f(42_2) - congestion(42_2) <= 0.275
+ c_u_con_def_congestion_1(42_3)_: f(42_3) - congestion(42_3) <= 0.275
+ c_u_con_def_congestion_1(42_4)_: f(42_4) - congestion(42_4) <= 0.275
+ c_u_con_def_congestion_1(42_6)_: f(42_6) - congestion(42_6) <= 0.275
+ c_u_con_def_congestion_2(24_0)_: - f(24_0) - congestion(24_0) <= 0.8
+ c_u_con_def_congestion_2(24_1)_: - f(24_1) - congestion(24_1) <= 0.8
+ c_u_con_def_congestion_2(24_2)_: - f(24_2) - congestion(24_2) <= 0.8
+ c_u_con_def_congestion_2(24_3)_: - f(24_3) - congestion(24_3) <= 0.8
+ c_u_con_def_congestion_2(24_4)_: - f(24_4) - congestion(24_4) <= 0.8
+ c_u_con_def_congestion_2(24_5)_: - f(24_5) - congestion(24_5) <= 0.8
+ c_u_con_def_congestion_2(24_6)_: - f(24_6) - congestion(24_6) <= 0.8
+ c_u_con_def_congestion_2(24_7)_: - f(24_7) - congestion(24_7) <= 0.8
+ c_u_con_def_congestion_2(25_0)_: - f(25_0) - congestion(25_0) <= 0.75
+ c_u_con_def_congestion_2(25_1)_: - f(25_1) - congestion(25_1) <= 0.75
+ c_u_con_def_congestion_2(25_2)_: - f(25_2) - congestion(25_2) <= 0.75
+ c_u_con_def_congestion_2(25_3)_: - f(25_3) - congestion(25_3) <= 0.75
+ c_u_con_def_congestion_2(25_4)_: - f(25_4) - congestion(25_4) <= 0.75
+ c_u_con_def_congestion_2(25_5)_: - f(25_5) - congestion(25_5) <= 0.75
+ c_u_con_def_congestion_2(25_6)_: - f(25_6) - congestion(25_6) <= 0.75
+ c_u_con_def_congestion_2(25_7)_: - f(25_7) - congestion(25_7) <= 0.75
+ c_u_con_def_congestion_2(29_7)_: - f(29_7) - congestion(29_7) <= 1.3
+ c_e_con_DC_flow(0_0)_: f(0_0) - 2000 theta(0_0) + 2000 theta(1_0) = 0
+ c_e_con_DC_flow(0_1)_: f(0_1) - 2000 theta(0_1) + 2000 theta(1_1) = 0
+ c_e_con_DC_flow(0_2)_: f(0_2) - 2000 theta(0_2) + 2000 theta(1_2) = 0
+ c_e_con_DC_flow(0_3)_: f(0_3) - 2000 theta(0_3) + 2000 theta(1_3) = 0
+ c_e_con_DC_flow(0_4)_: f(0_4) - 2000 theta(0_4) + 2000 theta(1_4) = 0
+ c_e_con_DC_flow(0_6)_: f(0_6) - 2000 theta(0_6) + 2000 theta(1_6) = 0
+ c_e_con_DC_flow(0_7)_: f(0_7) - 2000 theta(0_7) + 2000 theta(1_7) = 0
+ c_e_con_DC_flow(1_0)_: f(1_0) - 2000 theta(1_0) + 2000 theta(2_0) = 0
+ c_e_con_DC_flow(1_1)_: f(1_1) - 2000 theta(1_1) + 2000 theta(2_1) = 0
+ c_e_con_DC_flow(1_2)_: f(1_2) - 2000 theta(1_2) + 2000 theta(2_2) = 0
+ c_e_con_DC_flow(1_3)_: f(1_3) - 2000 theta(1_3) + 2000 theta(2_3) = 0
+ c_e_con_DC_flow(1_4)_: f(1_4) - 2000 theta(1_4) + 2000 theta(2_4) = 0
+ c_e_con_DC_flow(1_6)_: f(1_6) - 2000 theta(1_6) + 2000 theta(2_6) = 0
+ c_e_con_DC_flow(1_7)_: f(1_7) - 2000 theta(1_7) + 2000 theta(2_7) = 0
+ c_e_con_DC_flow(2_0)_: f(2_0) - 3333.333333333333 theta(2_0)
+   + 3333.333333333333 theta(3_0) = 0
+ c_e_con_DC_flow(2_1)_: f(2_1) - 3333.333333333333 theta(2_1)
+   + 3333.333333333333 theta(3_1) = 0
+ c_e_con_DC_flow(2_2)_: f(2_2) - 3333.333333333333 theta(2_2)
+   + 3333.333333333333 theta(3_2) = 0
+ c_e_con_DC_flow(2_3)_: f(2_3) - 3333.333333333333 theta(2_3)
+   + 3333.333333333333 theta(3_3) = 0
+ c_e_con_DC_flow(2_4)_: f(2_4) - 3333.333333333333 theta(2_4)
+   + 3333.333333333333 theta(3_4) = 0
+ c_e_con_DC_flow(2_6)_: f(2_6) - 3333.333333333333 theta(2_6)
+   + 3333.333333333333 theta(3_6) = 0
+ c_e_con_DC_flow(2_7)_: f(2_7) - 3333.333333333333 theta(2_7)
+   + 3333.333333333333 theta(3_7) = 0
+ c_e_con_DC_flow(3_0)_: f(3_0) - 1250 theta(0_0) + 1250 theta(3_0) = 0
+ c_e_con_DC_flow(3_1)_: f(3_1) - 1250 theta(0_1) + 1250 theta(3_1) = 0
+ c_e_con_DC_flow(3_2)_: f(3_2) - 1250 theta(0_2) + 1250 theta(3_2) = 0
+ c_e_con_DC_flow(3_3)_: f(3_3) - 1250 theta(0_3) + 1250 theta(3_3) = 0
+ c_e_con_DC_flow(3_4)_: f(3_4) - 1250 theta(0_4) + 1250 theta(3_4) = 0
+ c_e_con_DC_flow(3_6)_: f(3_6) - 1250 theta(0_6) + 1250 theta(3_6) = 0
+ c_e_con_DC_flow(3_7)_: f(3_7) - 1250 theta(0_7) + 1250 theta(3_7) = 0
+ c_e_con_DC_flow(4_0)_: f(4_0) - 1000 theta(3_0) + 1000 theta(4_0) = 0
+ c_e_con_DC_flow(4_1)_: f(4_1) - 1000 theta(3_1) + 1000 theta(4_1) = 0
+ c_e_con_DC_flow(4_2)_: f(4_2) - 1000 theta(3_2) + 1000 theta(4_2) = 0
+ c_e_con_DC_flow(4_3)_: f(4_3) - 1000 theta(3_3) + 1000 theta(4_3) = 0
+ c_e_con_DC_flow(4_4)_: f(4_4) - 1000 theta(3_4) + 1000 theta(4_4) = 0
+ c_e_con_DC_flow(4_6)_: f(4_6) - 1000 theta(3_6) + 1000 theta(4_6) = 0
+ c_e_con_DC_flow(4_7)_: f(4_7) - 1000 theta(3_7) + 1000 theta(4_7) = 0
+ c_e_con_DC_flow(5_0)_: f(5_0) - 1428.571428571429 theta(4_0)
+   + 1428.571428571429 theta(5_0) = 0
+ c_e_con_DC_flow(5_1)_: f(5_1) - 1428.571428571429 theta(4_1)
+   + 1428.571428571429 theta(5_1) = 0
+ c_e_con_DC_flow(5_2)_: f(5_2) - 1428.571428571429 theta(4_2)
+   + 1428.571428571429 theta(5_2) = 0
+ c_e_con_DC_flow(5_3)_: f(5_3) - 1428.571428571429 theta(4_3)
+   + 1428.571428571429 theta(5_3) = 0
+ c_e_con_DC_flow(5_4)_: f(5_4) - 1428.571428571429 theta(4_4)
+   + 1428.571428571429 theta(5_4) = 0
+ c_e_con_DC_flow(5_6)_: f(5_6) - 1428.571428571429 theta(4_6)
+   + 1428.571428571429 theta(5_6) = 0
+ c_e_con_DC_flow(5_7)_: f(5_7) - 1428.571428571429 theta(4_7)
+   + 1428.571428571429 theta(5_7) = 0
+ c_e_con_DC_flow(6_0)_: f(6_0) - 3333.333333333333 theta(5_0)
+   + 3333.333333333333 theta(6_0) = 0
+ c_e_con_DC_flow(6_1)_: f(6_1) - 3333.333333333333 theta(5_1)
+   + 3333.333333333333 theta(6_1) = 0
+ c_e_con_DC_flow(6_2)_: f(6_2) - 3333.333333333333 theta(5_2)
+   + 3333.333333333333 theta(6_2) = 0
+ c_e_con_DC_flow(6_3)_: f(6_3) - 3333.333333333333 theta(5_3)
+   + 3333.333333333333 theta(6_3) = 0
+ c_e_con_DC_flow(6_4)_: f(6_4) - 3333.333333333333 theta(5_4)
+   + 3333.333333333333 theta(6_4) = 0
+ c_e_con_DC_flow(6_6)_: f(6_6) - 3333.333333333333 theta(5_6)
+   + 3333.333333333333 theta(6_6) = 0
+ c_e_con_DC_flow(6_7)_: f(6_7) - 3333.333333333333 theta(5_7)
+   + 3333.333333333333 theta(6_7) = 0
+ c_e_con_DC_flow(7_0)_: f(7_0) - 2500 theta(6_0) + 2500 theta(7_0) = 0
+ c_e_con_DC_flow(7_1)_: f(7_1) - 2500 theta(6_1) + 2500 theta(7_1) = 0
+ c_e_con_DC_flow(7_2)_: f(7_2) - 2500 theta(6_2) + 2500 theta(7_2) = 0
+ c_e_con_DC_flow(7_3)_: f(7_3) - 2500 theta(6_3) + 2500 theta(7_3) = 0
+ c_e_con_DC_flow(7_4)_: f(7_4) - 2500 theta(6_4) + 2500 theta(7_4) = 0
+ c_e_con_DC_flow(7_6)_: f(7_6) - 2500 theta(6_6) + 2500 theta(7_6) = 0
+ c_e_con_DC_flow(7_7)_: f(7_7) - 2500 theta(6_7) + 2500 theta(7_7) = 0
+ c_e_con_DC_flow(9_0)_: f(9_0) - 1666.666666666667 theta(7_0)
+   + 1666.666666666667 theta(11_0) = 0
+ c_e_con_DC_flow(9_1)_: f(9_1) - 1666.666666666667 theta(7_1)
+   + 1666.666666666667 theta(11_1) = 0
+ c_e_con_DC_flow(9_2)_: f(9_2) - 1666.666666666667 theta(7_2)
+   + 1666.666666666667 theta(11_2) = 0
+ c_e_con_DC_flow(9_3)_: f(9_3) - 1666.666666666667 theta(7_3)
+   + 1666.666666666667 theta(11_3) = 0
+ c_e_con_DC_flow(9_4)_: f(9_4) - 1666.666666666667 theta(7_4)
+   + 1666.666666666667 theta(11_4) = 0
+ c_e_con_DC_flow(9_6)_: f(9_6) - 1666.666666666667 theta(7_6)
+   + 1666.666666666667 theta(11_6) = 0
+ c_e_con_DC_flow(9_7)_: f(9_7) - 1666.666666666667 theta(7_7)
+   + 1666.666666666667 theta(11_7) = 0
+ c_e_con_DC_flow(10_0)_: f(10_0) - 2000 theta(7_0) + 2000 theta(9_0) = 0
+ c_e_con_DC_flow(10_1)_: f(10_1) - 2000 theta(7_1) + 2000 theta(9_1) = 0
+ c_e_con_DC_flow(10_2)_: f(10_2) - 2000 theta(7_2) + 2000 theta(9_2) = 0
+ c_e_con_DC_flow(10_3)_: f(10_3) - 2000 theta(7_3) + 2000 theta(9_3) = 0
+ c_e_con_DC_flow(10_4)_: f(10_4) - 2000 theta(7_4) + 2000 theta(9_4) = 0
+ c_e_con_DC_flow(10_6)_: f(10_6) - 2000 theta(7_6) + 2000 theta(9_6) = 0
+ c_e_con_DC_flow(10_7)_: f(10_7) - 2000 theta(7_7) + 2000 theta(9_7) = 0
+ c_e_con_DC_flow(11_0)_: f(11_0) - 10000 theta(9_0) + 10000 theta(10_0)
+   = 0
+ c_e_con_DC_flow(11_1)_: f(11_1) - 10000 theta(9_1) + 10000 theta(10_1)
+   = 0
+ c_e_con_DC_flow(11_2)_: f(11_2) - 10000 theta(9_2) + 10000 theta(10_2)
+   = 0
+ c_e_con_DC_flow(11_3)_: f(11_3) - 10000 theta(9_3) + 10000 theta(10_3)
+   = 0
+ c_e_con_DC_flow(11_4)_: f(11_4) - 10000 theta(9_4) + 10000 theta(10_4)
+   = 0
+ c_e_con_DC_flow(11_6)_: f(11_6) - 10000 theta(9_6) + 10000 theta(10_6)
+   = 0
+ c_e_con_DC_flow(11_7)_: f(11_7) - 10000 theta(9_7) + 10000 theta(10_7)
+   = 0
+ c_e_con_DC_flow(12_0)_: f(12_0) + 1666.666666666667 theta(11_0)
+   - 1666.666666666667 theta(10_0) = 0
+ c_e_con_DC_flow(12_1)_: f(12_1) + 1666.666666666667 theta(11_1)
+   - 1666.666666666667 theta(10_1) = 0
+ c_e_con_DC_flow(12_2)_: f(12_2) + 1666.666666666667 theta(11_2)
+   - 1666.666666666667 theta(10_2) = 0
+ c_e_con_DC_flow(12_3)_: f(12_3) + 1666.666666666667 theta(11_3)
+   - 1666.666666666667 theta(10_3) = 0
+ c_e_con_DC_flow(12_4)_: f(12_4) + 1666.666666666667 theta(11_4)
+   - 1666.666666666667 theta(10_4) = 0
+ c_e_con_DC_flow(12_6)_: f(12_6) + 1666.666666666667 theta(11_6)
+   - 1666.666666666667 theta(10_6) = 0
+ c_e_con_DC_flow(12_7)_: f(12_7) + 1666.666666666667 theta(11_7)
+   - 1666.666666666667 theta(10_7) = 0
+ c_e_con_DC_flow(13_0)_: f(13_0) - 2500 theta(2_0) + 2500 theta(11_0) = 0
+ c_e_con_DC_flow(13_1)_: f(13_1) - 2500 theta(2_1) + 2500 theta(11_1) = 0
+ c_e_con_DC_flow(13_2)_: f(13_2) - 2500 theta(2_2) + 2500 theta(11_2) = 0
+ c_e_con_DC_flow(13_3)_: f(13_3) - 2500 theta(2_3) + 2500 theta(11_3) = 0
+ c_e_con_DC_flow(13_4)_: f(13_4) - 2500 theta(2_4) + 2500 theta(11_4) = 0
+ c_e_con_DC_flow(13_6)_: f(13_6) - 2500 theta(2_6) + 2500 theta(11_6) = 0
+ c_e_con_DC_flow(13_7)_: f(13_7) - 2500 theta(2_7) + 2500 theta(11_7) = 0
+ c_e_con_DC_flow(14_0)_: f(14_0) - 10000 theta(0_0) + 10000 theta(12_0)
+   = 0
+ c_e_con_DC_flow(14_1)_: f(14_1) - 10000 theta(0_1) + 10000 theta(12_1)
+   = 0
+ c_e_con_DC_flow(14_2)_: f(14_2) - 10000 theta(0_2) + 10000 theta(12_2)
+   = 0
+ c_e_con_DC_flow(14_3)_: f(14_3) - 10000 theta(0_3) + 10000 theta(12_3)
+   = 0
+ c_e_con_DC_flow(14_4)_: f(14_4) - 10000 theta(0_4) + 10000 theta(12_4)
+   = 0
+ c_e_con_DC_flow(14_6)_: f(14_6) - 10000 theta(0_6) + 10000 theta(12_6)
+   = 0
+ c_e_con_DC_flow(14_7)_: f(14_7) - 10000 theta(0_7) + 10000 theta(12_7)
+   = 0
+ c_e_con_DC_flow(15_0)_: f(15_0) - 10000 theta(12_0) + 10000 theta(13_0)
+   = 0
+ c_e_con_DC_flow(15_1)_: f(15_1) - 10000 theta(12_1) + 10000 theta(13_1)
+   = 0
+ c_e_con_DC_flow(15_2)_: f(15_2) - 10000 theta(12_2) + 10000 theta(13_2)
+   = 0
+ c_e_con_DC_flow(15_3)_: f(15_3) - 10000 theta(12_3) + 10000 theta(13_3)
+   = 0
+ c_e_con_DC_flow(15_4)_: f(15_4) - 10000 theta(12_4) + 10000 theta(13_4)
+   = 0
+ c_e_con_DC_flow(15_6)_: f(15_6) - 10000 theta(12_6) + 10000 theta(13_6)
+   = 0
+ c_e_con_DC_flow(15_7)_: f(15_7) - 10000 theta(12_7) + 10000 theta(13_7)
+   = 0
+ c_e_con_DC_flow(16_0)_: f(16_0) - 10000 theta(3_0) + 10000 theta(12_0)
+   = 0
+ c_e_con_DC_flow(16_1)_: f(16_1) - 10000 theta(3_1) + 10000 theta(12_1)
+   = 0
+ c_e_con_DC_flow(16_2)_: f(16_2) - 10000 theta(3_2) + 10000 theta(12_2)
+   = 0
+ c_e_con_DC_flow(16_3)_: f(16_3) - 10000 theta(3_3) + 10000 theta(12_3)
+   = 0
+ c_e_con_DC_flow(16_4)_: f(16_4) - 10000 theta(3_4) + 10000 theta(12_4)
+   = 0
+ c_e_con_DC_flow(16_6)_: f(16_6) - 10000 theta(3_6) + 10000 theta(12_6)
+   = 0
+ c_e_con_DC_flow(16_7)_: f(16_7) - 10000 theta(3_7) + 10000 theta(12_7)
+   = 0
+ c_e_con_DC_flow(17_0)_: f(17_0) - 10000 theta(13_0) + 10000 theta(14_0)
+   = 0
+ c_e_con_DC_flow(17_1)_: f(17_1) - 10000 theta(13_1) + 10000 theta(14_1)
+   = 0
+ c_e_con_DC_flow(17_2)_: f(17_2) - 10000 theta(13_2) + 10000 theta(14_2)
+   = 0
+ c_e_con_DC_flow(17_3)_: f(17_3) - 10000 theta(13_3) + 10000 theta(14_3)
+   = 0
+ c_e_con_DC_flow(17_4)_: f(17_4) - 10000 theta(13_4) + 10000 theta(14_4)
+   = 0
+ c_e_con_DC_flow(17_6)_: f(17_6) - 10000 theta(13_6) + 10000 theta(14_6)
+   = 0
+ c_e_con_DC_flow(17_7)_: f(17_7) - 10000 theta(13_7) + 10000 theta(14_7)
+   = 0
+ c_e_con_DC_flow(18_0)_: f(18_0) - 10000 theta(14_0) + 10000 theta(15_0)
+   = 0
+ c_e_con_DC_flow(18_1)_: f(18_1) - 10000 theta(14_1) + 10000 theta(15_1)
+   = 0
+ c_e_con_DC_flow(18_2)_: f(18_2) - 10000 theta(14_2) + 10000 theta(15_2)
+   = 0
+ c_e_con_DC_flow(18_3)_: f(18_3) - 10000 theta(14_3) + 10000 theta(15_3)
+   = 0
+ c_e_con_DC_flow(18_4)_: f(18_4) - 10000 theta(14_4) + 10000 theta(15_4)
+   = 0
+ c_e_con_DC_flow(18_6)_: f(18_6) - 10000 theta(14_6) + 10000 theta(15_6)
+   = 0
+ c_e_con_DC_flow(18_7)_: f(18_7) - 10000 theta(14_7) + 10000 theta(15_7)
+   = 0
+ c_e_con_DC_flow(19_0)_: f(19_0) - 10000 theta(12_0) + 10000 theta(15_0)
+   = 0
+ c_e_con_DC_flow(19_1)_: f(19_1) - 10000 theta(12_1) + 10000 theta(15_1)
+   = 0
+ c_e_con_DC_flow(19_2)_: f(19_2) - 10000 theta(12_2) + 10000 theta(15_2)
+   = 0
+ c_e_con_DC_flow(19_3)_: f(19_3) - 10000 theta(12_3) + 10000 theta(15_3)
+   = 0
+ c_e_con_DC_flow(19_4)_: f(19_4) - 10000 theta(12_4) + 10000 theta(15_4)
+   = 0
+ c_e_con_DC_flow(19_6)_: f(19_6) - 10000 theta(12_6) + 10000 theta(15_6)
+   = 0
+ c_e_con_DC_flow(19_7)_: f(19_7) - 10000 theta(12_7) + 10000 theta(15_7)
+   = 0
+ c_e_con_DC_flow(20_0)_: f(20_0) - 10000 theta(16_0) + 10000 theta(17_0)
+   = 0
+ c_e_con_DC_flow(20_1)_: f(20_1) - 10000 theta(16_1) + 10000 theta(17_1)
+   = 0
+ c_e_con_DC_flow(20_2)_: f(20_2) - 10000 theta(16_2) + 10000 theta(17_2)
+   = 0
+ c_e_con_DC_flow(20_3)_: f(20_3) - 10000 theta(16_3) + 10000 theta(17_3)
+   = 0
+ c_e_con_DC_flow(20_4)_: f(20_4) - 10000 theta(16_4) + 10000 theta(17_4)
+   = 0
+ c_e_con_DC_flow(20_6)_: f(20_6) - 10000 theta(16_6) + 10000 theta(17_6)
+   = 0
+ c_e_con_DC_flow(20_7)_: f(20_7) - 10000 theta(16_7) + 10000 theta(17_7)
+   = 0
+ c_e_con_DC_flow(21_0)_: f(21_0) - 10000 theta(17_0) + 10000 theta(18_0)
+   = 0
+ c_e_con_DC_flow(21_1)_: f(21_1) - 10000 theta(17_1) + 10000 theta(18_1)
+   = 0
+ c_e_con_DC_flow(21_2)_: f(21_2) - 10000 theta(17_2) + 10000 theta(18_2)
+   = 0
+ c_e_con_DC_flow(21_3)_: f(21_3) - 10000 theta(17_3) + 10000 theta(18_3)
+   = 0
+ c_e_con_DC_flow(21_4)_: f(21_4) - 10000 theta(17_4) + 10000 theta(18_4)
+   = 0
+ c_e_con_DC_flow(21_6)_: f(21_6) - 10000 theta(17_6) + 10000 theta(18_6)
+   = 0
+ c_e_con_DC_flow(21_7)_: f(21_7) - 10000 theta(17_7) + 10000 theta(18_7)
+   = 0
+ c_e_con_DC_flow(22_0)_: f(22_0) - 10000 theta(18_0) + 10000 theta(19_0)
+   = 0
+ c_e_con_DC_flow(22_1)_: f(22_1) - 10000 theta(18_1) + 10000 theta(19_1)
+   = 0
+ c_e_con_DC_flow(22_2)_: f(22_2) - 10000 theta(18_2) + 10000 theta(19_2)
+   = 0
+ c_e_con_DC_flow(22_3)_: f(22_3) - 10000 theta(18_3) + 10000 theta(19_3)
+   = 0
+ c_e_con_DC_flow(22_4)_: f(22_4) - 10000 theta(18_4) + 10000 theta(19_4)
+   = 0
+ c_e_con_DC_flow(22_6)_: f(22_6) - 10000 theta(18_6) + 10000 theta(19_6)
+   = 0
+ c_e_con_DC_flow(22_7)_: f(22_7) - 10000 theta(18_7) + 10000 theta(19_7)
+   = 0
+ c_e_con_DC_flow(23_0)_: f(23_0) - 10000 theta(16_0) + 10000 theta(19_0)
+   = 0
+ c_e_con_DC_flow(23_1)_: f(23_1) - 10000 theta(16_1) + 10000 theta(19_1)
+   = 0
+ c_e_con_DC_flow(23_2)_: f(23_2) - 10000 theta(16_2) + 10000 theta(19_2)
+   = 0
+ c_e_con_DC_flow(23_3)_: f(23_3) - 10000 theta(16_3) + 10000 theta(19_3)
+   = 0
+ c_e_con_DC_flow(23_4)_: f(23_4) - 10000 theta(16_4) + 10000 theta(19_4)
+   = 0
+ c_e_con_DC_flow(23_6)_: f(23_6) - 10000 theta(16_6) + 10000 theta(19_6)
+   = 0
+ c_e_con_DC_flow(23_7)_: f(23_7) - 10000 theta(16_7) + 10000 theta(19_7)
+   = 0
+ c_e_con_DC_flow(29_0)_: f(29_0) - 10000 theta(7_0) + 10000 theta(23_0)
+   = 0
+ c_e_con_DC_flow(29_1)_: f(29_1) - 10000 theta(7_1) + 10000 theta(23_1)
+   = 0
+ c_e_con_DC_flow(29_2)_: f(29_2) - 10000 theta(7_2) + 10000 theta(23_2)
+   = 0
+ c_e_con_DC_flow(29_3)_: f(29_3) - 10000 theta(7_3) + 10000 theta(23_3)
+   = 0
+ c_e_con_DC_flow(29_4)_: f(29_4) - 10000 theta(7_4) + 10000 theta(23_4)
+   = 0
+ c_e_con_DC_flow(29_6)_: f(29_6) - 10000 theta(7_6) + 10000 theta(23_6)
+   = 0
+ c_e_con_DC_flow(29_7)_: f(29_7) - 10000 theta(7_7) + 10000 theta(23_7)
+   = 0
+ c_e_con_DC_flow(30_0)_: f(30_0) - 10000 theta(23_0) + 10000 theta(24_0)
+   = 0
+ c_e_con_DC_flow(30_1)_: f(30_1) - 10000 theta(23_1) + 10000 theta(24_1)
+   = 0
+ c_e_con_DC_flow(30_2)_: f(30_2) - 10000 theta(23_2) + 10000 theta(24_2)
+   = 0
+ c_e_con_DC_flow(30_3)_: f(30_3) - 10000 theta(23_3) + 10000 theta(24_3)
+   = 0
+ c_e_con_DC_flow(30_4)_: f(30_4) - 10000 theta(23_4) + 10000 theta(24_4)
+   = 0
+ c_e_con_DC_flow(30_6)_: f(30_6) - 10000 theta(23_6) + 10000 theta(24_6)
+   = 0
+ c_e_con_DC_flow(30_7)_: f(30_7) - 10000 theta(23_7) + 10000 theta(24_7)
+   = 0
+ c_e_con_DC_flow(31_0)_: f(31_0) - 10000 theta(24_0) + 10000 theta(25_0)
+   = 0
+ c_e_con_DC_flow(31_1)_: f(31_1) - 10000 theta(24_1) + 10000 theta(25_1)
+   = 0
+ c_e_con_DC_flow(31_2)_: f(31_2) - 10000 theta(24_2) + 10000 theta(25_2)
+   = 0
+ c_e_con_DC_flow(31_3)_: f(31_3) - 10000 theta(24_3) + 10000 theta(25_3)
+   = 0
+ c_e_con_DC_flow(31_4)_: f(31_4) - 10000 theta(24_4) + 10000 theta(25_4)
+   = 0
+ c_e_con_DC_flow(31_6)_: f(31_6) - 10000 theta(24_6) + 10000 theta(25_6)
+   = 0
+ c_e_con_DC_flow(31_7)_: f(31_7) - 10000 theta(24_7) + 10000 theta(25_7)
+   = 0
+ c_e_con_DC_flow(32_0)_: f(32_0) - 10000 theta(6_0) + 10000 theta(25_0)
+   = 0
+ c_e_con_DC_flow(32_1)_: f(32_1) - 10000 theta(6_1) + 10000 theta(25_1)
+   = 0
+ c_e_con_DC_flow(32_2)_: f(32_2) - 10000 theta(6_2) + 10000 theta(25_2)
+   = 0
+ c_e_con_DC_flow(32_3)_: f(32_3) - 10000 theta(6_3) + 10000 theta(25_3)
+   = 0
+ c_e_con_DC_flow(32_4)_: f(32_4) - 10000 theta(6_4) + 10000 theta(25_4)
+   = 0
+ c_e_con_DC_flow(32_6)_: f(32_6) - 10000 theta(6_6) + 10000 theta(25_6)
+   = 0
+ c_e_con_DC_flow(32_7)_: f(32_7) - 10000 theta(6_7) + 10000 theta(25_7)
+   = 0
+ c_e_con_DC_flow(33_0)_: f(33_0) - 10000 theta(11_0) + 10000 theta(26_0)
+   = 0
+ c_e_con_DC_flow(33_1)_: f(33_1) - 10000 theta(11_1) + 10000 theta(26_1)
+   = 0
+ c_e_con_DC_flow(33_2)_: f(33_2) - 10000 theta(11_2) + 10000 theta(26_2)
+   = 0
+ c_e_con_DC_flow(33_3)_: f(33_3) - 10000 theta(11_3) + 10000 theta(26_3)
+   = 0
+ c_e_con_DC_flow(33_4)_: f(33_4) - 10000 theta(11_4) + 10000 theta(26_4)
+   = 0
+ c_e_con_DC_flow(33_6)_: f(33_6) - 10000 theta(11_6) + 10000 theta(26_6)
+   = 0
+ c_e_con_DC_flow(33_7)_: f(33_7) - 10000 theta(11_7) + 10000 theta(26_7)
+   = 0
+ c_e_con_DC_flow(34_0)_: f(34_0) - 10000 theta(26_0) + 10000 theta(27_0)
+   = 0
+ c_e_con_DC_flow(34_1)_: f(34_1) - 10000 theta(26_1) + 10000 theta(27_1)
+   = 0
+ c_e_con_DC_flow(34_2)_: f(34_2) - 10000 theta(26_2) + 10000 theta(27_2)
+   = 0
+ c_e_con_DC_flow(34_3)_: f(34_3) - 10000 theta(26_3) + 10000 theta(27_3)
+   = 0
+ c_e_con_DC_flow(34_4)_: f(34_4) - 10000 theta(26_4) + 10000 theta(27_4)
+   = 0
+ c_e_con_DC_flow(34_6)_: f(34_6) - 10000 theta(26_6) + 10000 theta(27_6)
+   = 0
+ c_e_con_DC_flow(34_7)_: f(34_7) - 10000 theta(26_7) + 10000 theta(27_7)
+   = 0
+ c_e_con_DC_flow(35_0)_: f(35_0) - 10000 theta(7_0) + 10000 theta(27_0)
+   = 0
+ c_e_con_DC_flow(35_1)_: f(35_1) - 10000 theta(7_1) + 10000 theta(27_1)
+   = 0
+ c_e_con_DC_flow(35_2)_: f(35_2) - 10000 theta(7_2) + 10000 theta(27_2)
+   = 0
+ c_e_con_DC_flow(35_3)_: f(35_3) - 10000 theta(7_3) + 10000 theta(27_3)
+   = 0
+ c_e_con_DC_flow(35_4)_: f(35_4) - 10000 theta(7_4) + 10000 theta(27_4)
+   = 0
+ c_e_con_DC_flow(35_6)_: f(35_6) - 10000 theta(7_6) + 10000 theta(27_6)
+   = 0
+ c_e_con_DC_flow(35_7)_: f(35_7) - 10000 theta(7_7) + 10000 theta(27_7)
+   = 0
+ c_e_con_DC_flow(36_0)_: f(36_0) - 10000 theta(27_0) + 10000 theta(28_0)
+   = 0
+ c_e_con_DC_flow(36_1)_: f(36_1) - 10000 theta(27_1) + 10000 theta(28_1)
+   = 0
+ c_e_con_DC_flow(36_2)_: f(36_2) - 10000 theta(27_2) + 10000 theta(28_2)
+   = 0
+ c_e_con_DC_flow(36_3)_: f(36_3) - 10000 theta(27_3) + 10000 theta(28_3)
+   = 0
+ c_e_con_DC_flow(36_4)_: f(36_4) - 10000 theta(27_4) + 10000 theta(28_4)
+   = 0
+ c_e_con_DC_flow(36_6)_: f(36_6) - 10000 theta(27_6) + 10000 theta(28_6)
+   = 0
+ c_e_con_DC_flow(36_7)_: f(36_7) - 10000 theta(27_7) + 10000 theta(28_7)
+   = 0
+ c_e_con_DC_flow(37_0)_: f(37_0) - 10000 theta(9_0) + 10000 theta(28_0)
+   = 0
+ c_e_con_DC_flow(37_1)_: f(37_1) - 10000 theta(9_1) + 10000 theta(28_1)
+   = 0
+ c_e_con_DC_flow(37_2)_: f(37_2) - 10000 theta(9_2) + 10000 theta(28_2)
+   = 0
+ c_e_con_DC_flow(37_3)_: f(37_3) - 10000 theta(9_3) + 10000 theta(28_3)
+   = 0
+ c_e_con_DC_flow(37_4)_: f(37_4) - 10000 theta(9_4) + 10000 theta(28_4)
+   = 0
+ c_e_con_DC_flow(37_6)_: f(37_6) - 10000 theta(9_6) + 10000 theta(28_6)
+   = 0
+ c_e_con_DC_flow(37_7)_: f(37_7) - 10000 theta(9_7) + 10000 theta(28_7)
+   = 0
+ c_e_con_DC_flow(38_0)_: f(38_0) - 10000 theta(10_0) + 10000 theta(28_0)
+   = 0
+ c_e_con_DC_flow(38_1)_: f(38_1) - 10000 theta(10_1) + 10000 theta(28_1)
+   = 0
+ c_e_con_DC_flow(38_2)_: f(38_2) - 10000 theta(10_2) + 10000 theta(28_2)
+   = 0
+ c_e_con_DC_flow(38_3)_: f(38_3) - 10000 theta(10_3) + 10000 theta(28_3)
+   = 0
+ c_e_con_DC_flow(38_4)_: f(38_4) - 10000 theta(10_4) + 10000 theta(28_4)
+   = 0
+ c_e_con_DC_flow(38_6)_: f(38_6) - 10000 theta(10_6) + 10000 theta(28_6)
+   = 0
+ c_e_con_DC_flow(38_7)_: f(38_7) - 10000 theta(10_7) + 10000 theta(28_7)
+   = 0
+ c_e_con_DC_flow(39_0)_: f(39_0) - 10000 theta(26_0) + 10000 theta(28_0)
+   = 0
+ c_e_con_DC_flow(39_1)_: f(39_1) - 10000 theta(26_1) + 10000 theta(28_1)
+   = 0
+ c_e_con_DC_flow(39_2)_: f(39_2) - 10000 theta(26_2) + 10000 theta(28_2)
+   = 0
+ c_e_con_DC_flow(39_3)_: f(39_3) - 10000 theta(26_3) + 10000 theta(28_3)
+   = 0
+ c_e_con_DC_flow(39_4)_: f(39_4) - 10000 theta(26_4) + 10000 theta(28_4)
+   = 0
+ c_e_con_DC_flow(39_6)_: f(39_6) - 10000 theta(26_6) + 10000 theta(28_6)
+   = 0
+ c_e_con_DC_flow(39_7)_: f(39_7) - 10000 theta(26_7) + 10000 theta(28_7)
+   = 0
+ c_e_con_DC_flow(40_0)_: f(40_0) - 10000 theta(1_0) + 10000 theta(15_0)
+   = 0
+ c_e_con_DC_flow(40_1)_: f(40_1) - 10000 theta(1_1) + 10000 theta(15_1)
+   = 0
+ c_e_con_DC_flow(40_2)_: f(40_2) - 10000 theta(1_2) + 10000 theta(15_2)
+   = 0
+ c_e_con_DC_flow(40_3)_: f(40_3) - 10000 theta(1_3) + 10000 theta(15_3)
+   = 0
+ c_e_con_DC_flow(40_4)_: f(40_4) - 10000 theta(1_4) + 10000 theta(15_4)
+   = 0
+ c_e_con_DC_flow(40_6)_: f(40_6) - 10000 theta(1_6) + 10000 theta(15_6)
+   = 0
+ c_e_con_DC_flow(40_7)_: f(40_7) - 10000 theta(1_7) + 10000 theta(15_7)
+   = 0
+ c_e_con_DC_flow(41_0)_: f(41_0) - 10000 theta(2_0) + 10000 theta(16_0)
+   = 0
+ c_e_con_DC_flow(41_1)_: f(41_1) - 10000 theta(2_1) + 10000 theta(16_1)
+   = 0
+ c_e_con_DC_flow(41_2)_: f(41_2) - 10000 theta(2_2) + 10000 theta(16_2)
+   = 0
+ c_e_con_DC_flow(41_3)_: f(41_3) - 10000 theta(2_3) + 10000 theta(16_3)
+   = 0
+ c_e_con_DC_flow(41_4)_: f(41_4) - 10000 theta(2_4) + 10000 theta(16_4)
+   = 0
+ c_e_con_DC_flow(41_6)_: f(41_6) - 10000 theta(2_6) + 10000 theta(16_6)
+   = 0
+ c_e_con_DC_flow(41_7)_: f(41_7) - 10000 theta(2_7) + 10000 theta(16_7)
+   = 0
+ c_e_con_DC_flow(42_0)_: f(42_0) - 10000 theta(4_0) + 10000 theta(18_0)
+   = 0
+ c_e_con_DC_flow(42_1)_: f(42_1) - 10000 theta(4_1) + 10000 theta(18_1)
+   = 0
+ c_e_con_DC_flow(42_2)_: f(42_2) - 10000 theta(4_2) + 10000 theta(18_2)
+   = 0
+ c_e_con_DC_flow(42_3)_: f(42_3) - 10000 theta(4_3) + 10000 theta(18_3)
+   = 0
+ c_e_con_DC_flow(42_4)_: f(42_4) - 10000 theta(4_4) + 10000 theta(18_4)
+   = 0
+ c_e_con_DC_flow(42_6)_: f(42_6) - 10000 theta(4_6) + 10000 theta(18_6)
+   = 0
+ c_e_con_DC_flow(42_7)_: f(42_7) - 10000 theta(4_7) + 10000 theta(18_7)
+   = 0
+ c_e_con_nodal_power_balance(0_0)_: - f(0_0) - f(3_0) - f(14_0) + p(0_0)
+   = 0
+ c_e_con_nodal_power_balance(0_1)_: - f(0_1) - f(3_1) - f(14_1) + p(0_1)
+   = 0
+ c_e_con_nodal_power_balance(0_2)_: - f(0_2) - f(3_2) - f(14_2) + p(0_2)
+   = 0
+ c_e_con_nodal_power_balance(0_3)_: - f(0_3) - f(3_3) - f(14_3) + p(0_3)
+   = 0
+ c_e_con_nodal_power_balance(0_4)_: - f(0_4) - f(3_4) - f(14_4) + p(0_4)
+   = 0
+ c_e_con_nodal_power_balance(0_6)_: - f(0_6) - f(3_6) - f(14_6) + p(0_6)
+   = 0
+ c_e_con_nodal_power_balance(0_7)_: - f(0_7) - f(3_7) - f(14_7) + p(0_7)
+   = 0
+ c_e_con_nodal_power_balance(1_0)_: f(0_0) - f(1_0) - f(40_0) + p(1_0) = 0
+ c_e_con_nodal_power_balance(1_1)_: f(0_1) - f(1_1) - f(40_1) + p(1_1) = 0
+ c_e_con_nodal_power_balance(1_2)_: f(0_2) - f(1_2) - f(40_2) + p(1_2) = 0
+ c_e_con_nodal_power_balance(1_3)_: f(0_3) - f(1_3) - f(40_3) + p(1_3) = 0
+ c_e_con_nodal_power_balance(1_4)_: f(0_4) - f(1_4) - f(40_4) + p(1_4) = 0
+ c_e_con_nodal_power_balance(1_6)_: f(0_6) - f(1_6) - f(40_6) + p(1_6) = 0
+ c_e_con_nodal_power_balance(1_7)_: f(0_7) - f(1_7) - f(40_7) + p(1_7) = 0
+ c_e_con_nodal_power_balance(2_0)_: f(1_0) - f(2_0) - f(13_0) - f(41_0)
+   + p(2_0) = 0
+ c_e_con_nodal_power_balance(2_1)_: f(1_1) - f(2_1) - f(13_1) - f(41_1)
+   + p(2_1) = 0
+ c_e_con_nodal_power_balance(2_2)_: f(1_2) - f(2_2) - f(13_2) - f(41_2)
+   + p(2_2) = 0
+ c_e_con_nodal_power_balance(2_3)_: f(1_3) - f(2_3) - f(13_3) - f(41_3)
+   + p(2_3) = 0
+ c_e_con_nodal_power_balance(2_4)_: f(1_4) - f(2_4) - f(13_4) - f(41_4)
+   + p(2_4) = 0
+ c_e_con_nodal_power_balance(2_6)_: f(1_6) - f(2_6) - f(13_6) - f(41_6)
+   + p(2_6) = 0
+ c_e_con_nodal_power_balance(2_7)_: f(1_7) - f(2_7) - f(13_7) - f(41_7)
+   + p(2_7) = 0
+ c_e_con_nodal_power_balance(3_0)_: f(2_0) + f(3_0) - f(4_0) - f(16_0)
+   + p(3_0) = 0
+ c_e_con_nodal_power_balance(3_1)_: f(2_1) + f(3_1) - f(4_1) - f(16_1)
+   + p(3_1) = 0
+ c_e_con_nodal_power_balance(3_2)_: f(2_2) + f(3_2) - f(4_2) - f(16_2)
+   + p(3_2) = 0
+ c_e_con_nodal_power_balance(3_3)_: f(2_3) + f(3_3) - f(4_3) - f(16_3)
+   + p(3_3) = 0
+ c_e_con_nodal_power_balance(3_4)_: f(2_4) + f(3_4) - f(4_4) - f(16_4)
+   + p(3_4) = 0
+ c_e_con_nodal_power_balance(3_6)_: f(2_6) + f(3_6) - f(4_6) - f(16_6)
+   + p(3_6) = 0
+ c_e_con_nodal_power_balance(3_7)_: f(2_7) + f(3_7) - f(4_7) - f(16_7)
+   + p(3_7) = 0
+ c_e_con_nodal_power_balance(4_0)_: f(4_0) - f(5_0) - f(42_0) + p(4_0) = 0
+ c_e_con_nodal_power_balance(4_1)_: f(4_1) - f(5_1) - f(42_1) + p(4_1) = 0
+ c_e_con_nodal_power_balance(4_2)_: f(4_2) - f(5_2) - f(42_2) + p(4_2) = 0
+ c_e_con_nodal_power_balance(4_3)_: f(4_3) - f(5_3) - f(42_3) + p(4_3) = 0
+ c_e_con_nodal_power_balance(4_4)_: f(4_4) - f(5_4) - f(42_4) + p(4_4) = 0
+ c_e_con_nodal_power_balance(4_6)_: f(4_6) - f(5_6) - f(42_6) + p(4_6) = 0
+ c_e_con_nodal_power_balance(4_7)_: f(4_7) - f(5_7) - f(42_7) + p(4_7) = 0
+ c_e_con_nodal_power_balance(5_0)_: f(5_0) - f(6_0) - f(24_0) - f(25_0)
+   + p(5_0) = 0
+ c_e_con_nodal_power_balance(5_1)_: f(5_1) - f(6_1) - f(24_1) - f(25_1)
+   + p(5_1) = 0
+ c_e_con_nodal_power_balance(5_2)_: f(5_2) - f(6_2) - f(24_2) - f(25_2)
+   + p(5_2) = 0
+ c_e_con_nodal_power_balance(5_3)_: f(5_3) - f(6_3) - f(24_3) - f(25_3)
+   + p(5_3) = 0
+ c_e_con_nodal_power_balance(5_4)_: f(5_4) - f(6_4) - f(24_4) - f(25_4)
+   + p(5_4) = 0
+ c_e_con_nodal_power_balance(5_6)_: f(5_6) - f(6_6) - f(24_6) - f(25_6)
+   + p(5_6) = 0
+ c_e_con_nodal_power_balance(5_7)_: f(5_7) - f(6_7) - f(24_7) - f(25_7)
+   + p(5_7) = 0
+ c_e_con_nodal_power_balance(6_0)_: f(6_0) - f(7_0) - f(32_0) + p(6_0) = 0
+ c_e_con_nodal_power_balance(6_1)_: f(6_1) - f(7_1) - f(32_1) + p(6_1) = 0
+ c_e_con_nodal_power_balance(6_2)_: f(6_2) - f(7_2) - f(32_2) + p(6_2) = 0
+ c_e_con_nodal_power_balance(6_3)_: f(6_3) - f(7_3) - f(32_3) + p(6_3) = 0
+ c_e_con_nodal_power_balance(6_4)_: f(6_4) - f(7_4) - f(32_4) + p(6_4) = 0
+ c_e_con_nodal_power_balance(6_6)_: f(6_6) - f(7_6) - f(32_6) + p(6_6) = 0
+ c_e_con_nodal_power_balance(6_7)_: f(6_7) - f(7_7) - f(32_7) + p(6_7) = 0
+ c_e_con_nodal_power_balance(7_0)_: f(7_0) - f(8_0) - f(9_0) - f(10_0)
+   - f(29_0) - f(35_0) + p(7_0) = 0
+ c_e_con_nodal_power_balance(7_1)_: f(7_1) - f(8_1) - f(9_1) - f(10_1)
+   - f(29_1) - f(35_1) + p(7_1) = 0
+ c_e_con_nodal_power_balance(7_2)_: f(7_2) - f(8_2) - f(9_2) - f(10_2)
+   - f(29_2) - f(35_2) + p(7_2) = 0
+ c_e_con_nodal_power_balance(7_3)_: f(7_3) - f(8_3) - f(9_3) - f(10_3)
+   - f(29_3) - f(35_3) + p(7_3) = 0
+ c_e_con_nodal_power_balance(7_4)_: f(7_4) - f(8_4) - f(9_4) - f(10_4)
+   - f(29_4) - f(35_4) + p(7_4) = 0
+ c_e_con_nodal_power_balance(7_6)_: f(7_6) - f(8_6) - f(9_6) - f(10_6)
+   - f(29_6) - f(35_6) + p(7_6) = 0
+ c_e_con_nodal_power_balance(7_7)_: f(7_7) - f(8_7) - f(9_7) - f(10_7)
+   - f(29_7) - f(35_7) + p(7_7) = 0
+ c_e_con_nodal_power_balance(8_0)_: f(8_0) + p(8_0) = 0
+ c_e_con_nodal_power_balance(8_1)_: f(8_1) + p(8_1) = 0
+ c_e_con_nodal_power_balance(8_2)_: f(8_2) + p(8_2) = 0
+ c_e_con_nodal_power_balance(8_3)_: f(8_3) + p(8_3) = 0
+ c_e_con_nodal_power_balance(8_4)_: f(8_4) + p(8_4) = 0
+ c_e_con_nodal_power_balance(8_6)_: f(8_6) + p(8_6) = 0
+ c_e_con_nodal_power_balance(8_7)_: f(8_7) + p(8_7) = 0
+ c_e_con_nodal_power_balance(9_0)_: f(10_0) - f(11_0) - f(37_0) + p(9_0)
+   = 0
+ c_e_con_nodal_power_balance(9_1)_: f(10_1) - f(11_1) - f(37_1) + p(9_1)
+   = 0
+ c_e_con_nodal_power_balance(9_2)_: f(10_2) - f(11_2) - f(37_2) + p(9_2)
+   = 0
+ c_e_con_nodal_power_balance(9_3)_: f(10_3) - f(11_3) - f(37_3) + p(9_3)
+   = 0
+ c_e_con_nodal_power_balance(9_4)_: f(10_4) - f(11_4) - f(37_4) + p(9_4)
+   = 0
+ c_e_con_nodal_power_balance(9_6)_: f(10_6) - f(11_6) - f(37_6) + p(9_6)
+   = 0
+ c_e_con_nodal_power_balance(9_7)_: f(10_7) - f(11_7) - f(37_7) + p(9_7)
+   = 0
+ c_e_con_nodal_power_balance(10_0)_: f(11_0) - f(12_0) - f(38_0) + p(10_0)
+   = 0
+ c_e_con_nodal_power_balance(10_1)_: f(11_1) - f(12_1) - f(38_1) + p(10_1)
+   = 0
+ c_e_con_nodal_power_balance(10_2)_: f(11_2) - f(12_2) - f(38_2) + p(10_2)
+   = 0
+ c_e_con_nodal_power_balance(10_3)_: f(11_3) - f(12_3) - f(38_3) + p(10_3)
+   = 0
+ c_e_con_nodal_power_balance(10_4)_: f(11_4) - f(12_4) - f(38_4) + p(10_4)
+   = 0
+ c_e_con_nodal_power_balance(10_6)_: f(11_6) - f(12_6) - f(38_6) + p(10_6)
+   = 0
+ c_e_con_nodal_power_balance(10_7)_: f(11_7) - f(12_7) - f(38_7) + p(10_7)
+   = 0
+ c_e_con_nodal_power_balance(11_0)_: f(9_0) + f(12_0) + f(13_0) - f(33_0)
+   + p(11_0) = 0
+ c_e_con_nodal_power_balance(11_1)_: f(9_1) + f(12_1) + f(13_1) - f(33_1)
+   + p(11_1) = 0
+ c_e_con_nodal_power_balance(11_2)_: f(9_2) + f(12_2) + f(13_2) - f(33_2)
+   + p(11_2) = 0
+ c_e_con_nodal_power_balance(11_3)_: f(9_3) + f(12_3) + f(13_3) - f(33_3)
+   + p(11_3) = 0
+ c_e_con_nodal_power_balance(11_4)_: f(9_4) + f(12_4) + f(13_4) - f(33_4)
+   + p(11_4) = 0
+ c_e_con_nodal_power_balance(11_6)_: f(9_6) + f(12_6) + f(13_6) - f(33_6)
+   + p(11_6) = 0
+ c_e_con_nodal_power_balance(11_7)_: f(9_7) + f(12_7) + f(13_7) - f(33_7)
+   + p(11_7) = 0
+ c_e_con_nodal_power_balance(12_0)_: f(14_0) - f(15_0) + f(16_0) - f(19_0)
+   + p(12_0) = 0
+ c_e_con_nodal_power_balance(12_1)_: f(14_1) - f(15_1) + f(16_1) - f(19_1)
+   + p(12_1) = 0
+ c_e_con_nodal_power_balance(12_2)_: f(14_2) - f(15_2) + f(16_2) - f(19_2)
+   + p(12_2) = 0
+ c_e_con_nodal_power_balance(12_3)_: f(14_3) - f(15_3) + f(16_3) - f(19_3)
+   + p(12_3) = 0
+ c_e_con_nodal_power_balance(12_4)_: f(14_4) - f(15_4) + f(16_4) - f(19_4)
+   + p(12_4) = 0
+ c_e_con_nodal_power_balance(12_6)_: f(14_6) - f(15_6) + f(16_6) - f(19_6)
+   + p(12_6) = 0
+ c_e_con_nodal_power_balance(12_7)_: f(14_7) - f(15_7) + f(16_7) - f(19_7)
+   + p(12_7) = 0
+ c_e_con_nodal_power_balance(13_0)_: f(15_0) - f(17_0) + p(13_0) = 0
+ c_e_con_nodal_power_balance(13_1)_: f(15_1) - f(17_1) + p(13_1) = 0
+ c_e_con_nodal_power_balance(13_2)_: f(15_2) - f(17_2) + p(13_2) = 0
+ c_e_con_nodal_power_balance(13_3)_: f(15_3) - f(17_3) + p(13_3) = 0
+ c_e_con_nodal_power_balance(13_4)_: f(15_4) - f(17_4) + p(13_4) = 0
+ c_e_con_nodal_power_balance(13_6)_: f(15_6) - f(17_6) + p(13_6) = 0
+ c_e_con_nodal_power_balance(13_7)_: f(15_7) - f(17_7) + p(13_7) = 0
+ c_e_con_nodal_power_balance(14_0)_: f(17_0) - f(18_0) + p(14_0) = 0
+ c_e_con_nodal_power_balance(14_1)_: f(17_1) - f(18_1) + p(14_1) = 0
+ c_e_con_nodal_power_balance(14_2)_: f(17_2) - f(18_2) + p(14_2) = 0
+ c_e_con_nodal_power_balance(14_3)_: f(17_3) - f(18_3) + p(14_3) = 0
+ c_e_con_nodal_power_balance(14_4)_: f(17_4) - f(18_4) + p(14_4) = 0
+ c_e_con_nodal_power_balance(14_6)_: f(17_6) - f(18_6) + p(14_6) = 0
+ c_e_con_nodal_power_balance(14_7)_: f(17_7) - f(18_7) + p(14_7) = 0
+ c_e_con_nodal_power_balance(15_0)_: f(18_0) + f(19_0) + f(40_0) + p(15_0)
+   = 0
+ c_e_con_nodal_power_balance(15_1)_: f(18_1) + f(19_1) + f(40_1) + p(15_1)
+   = 0
+ c_e_con_nodal_power_balance(15_2)_: f(18_2) + f(19_2) + f(40_2) + p(15_2)
+   = 0
+ c_e_con_nodal_power_balance(15_3)_: f(18_3) + f(19_3) + f(40_3) + p(15_3)
+   = 0
+ c_e_con_nodal_power_balance(15_4)_: f(18_4) + f(19_4) + f(40_4) + p(15_4)
+   = 0
+ c_e_con_nodal_power_balance(15_6)_: f(18_6) + f(19_6) + f(40_6) + p(15_6)
+   = 0
+ c_e_con_nodal_power_balance(15_7)_: f(18_7) + f(19_7) + f(40_7) + p(15_7)
+   = 0
+ c_e_con_nodal_power_balance(16_0)_: - f(20_0) - f(23_0) + f(41_0)
+   + p(16_0) = 0
+ c_e_con_nodal_power_balance(16_1)_: - f(20_1) - f(23_1) + f(41_1)
+   + p(16_1) = 0
+ c_e_con_nodal_power_balance(16_2)_: - f(20_2) - f(23_2) + f(41_2)
+   + p(16_2) = 0
+ c_e_con_nodal_power_balance(16_3)_: - f(20_3) - f(23_3) + f(41_3)
+   + p(16_3) = 0
+ c_e_con_nodal_power_balance(16_4)_: - f(20_4) - f(23_4) + f(41_4)
+   + p(16_4) = 0
+ c_e_con_nodal_power_balance(16_6)_: - f(20_6) - f(23_6) + f(41_6)
+   + p(16_6) = 0
+ c_e_con_nodal_power_balance(16_7)_: - f(20_7) - f(23_7) + f(41_7)
+   + p(16_7) = 0
+ c_e_con_nodal_power_balance(17_0)_: f(20_0) - f(21_0) + p(17_0) = 0
+ c_e_con_nodal_power_balance(17_1)_: f(20_1) - f(21_1) + p(17_1) = 0
+ c_e_con_nodal_power_balance(17_2)_: f(20_2) - f(21_2) + p(17_2) = 0
+ c_e_con_nodal_power_balance(17_3)_: f(20_3) - f(21_3) + p(17_3) = 0
+ c_e_con_nodal_power_balance(17_4)_: f(20_4) - f(21_4) + p(17_4) = 0
+ c_e_con_nodal_power_balance(17_6)_: f(20_6) - f(21_6) + p(17_6) = 0
+ c_e_con_nodal_power_balance(17_7)_: f(20_7) - f(21_7) + p(17_7) = 0
+ c_e_con_nodal_power_balance(18_0)_: f(21_0) - f(22_0) + f(42_0) + p(18_0)
+   = 0
+ c_e_con_nodal_power_balance(18_1)_: f(21_1) - f(22_1) + f(42_1) + p(18_1)
+   = 0
+ c_e_con_nodal_power_balance(18_2)_: f(21_2) - f(22_2) + f(42_2) + p(18_2)
+   = 0
+ c_e_con_nodal_power_balance(18_3)_: f(21_3) - f(22_3) + f(42_3) + p(18_3)
+   = 0
+ c_e_con_nodal_power_balance(18_4)_: f(21_4) - f(22_4) + f(42_4) + p(18_4)
+   = 0
+ c_e_con_nodal_power_balance(18_6)_: f(21_6) - f(22_6) + f(42_6) + p(18_6)
+   = 0
+ c_e_con_nodal_power_balance(18_7)_: f(21_7) - f(22_7) + f(42_7) + p(18_7)
+   = 0
+ c_e_con_nodal_power_balance(19_0)_: f(22_0) + f(23_0) + p(19_0) = 0
+ c_e_con_nodal_power_balance(19_1)_: f(22_1) + f(23_1) + p(19_1) = 0
+ c_e_con_nodal_power_balance(19_2)_: f(22_2) + f(23_2) + p(19_2) = 0
+ c_e_con_nodal_power_balance(19_3)_: f(22_3) + f(23_3) + p(19_3) = 0
+ c_e_con_nodal_power_balance(19_4)_: f(22_4) + f(23_4) + p(19_4) = 0
+ c_e_con_nodal_power_balance(19_6)_: f(22_6) + f(23_6) + p(19_6) = 0
+ c_e_con_nodal_power_balance(19_7)_: f(22_7) + f(23_7) + p(19_7) = 0
+ c_e_con_nodal_power_balance(20_0)_: f(24_0) - f(27_0) - f(28_0) + p(20_0)
+   = 0
+ c_e_con_nodal_power_balance(20_1)_: f(24_1) - f(27_1) - f(28_1) + p(20_1)
+   = 0
+ c_e_con_nodal_power_balance(20_2)_: f(24_2) - f(27_2) - f(28_2) + p(20_2)
+   = 0
+ c_e_con_nodal_power_balance(20_3)_: f(24_3) - f(27_3) - f(28_3) + p(20_3)
+   = 0
+ c_e_con_nodal_power_balance(20_4)_: f(24_4) - f(27_4) - f(28_4) + p(20_4)
+   = 0
+ c_e_con_nodal_power_balance(20_5)_: f(24_5) - f(27_5) - f(28_5) + p(20_5)
+   = 0
+ c_e_con_nodal_power_balance(20_6)_: f(24_6) - f(27_6) - f(28_6) + p(20_6)
+   = 0
+ c_e_con_nodal_power_balance(20_7)_: f(24_7) - f(27_7) - f(28_7) + p(20_7)
+   = 0
+ c_e_con_nodal_power_balance(21_0)_: f(25_0) - f(26_0) + f(27_0) + p(21_0)
+   = 0
+ c_e_con_nodal_power_balance(21_1)_: f(25_1) - f(26_1) + f(27_1) + p(21_1)
+   = 0
+ c_e_con_nodal_power_balance(21_2)_: f(25_2) - f(26_2) + f(27_2) + p(21_2)
+   = 0
+ c_e_con_nodal_power_balance(21_3)_: f(25_3) - f(26_3) + f(27_3) + p(21_3)
+   = 0
+ c_e_con_nodal_power_balance(21_4)_: f(25_4) - f(26_4) + f(27_4) + p(21_4)
+   = 0
+ c_e_con_nodal_power_balance(21_5)_: f(25_5) - f(26_5) + f(27_5) + p(21_5)
+   = 0
+ c_e_con_nodal_power_balance(21_6)_: f(25_6) - f(26_6) + f(27_6) + p(21_6)
+   = 0
+ c_e_con_nodal_power_balance(21_7)_: f(25_7) - f(26_7) + f(27_7) + p(21_7)
+   = 0
+ c_e_con_nodal_power_balance(22_0)_: f(26_0) + f(28_0) + p(22_0) = 0
+ c_e_con_nodal_power_balance(22_1)_: f(26_1) + f(28_1) + p(22_1) = 0
+ c_e_con_nodal_power_balance(22_2)_: f(26_2) + f(28_2) + p(22_2) = 0
+ c_e_con_nodal_power_balance(22_3)_: f(26_3) + f(28_3) + p(22_3) = 0
+ c_e_con_nodal_power_balance(22_4)_: f(26_4) + f(28_4) + p(22_4) = 0
+ c_e_con_nodal_power_balance(22_5)_: f(26_5) + f(28_5) + p(22_5) = 0
+ c_e_con_nodal_power_balance(22_6)_: f(26_6) + f(28_6) + p(22_6) = 0
+ c_e_con_nodal_power_balance(22_7)_: f(26_7) + f(28_7) + p(22_7) = 0
+ c_e_con_nodal_power_balance(23_0)_: f(29_0) - f(30_0) + p(23_0) = 0
+ c_e_con_nodal_power_balance(23_1)_: f(29_1) - f(30_1) + p(23_1) = 0
+ c_e_con_nodal_power_balance(23_2)_: f(29_2) - f(30_2) + p(23_2) = 0
+ c_e_con_nodal_power_balance(23_3)_: f(29_3) - f(30_3) + p(23_3) = 0
+ c_e_con_nodal_power_balance(23_4)_: f(29_4) - f(30_4) + p(23_4) = 0
+ c_e_con_nodal_power_balance(23_6)_: f(29_6) - f(30_6) + p(23_6) = 0
+ c_e_con_nodal_power_balance(23_7)_: f(29_7) - f(30_7) + p(23_7) = 0
+ c_e_con_nodal_power_balance(24_0)_: f(30_0) - f(31_0) + p(24_0) = 0
+ c_e_con_nodal_power_balance(24_1)_: f(30_1) - f(31_1) + p(24_1) = 0
+ c_e_con_nodal_power_balance(24_2)_: f(30_2) - f(31_2) + p(24_2) = 0
+ c_e_con_nodal_power_balance(24_3)_: f(30_3) - f(31_3) + p(24_3) = 0
+ c_e_con_nodal_power_balance(24_4)_: f(30_4) - f(31_4) + p(24_4) = 0
+ c_e_con_nodal_power_balance(24_6)_: f(30_6) - f(31_6) + p(24_6) = 0
+ c_e_con_nodal_power_balance(24_7)_: f(30_7) - f(31_7) + p(24_7) = 0
+ c_e_con_nodal_power_balance(25_0)_: f(31_0) + f(32_0) + p(25_0) = 0
+ c_e_con_nodal_power_balance(25_1)_: f(31_1) + f(32_1) + p(25_1) = 0
+ c_e_con_nodal_power_balance(25_2)_: f(31_2) + f(32_2) + p(25_2) = 0
+ c_e_con_nodal_power_balance(25_3)_: f(31_3) + f(32_3) + p(25_3) = 0
+ c_e_con_nodal_power_balance(25_4)_: f(31_4) + f(32_4) + p(25_4) = 0
+ c_e_con_nodal_power_balance(25_6)_: f(31_6) + f(32_6) + p(25_6) = 0
+ c_e_con_nodal_power_balance(25_7)_: f(31_7) + f(32_7) + p(25_7) = 0
+ c_e_con_nodal_power_balance(26_0)_: f(33_0) - f(34_0) - f(39_0) + p(26_0)
+   = 0
+ c_e_con_nodal_power_balance(26_1)_: f(33_1) - f(34_1) - f(39_1) + p(26_1)
+   = 0
+ c_e_con_nodal_power_balance(26_2)_: f(33_2) - f(34_2) - f(39_2) + p(26_2)
+   = 0
+ c_e_con_nodal_power_balance(26_3)_: f(33_3) - f(34_3) - f(39_3) + p(26_3)
+   = 0
+ c_e_con_nodal_power_balance(26_4)_: f(33_4) - f(34_4) - f(39_4) + p(26_4)
+   = 0
+ c_e_con_nodal_power_balance(26_6)_: f(33_6) - f(34_6) - f(39_6) + p(26_6)
+   = 0
+ c_e_con_nodal_power_balance(26_7)_: f(33_7) - f(34_7) - f(39_7) + p(26_7)
+   = 0
+ c_e_con_nodal_power_balance(27_0)_: f(34_0) + f(35_0) - f(36_0) + p(27_0)
+   = 0
+ c_e_con_nodal_power_balance(27_1)_: f(34_1) + f(35_1) - f(36_1) + p(27_1)
+   = 0
+ c_e_con_nodal_power_balance(27_2)_: f(34_2) + f(35_2) - f(36_2) + p(27_2)
+   = 0
+ c_e_con_nodal_power_balance(27_3)_: f(34_3) + f(35_3) - f(36_3) + p(27_3)
+   = 0
+ c_e_con_nodal_power_balance(27_4)_: f(34_4) + f(35_4) - f(36_4) + p(27_4)
+   = 0
+ c_e_con_nodal_power_balance(27_6)_: f(34_6) + f(35_6) - f(36_6) + p(27_6)
+   = 0
+ c_e_con_nodal_power_balance(27_7)_: f(34_7) + f(35_7) - f(36_7) + p(27_7)
+   = 0
+ c_e_con_nodal_power_balance(28_0)_: f(36_0) + f(37_0) + f(38_0) + f(39_0)
+   + p(28_0) = 0
+ c_e_con_nodal_power_balance(28_1)_: f(36_1) + f(37_1) + f(38_1) + f(39_1)
+   + p(28_1) = 0
+ c_e_con_nodal_power_balance(28_2)_: f(36_2) + f(37_2) + f(38_2) + f(39_2)
+   + p(28_2) = 0
+ c_e_con_nodal_power_balance(28_3)_: f(36_3) + f(37_3) + f(38_3) + f(39_3)
+   + p(28_3) = 0
+ c_e_con_nodal_power_balance(28_4)_: f(36_4) + f(37_4) + f(38_4) + f(39_4)
+   + p(28_4) = 0
+ c_e_con_nodal_power_balance(28_6)_: f(36_6) + f(37_6) + f(38_6) + f(39_6)
+   + p(28_6) = 0
+ c_e_con_nodal_power_balance(28_7)_: f(36_7) + f(37_7) + f(38_7) + f(39_7)
+   + p(28_7) = 0
+ c_e_con_def_balancing_p(0)_: balancing_p(0) - 0.125 dp(0_0)
+   - 0.125 dp(1_0) - 0.125 dp(2_0) - 0.125 dp(3_0) - 0.125 dp(4_0)
+   - 0.125 dp(5_0) - 0.125 dp(6_0) - 0.125 dp(7_0) - 0.125 dp(8_0)
+   - 0.125 dp(9_0) - 0.125 dp(10_0) - 0.125 dp(11_0) - 0.125 dp(12_0)
+   - 0.125 dp(13_0) - 0.125 dp(14_0) = 0
+ c_e_con_def_balancing_p(1)_: balancing_p(1) - 0.125 dp(0_1)
+   - 0.125 dp(1_1) - 0.125 dp(2_1) - 0.125 dp(3_1) - 0.125 dp(4_1)
+   - 0.125 dp(5_1) - 0.125 dp(6_1) - 0.125 dp(7_1) - 0.125 dp(8_1)
+   - 0.125 dp(9_1) - 0.125 dp(10_1) - 0.125 dp(11_1) - 0.125 dp(12_1)
+   - 0.125 dp(13_1) - 0.125 dp(14_1) = 0
+ c_e_con_def_balancing_p(2)_: balancing_p(2) - 0.125 dp(0_2)
+   - 0.125 dp(1_2) - 0.125 dp(2_2) - 0.125 dp(3_2) - 0.125 dp(4_2)
+   - 0.125 dp(5_2) - 0.125 dp(6_2) - 0.125 dp(7_2) - 0.125 dp(8_2)
+   - 0.125 dp(9_2) - 0.125 dp(10_2) - 0.125 dp(11_2) - 0.125 dp(12_2)
+   - 0.125 dp(13_2) - 0.125 dp(14_2) = 0
+ c_e_con_def_balancing_p(3)_: balancing_p(3) - 0.125 dp(0_3)
+   - 0.125 dp(1_3) - 0.125 dp(2_3) - 0.125 dp(3_3) - 0.125 dp(4_3)
+   - 0.125 dp(5_3) - 0.125 dp(6_3) - 0.125 dp(7_3) - 0.125 dp(8_3)
+   - 0.125 dp(9_3) - 0.125 dp(10_3) - 0.125 dp(11_3) - 0.125 dp(12_3)
+   - 0.125 dp(13_3) - 0.125 dp(14_3) = 0
+ c_e_con_def_balancing_p(4)_: balancing_p(4) - 0.125 dp(0_4)
+   - 0.125 dp(1_4) - 0.125 dp(2_4) - 0.125 dp(3_4) - 0.125 dp(4_4)
+   - 0.125 dp(5_4) - 0.125 dp(6_4) - 0.125 dp(7_4) - 0.125 dp(8_4)
+   - 0.125 dp(9_4) - 0.125 dp(10_4) - 0.125 dp(11_4) - 0.125 dp(12_4)
+   - 0.125 dp(13_4) - 0.125 dp(14_4) = 0
+ c_e_con_def_balancing_p(6)_: balancing_p(6) - 0.125 dp(0_6)
+   - 0.125 dp(1_6) - 0.125 dp(2_6) - 0.125 dp(3_6) - 0.125 dp(4_6)
+   - 0.125 dp(5_6) - 0.125 dp(6_6) - 0.125 dp(7_6) - 0.125 dp(8_6)
+   - 0.125 dp(9_6) - 0.125 dp(10_6) - 0.125 dp(11_6) - 0.125 dp(12_6)
+   - 0.125 dp(13_6) - 0.125 dp(14_6) = 0
+ c_e_con_def_balancing_p(7)_: balancing_p(7) - 0.125 dp(0_7)
+   - 0.125 dp(1_7) - 0.125 dp(2_7) - 0.125 dp(3_7) - 0.125 dp(4_7)
+   - 0.125 dp(5_7) - 0.125 dp(6_7) - 0.125 dp(7_7) - 0.125 dp(8_7)
+   - 0.125 dp(9_7) - 0.125 dp(10_7) - 0.125 dp(11_7) - 0.125 dp(12_7)
+   - 0.125 dp(13_7) - 0.125 dp(14_7) = 0
+ c_e_con_def_p(0_0)_: p(0_0) + balancing_p(0) - 8 dp(0_0) = -2.7
+ c_e_con_def_p(0_1)_: p(0_1) + balancing_p(1) - 8 dp(0_1)
+   = -2.968568270298822
+ c_e_con_def_p(0_2)_: p(0_2) + balancing_p(2) - 8 dp(0_2)
+   = -2.59988400142312
+ c_e_con_def_p(0_3)_: p(0_3) + balancing_p(3) - 8 dp(0_3)
+   = -2.968568270298822
+ c_e_con_def_p(0_4)_: p(0_4) + balancing_p(4) - 8 dp(0_4)
+   = -2.968568270298822
+ c_e_con_def_p(0_6)_: p(0_6) + balancing_p(6) - 8 dp(0_6)
+   = -2.318774406011821
+ c_e_con_def_p(0_7)_: p(0_7) + balancing_p(7) - 8 dp(0_7)
+   = -1.8578301062113
+ c_e_con_def_p(1_0)_: p(1_0) = 0
+ c_e_con_def_p(1_1)_: p(1_1) = 0
+ c_e_con_def_p(1_2)_: p(1_2) = 0
+ c_e_con_def_p(1_3)_: p(1_3) = 0
+ c_e_con_def_p(1_4)_: p(1_4) = 0
+ c_e_con_def_p(1_6)_: p(1_6) = 0
+ c_e_con_def_p(1_7)_: p(1_7) = 0
+ c_e_con_def_p(2_0)_: p(2_0) + balancing_p(0) = 0.4
+ c_e_con_def_p(2_1)_: p(2_1) + balancing_p(1) = 0.4
+ c_e_con_def_p(2_2)_: p(2_2) + balancing_p(2) = 0.4
+ c_e_con_def_p(2_3)_: p(2_3) + balancing_p(3) = 0.4
+ c_e_con_def_p(2_4)_: p(2_4) + balancing_p(4) = 0.4
+ c_e_con_def_p(2_6)_: p(2_6) + balancing_p(6) = 0.4
+ c_e_con_def_p(2_7)_: p(2_7) + balancing_p(7) = 0.4
+ c_e_con_def_p(3_0)_: p(3_0) = 0
+ c_e_con_def_p(3_1)_: p(3_1) = 0
+ c_e_con_def_p(3_2)_: p(3_2) = 0
+ c_e_con_def_p(3_3)_: p(3_3) = 0
+ c_e_con_def_p(3_4)_: p(3_4) = 0
+ c_e_con_def_p(3_6)_: p(3_6) = 0
+ c_e_con_def_p(3_7)_: p(3_7) = 0
+ c_e_con_def_p(4_0)_: p(4_0) = 0
+ c_e_con_def_p(4_1)_: p(4_1) = 0
+ c_e_con_def_p(4_2)_: p(4_2) = 0
+ c_e_con_def_p(4_3)_: p(4_3) = 0
+ c_e_con_def_p(4_4)_: p(4_4) = 0
+ c_e_con_def_p(4_6)_: p(4_6) = 0
+ c_e_con_def_p(4_7)_: p(4_7) = 0
+ c_e_con_def_p(5_0)_: p(5_0) + balancing_p(0) = 0
+ c_e_con_def_p(5_1)_: p(5_1) + balancing_p(1) = 0
+ c_e_con_def_p(5_2)_: p(5_2) + balancing_p(2) = 0
+ c_e_con_def_p(5_3)_: p(5_3) + balancing_p(3) = 0
+ c_e_con_def_p(5_4)_: p(5_4) + balancing_p(4) = 0
+ c_e_con_def_p(5_6)_: p(5_6) + balancing_p(6) = 0
+ c_e_con_def_p(5_7)_: p(5_7) + balancing_p(7) = 0
+ c_e_con_def_p(6_0)_: p(6_0) = 0.3
+ c_e_con_def_p(6_1)_: p(6_1) = 0.3
+ c_e_con_def_p(6_2)_: p(6_2) = 0.3
+ c_e_con_def_p(6_3)_: p(6_3) = 0.3
+ c_e_con_def_p(6_4)_: p(6_4) = 0.3
+ c_e_con_def_p(6_6)_: p(6_6) = 0.3
+ c_e_con_def_p(6_7)_: p(6_7) = 0.3
+ c_e_con_def_p(7_0)_: p(7_0) + balancing_p(0) = 0
+ c_e_con_def_p(7_1)_: p(7_1) + balancing_p(1) = 0
+ c_e_con_def_p(7_2)_: p(7_2) + balancing_p(2) = 0
+ c_e_con_def_p(7_3)_: p(7_3) + balancing_p(3) = 0
+ c_e_con_def_p(7_4)_: p(7_4) + balancing_p(4) = 0
+ c_e_con_def_p(7_6)_: p(7_6) + balancing_p(6) = 0
+ c_e_con_def_p(7_7)_: p(7_7) + balancing_p(7) = 0
+ c_e_con_def_p(8_0)_: p(8_0) + balancing_p(0) - 8 dp(1_0)
+   = -1.01074610838818
+ c_e_con_def_p(8_1)_: p(8_1) + balancing_p(1) - 8 dp(1_1) = -0.8
+ c_e_con_def_p(8_2)_: p(8_2) + balancing_p(2) - 8 dp(1_2)
+   = -1.01074610838818
+ c_e_con_def_p(8_3)_: p(8_3) + balancing_p(3) - 8 dp(1_3)
+   = -1.01074610838818
+ c_e_con_def_p(8_4)_: p(8_4) + balancing_p(4) - 8 dp(1_4)
+   = -1.01074610838818
+ c_e_con_def_p(8_6)_: p(8_6) + balancing_p(6) - 8 dp(1_6)
+   = -1.01074610838818
+ c_e_con_def_p(8_7)_: p(8_7) + balancing_p(7) - 8 dp(1_7) = -2
+ c_e_con_def_p(9_0)_: p(9_0) + balancing_p(0) = 0.1881160045768806
+ c_e_con_def_p(9_1)_: p(9_1) + balancing_p(1) = 0.2459381664875226
+ c_e_con_def_p(9_2)_: p(9_2) + balancing_p(2) = 0.5
+ c_e_con_def_p(9_3)_: p(9_3) + balancing_p(3) = 0.4849938666870015
+ c_e_con_def_p(9_4)_: p(9_4) + balancing_p(4) = -0.2305952323242977
+ c_e_con_def_p(9_6)_: p(9_6) + balancing_p(6) = 0.5
+ c_e_con_def_p(9_7)_: p(9_7) + balancing_p(7) = 0.5
+ c_e_con_def_p(10_0)_: p(10_0) + balancing_p(0) - 8 dp(2_0) = -2.3816795
+ c_e_con_def_p(10_1)_: p(10_1) + balancing_p(1) - 8 dp(2_1) = -2.3816795
+ c_e_con_def_p(10_2)_: p(10_2) + balancing_p(2) - 8 dp(2_2) = -2.3816795
+ c_e_con_def_p(10_3)_: p(10_3) + balancing_p(3) - 8 dp(2_3) = -2.3816795
+ c_e_con_def_p(10_4)_: p(10_4) + balancing_p(4) - 8 dp(2_4) = -1.2
+ c_e_con_def_p(10_6)_: p(10_6) + balancing_p(6) - 8 dp(2_6) = -2.3816795
+ c_e_con_def_p(10_7)_: p(10_7) + balancing_p(7) - 8 dp(2_7) = -2.3816795
+ c_e_con_def_p(11_0)_: p(11_0) + balancing_p(0) - 8 dp(3_0)
+   = -0.8012904033887005
+ c_e_con_def_p(11_1)_: p(11_1) + balancing_p(1) - 8 dp(3_1)
+   = -0.8012904033887005
+ c_e_con_def_p(11_2)_: p(11_2) + balancing_p(2) - 8 dp(3_2)
+   = -0.8012904033887005
+ c_e_con_def_p(11_3)_: p(11_3) + balancing_p(3) - 8 dp(3_3) = -0.5
+ c_e_con_def_p(11_4)_: p(11_4) + balancing_p(4) - 8 dp(3_4)
+   = -0.8012904033887005
+ c_e_con_def_p(11_6)_: p(11_6) + balancing_p(6) - 8 dp(3_6) = -1
+ c_e_con_def_p(11_7)_: p(11_7) + balancing_p(7) - 8 dp(3_7)
+   = -0.8012904033887005
+ c_e_con_def_p(12_0)_: p(12_0) - 8 dp(4_0) = 0.19
+ c_e_con_def_p(12_1)_: p(12_1) - 8 dp(4_1) = 0.19
+ c_e_con_def_p(12_2)_: p(12_2) - 8 dp(4_2) = 0.015
+ c_e_con_def_p(12_3)_: p(12_3) - 8 dp(4_3) = 0.05
+ c_e_con_def_p(12_4)_: p(12_4) - 8 dp(4_4) = -0.02
+ c_e_con_def_p(12_6)_: p(12_6) - 8 dp(4_6) = -0.02
+ c_e_con_def_p(12_7)_: p(12_7) - 8 dp(4_7) = 0.12
+ c_e_con_def_p(13_0)_: p(13_0) - 8 dp(5_0) = 0.31
+ c_e_con_def_p(13_1)_: p(13_1) - 8 dp(5_1) = 0.31
+ c_e_con_def_p(13_2)_: p(13_2) - 8 dp(5_2) = 0.235
+ c_e_con_def_p(13_3)_: p(13_3) - 8 dp(5_3) = 0.25
+ c_e_con_def_p(13_4)_: p(13_4) - 8 dp(5_4) = 0.22
+ c_e_con_def_p(13_6)_: p(13_6) - 8 dp(5_6) = 0.22
+ c_e_con_def_p(13_7)_: p(13_7) - 8 dp(5_7) = 0.28
+ c_e_con_def_p(14_0)_: p(14_0) = 0.4
+ c_e_con_def_p(14_1)_: p(14_1) = 0.4
+ c_e_con_def_p(14_2)_: p(14_2) = 0.4
+ c_e_con_def_p(14_3)_: p(14_3) = 0.4
+ c_e_con_def_p(14_4)_: p(14_4) = 0.4
+ c_e_con_def_p(14_6)_: p(14_6) = 0.4
+ c_e_con_def_p(14_7)_: p(14_7) = 0.4
+ c_e_con_def_p(15_0)_: p(15_0) - 8 dp(6_0) = 0.358
+ c_e_con_def_p(15_1)_: p(15_1) - 8 dp(6_1) = 0.358
+ c_e_con_def_p(15_2)_: p(15_2) - 8 dp(6_2) = 0.323
+ c_e_con_def_p(15_3)_: p(15_3) - 8 dp(6_3) = 0.33
+ c_e_con_def_p(15_4)_: p(15_4) - 8 dp(6_4) = 0.316
+ c_e_con_def_p(15_6)_: p(15_6) - 8 dp(6_6) = 0.316
+ c_e_con_def_p(15_7)_: p(15_7) - 8 dp(6_7) = 0.344
+ c_e_con_def_p(16_0)_: p(16_0) - 8 dp(7_0) = 0.182
+ c_e_con_def_p(16_1)_: p(16_1) - 8 dp(7_1) = 0.182
+ c_e_con_def_p(16_2)_: p(16_2) - 8 dp(7_2) = 0.167
+ c_e_con_def_p(16_3)_: p(16_3) - 8 dp(7_3) = 0.17
+ c_e_con_def_p(16_4)_: p(16_4) - 8 dp(7_4) = 0.164
+ c_e_con_def_p(16_6)_: p(16_6) - 8 dp(7_6) = 0.164
+ c_e_con_def_p(16_7)_: p(16_7) - 8 dp(7_7) = 0.176
+ c_e_con_def_p(17_0)_: p(17_0) - 8 dp(8_0) = 0.164
+ c_e_con_def_p(17_1)_: p(17_1) - 8 dp(8_1) = 0.164
+ c_e_con_def_p(17_2)_: p(17_2) - 8 dp(8_2) = 0.134
+ c_e_con_def_p(17_3)_: p(17_3) - 8 dp(8_3) = 0.14
+ c_e_con_def_p(17_4)_: p(17_4) - 8 dp(8_4) = 0.128
+ c_e_con_def_p(17_6)_: p(17_6) - 8 dp(8_6) = 0.128
+ c_e_con_def_p(17_7)_: p(17_7) - 8 dp(8_7) = 0.152
+ c_e_con_def_p(18_0)_: p(18_0) - 8 dp(9_0) = 0.1838
+ c_e_con_def_p(18_1)_: p(18_1) - 8 dp(9_1) = 0.1838
+ c_e_con_def_p(18_2)_: p(18_2) - 8 dp(9_2) = 0.1703
+ c_e_con_def_p(18_3)_: p(18_3) - 8 dp(9_3) = 0.173
+ c_e_con_def_p(18_4)_: p(18_4) - 8 dp(9_4) = 0.1676
+ c_e_con_def_p(18_6)_: p(18_6) - 8 dp(9_6) = 0.1676
+ c_e_con_def_p(18_7)_: p(18_7) - 8 dp(9_7) = 0.1784
+ c_e_con_def_p(19_0)_: p(19_0) = 0.2
+ c_e_con_def_p(19_1)_: p(19_1) = 0.2
+ c_e_con_def_p(19_2)_: p(19_2) = 0.2
+ c_e_con_def_p(19_3)_: p(19_3) = 0.2
+ c_e_con_def_p(19_4)_: p(19_4) = 0.2
+ c_e_con_def_p(19_6)_: p(19_6) = 0.2
+ c_e_con_def_p(19_7)_: p(19_7) = 0.2
+ c_e_con_def_p(20_0)_: p(20_0) = 1
+ c_e_con_def_p(20_1)_: p(20_1) = 1
+ c_e_con_def_p(20_2)_: p(20_2) = 1
+ c_e_con_def_p(20_3)_: p(20_3) = 1
+ c_e_con_def_p(20_4)_: p(20_4) = 1
+ c_e_con_def_p(20_5)_: p(20_5) = 1
+ c_e_con_def_p(20_6)_: p(20_6) = 1
+ c_e_con_def_p(20_7)_: p(20_7) = 1
+ c_e_con_def_p(21_0)_: p(21_0) - 8 dp(10_0) = 0.3449
+ c_e_con_def_p(21_1)_: p(21_1) - 8 dp(10_1) = 0.3449
+ c_e_con_def_p(21_2)_: p(21_2) - 8 dp(10_2) = 0.34065
+ c_e_con_def_p(21_3)_: p(21_3) - 8 dp(10_3) = 0.3415
+ c_e_con_def_p(21_4)_: p(21_4) - 8 dp(10_4) = 0.3398
+ c_e_con_def_p(21_5)_: p(21_5) - 8 dp(10_5) = 0.33725
+ c_e_con_def_p(21_6)_: p(21_6) - 8 dp(10_6) = 0.3398
+ c_e_con_def_p(21_7)_: p(21_7) - 8 dp(10_7) = 0.3432
+ c_e_con_def_p(22_0)_: p(22_0) - 8 dp(11_0) = 0.3449
+ c_e_con_def_p(22_1)_: p(22_1) - 8 dp(11_1) = 0.3449
+ c_e_con_def_p(22_2)_: p(22_2) - 8 dp(11_2) = 0.34065
+ c_e_con_def_p(22_3)_: p(22_3) - 8 dp(11_3) = 0.3415
+ c_e_con_def_p(22_4)_: p(22_4) - 8 dp(11_4) = 0.3398
+ c_e_con_def_p(22_5)_: p(22_5) - 8 dp(11_5) = 0.33725
+ c_e_con_def_p(22_6)_: p(22_6) - 8 dp(11_6) = 0.3398
+ c_e_con_def_p(22_7)_: p(22_7) - 8 dp(11_7) = 0.3432
+ c_e_con_def_p(23_0)_: p(23_0) - 8 dp(12_0) = 0.2760000024
+ c_e_con_def_p(23_1)_: p(23_1) - 8 dp(12_1) = 0.2760000024
+ c_e_con_def_p(23_2)_: p(23_2) - 8 dp(12_2) = 0.2560000044
+ c_e_con_def_p(23_3)_: p(23_3) - 8 dp(12_3) = 0.260000004
+ c_e_con_def_p(23_4)_: p(23_4) - 8 dp(12_4) = 0.2520000048
+ c_e_con_def_p(23_6)_: p(23_6) - 8 dp(12_6) = 0.2520000048
+ c_e_con_def_p(23_7)_: p(23_7) - 8 dp(12_7) = 0.2680000032
+ c_e_con_def_p(24_0)_: p(24_0) - 8 dp(13_0) = 0.2760000024
+ c_e_con_def_p(24_1)_: p(24_1) - 8 dp(13_1) = 0.2760000024
+ c_e_con_def_p(24_2)_: p(24_2) - 8 dp(13_2) = 0.2560000044
+ c_e_con_def_p(24_3)_: p(24_3) - 8 dp(13_3) = 0.260000004
+ c_e_con_def_p(24_4)_: p(24_4) - 8 dp(13_4) = 0.2520000048
+ c_e_con_def_p(24_6)_: p(24_6) - 8 dp(13_6) = 0.2520000048
+ c_e_con_def_p(24_7)_: p(24_7) - 8 dp(13_7) = 0.2680000032
+ c_e_con_def_p(25_0)_: p(25_0) - 8 dp(14_0) = 0.2760000024
+ c_e_con_def_p(25_1)_: p(25_1) - 8 dp(14_1) = 0.2760000024
+ c_e_con_def_p(25_2)_: p(25_2) - 8 dp(14_2) = 0.2560000044
+ c_e_con_def_p(25_3)_: p(25_3) - 8 dp(14_3) = 0.260000004
+ c_e_con_def_p(25_4)_: p(25_4) - 8 dp(14_4) = 0.2520000048
+ c_e_con_def_p(25_6)_: p(25_6) - 8 dp(14_6) = 0.2520000048
+ c_e_con_def_p(25_7)_: p(25_7) - 8 dp(14_7) = 0.2680000032
+ c_e_con_def_p(26_0)_: p(26_0) = 0.5
+ c_e_con_def_p(26_1)_: p(26_1) = 0.5
+ c_e_con_def_p(26_2)_: p(26_2) = 0.5
+ c_e_con_def_p(26_3)_: p(26_3) = 0.5
+ c_e_con_def_p(26_4)_: p(26_4) = 0.5
+ c_e_con_def_p(26_6)_: p(26_6) = 0.5
+ c_e_con_def_p(26_7)_: p(26_7) = 0.5
+ c_e_con_def_p(27_0)_: p(27_0) = 0.5
+ c_e_con_def_p(27_1)_: p(27_1) = 0.5
+ c_e_con_def_p(27_2)_: p(27_2) = 0.5
+ c_e_con_def_p(27_3)_: p(27_3) = 0.5
+ c_e_con_def_p(27_4)_: p(27_4) = 0.5
+ c_e_con_def_p(27_6)_: p(27_6) = 0.5
+ c_e_con_def_p(27_7)_: p(27_7) = 0.5
+ c_e_con_def_p(28_0)_: p(28_0) = 0.5
+ c_e_con_def_p(28_1)_: p(28_1) = 0.5
+ c_e_con_def_p(28_2)_: p(28_2) = 0.5
+ c_e_con_def_p(28_3)_: p(28_3) = 0.5
+ c_e_con_def_p(28_4)_: p(28_4) = 0.5
+ c_e_con_def_p(28_6)_: p(28_6) = 0.5
+ c_e_con_def_p(28_7)_: p(28_7) = 0.5
+ c_l_con_lower_bound_dp(0_0)_: dp(0_0) >= 0
+ c_l_con_lower_bound_dp(0_1)_: dp(0_1) >= 0
+ c_l_con_lower_bound_dp(0_2)_: dp(0_2) >= 0
+ c_l_con_lower_bound_dp(0_3)_: dp(0_3) >= 0
+ c_l_con_lower_bound_dp(0_4)_: dp(0_4) >= 0
+ c_l_con_lower_bound_dp(0_6)_: dp(0_6) >= 0
+ c_l_con_lower_bound_dp(0_7)_: dp(0_7) >= 0
+ c_l_con_lower_bound_dp(1_0)_: dp(1_0) >= 0
+ c_l_con_lower_bound_dp(1_1)_: dp(1_1) >= 0
+ c_l_con_lower_bound_dp(1_2)_: dp(1_2) >= 0
+ c_l_con_lower_bound_dp(1_3)_: dp(1_3) >= 0
+ c_l_con_lower_bound_dp(1_4)_: dp(1_4) >= 0
+ c_l_con_lower_bound_dp(1_6)_: dp(1_6) >= 0
+ c_l_con_lower_bound_dp(2_0)_: dp(2_0) >= 0
+ c_l_con_lower_bound_dp(2_1)_: dp(2_1) >= 0
+ c_l_con_lower_bound_dp(2_2)_: dp(2_2) >= 0
+ c_l_con_lower_bound_dp(2_3)_: dp(2_3) >= 0
+ c_l_con_lower_bound_dp(2_4)_: dp(2_4) >= 0
+ c_l_con_lower_bound_dp(2_6)_: dp(2_6) >= 0
+ c_l_con_lower_bound_dp(2_7)_: dp(2_7) >= 0
+ c_l_con_lower_bound_dp(3_0)_: dp(3_0) >= 0
+ c_l_con_lower_bound_dp(3_1)_: dp(3_1) >= 0
+ c_l_con_lower_bound_dp(3_2)_: dp(3_2) >= 0
+ c_l_con_lower_bound_dp(3_3)_: dp(3_3) >= 0
+ c_l_con_lower_bound_dp(3_4)_: dp(3_4) >= 0
+ c_l_con_lower_bound_dp(3_6)_: dp(3_6) >= 0
+ c_l_con_lower_bound_dp(3_7)_: dp(3_7) >= 0
+ c_l_con_lower_bound_dp(4_7)_: dp(4_7) >= 0
+ c_l_con_lower_bound_dp(5_0)_: dp(5_0) >= 0
+ c_l_con_lower_bound_dp(5_1)_: dp(5_1) >= 0
+ c_l_con_lower_bound_dp(5_2)_: dp(5_2) >= 0
+ c_l_con_lower_bound_dp(5_3)_: dp(5_3) >= 0
+ c_l_con_lower_bound_dp(5_4)_: dp(5_4) >= 0
+ c_l_con_lower_bound_dp(5_6)_: dp(5_6) >= 0
+ c_l_con_lower_bound_dp(5_7)_: dp(5_7) >= 0
+ c_l_con_lower_bound_dp(6_0)_: dp(6_0) >= 0
+ c_l_con_lower_bound_dp(6_1)_: dp(6_1) >= 0
+ c_l_con_lower_bound_dp(6_2)_: dp(6_2) >= 0
+ c_l_con_lower_bound_dp(6_3)_: dp(6_3) >= 0
+ c_l_con_lower_bound_dp(6_4)_: dp(6_4) >= 0
+ c_l_con_lower_bound_dp(6_6)_: dp(6_6) >= 0
+ c_l_con_lower_bound_dp(6_7)_: dp(6_7) >= 0
+ c_l_con_lower_bound_dp(7_0)_: dp(7_0) >= 0
+ c_l_con_lower_bound_dp(7_1)_: dp(7_1) >= 0
+ c_l_con_lower_bound_dp(7_2)_: dp(7_2) >= 0
+ c_l_con_lower_bound_dp(7_3)_: dp(7_3) >= 0
+ c_l_con_lower_bound_dp(7_4)_: dp(7_4) >= 0
+ c_l_con_lower_bound_dp(7_6)_: dp(7_6) >= 0
+ c_l_con_lower_bound_dp(7_7)_: dp(7_7) >= 0
+ c_l_con_lower_bound_dp(8_0)_: dp(8_0) >= 0
+ c_l_con_lower_bound_dp(8_1)_: dp(8_1) >= 0
+ c_l_con_lower_bound_dp(8_2)_: dp(8_2) >= 0
+ c_l_con_lower_bound_dp(8_3)_: dp(8_3) >= 0
+ c_l_con_lower_bound_dp(8_4)_: dp(8_4) >= 0
+ c_l_con_lower_bound_dp(8_6)_: dp(8_6) >= 0
+ c_l_con_lower_bound_dp(8_7)_: dp(8_7) >= 0
+ c_l_con_lower_bound_dp(9_0)_: dp(9_0) >= 0
+ c_l_con_lower_bound_dp(9_1)_: dp(9_1) >= 0
+ c_l_con_lower_bound_dp(9_2)_: dp(9_2) >= 0
+ c_l_con_lower_bound_dp(9_3)_: dp(9_3) >= 0
+ c_l_con_lower_bound_dp(9_4)_: dp(9_4) >= 0
+ c_l_con_lower_bound_dp(9_6)_: dp(9_6) >= 0
+ c_l_con_lower_bound_dp(9_7)_: dp(9_7) >= 0
+ c_l_con_lower_bound_dp(10_0)_: dp(10_0) >= 0
+ c_l_con_lower_bound_dp(10_1)_: dp(10_1) >= 0
+ c_l_con_lower_bound_dp(10_2)_: dp(10_2) >= 0
+ c_l_con_lower_bound_dp(10_3)_: dp(10_3) >= 0
+ c_l_con_lower_bound_dp(10_4)_: dp(10_4) >= 0
+ c_l_con_lower_bound_dp(10_5)_: dp(10_5) >= 0
+ c_l_con_lower_bound_dp(10_6)_: dp(10_6) >= 0
+ c_l_con_lower_bound_dp(10_7)_: dp(10_7) >= 0
+ c_l_con_lower_bound_dp(11_0)_: dp(11_0) >= 0
+ c_l_con_lower_bound_dp(11_1)_: dp(11_1) >= 0
+ c_l_con_lower_bound_dp(11_2)_: dp(11_2) >= 0
+ c_l_con_lower_bound_dp(11_3)_: dp(11_3) >= 0
+ c_l_con_lower_bound_dp(11_4)_: dp(11_4) >= 0
+ c_l_con_lower_bound_dp(11_5)_: dp(11_5) >= 0
+ c_l_con_lower_bound_dp(11_6)_: dp(11_6) >= 0
+ c_l_con_lower_bound_dp(11_7)_: dp(11_7) >= 0
+ c_l_con_lower_bound_dp(12_0)_: dp(12_0) >= 0
+ c_l_con_lower_bound_dp(12_1)_: dp(12_1) >= 0
+ c_l_con_lower_bound_dp(12_2)_: dp(12_2) >= 0
+ c_l_con_lower_bound_dp(12_3)_: dp(12_3) >= 0
+ c_l_con_lower_bound_dp(12_4)_: dp(12_4) >= 0
+ c_l_con_lower_bound_dp(12_6)_: dp(12_6) >= 0
+ c_l_con_lower_bound_dp(12_7)_: dp(12_7) >= 0
+ c_l_con_lower_bound_dp(13_0)_: dp(13_0) >= 0
+ c_l_con_lower_bound_dp(13_1)_: dp(13_1) >= 0
+ c_l_con_lower_bound_dp(13_2)_: dp(13_2) >= 0
+ c_l_con_lower_bound_dp(13_3)_: dp(13_3) >= 0
+ c_l_con_lower_bound_dp(13_4)_: dp(13_4) >= 0
+ c_l_con_lower_bound_dp(13_6)_: dp(13_6) >= 0
+ c_l_con_lower_bound_dp(13_7)_: dp(13_7) >= 0
+ c_l_con_lower_bound_dp(14_0)_: dp(14_0) >= 0
+ c_l_con_lower_bound_dp(14_1)_: dp(14_1) >= 0
+ c_l_con_lower_bound_dp(14_2)_: dp(14_2) >= 0
+ c_l_con_lower_bound_dp(14_3)_: dp(14_3) >= 0
+ c_l_con_lower_bound_dp(14_4)_: dp(14_4) >= 0
+ c_l_con_lower_bound_dp(14_6)_: dp(14_6) >= 0
+ c_l_con_lower_bound_dp(14_7)_: dp(14_7) >= 0
  c_e_con_def_total_congestion_: - congestion(0_0) - congestion(0_1)
    - congestion(0_2) - congestion(0_3) - congestion(0_4) - congestion(0_5)
-   - congestion(0_6) - congestion(0_7) - congestion(0_8) - congestion(0_9)
-   - congestion(0_10) - congestion(0_11) - congestion(0_12)
-   - congestion(0_13) - congestion(0_14) - congestion(0_15)
-   - congestion(0_16) - congestion(0_17) - congestion(0_18)
-   - congestion(0_19) - congestion(0_20) - congestion(0_21)
-   - congestion(0_22) - congestion(0_23) - congestion(1_0)
-   - congestion(1_1) - congestion(1_2) - congestion(1_3) - congestion(1_4)
-   - congestion(1_5) - congestion(1_6) - congestion(1_7) - congestion(1_8)
-   - congestion(1_9) - congestion(1_10) - congestion(1_11)
-   - congestion(1_12) - congestion(1_13) - congestion(1_14)
-   - congestion(1_15) - congestion(1_16) - congestion(1_17)
-   - congestion(1_18) - congestion(1_19) - congestion(1_20)
-   - congestion(1_21) - congestion(1_22) - congestion(1_23)
-   - congestion(2_0) - congestion(2_1) - congestion(2_2) - congestion(2_3)
-   - congestion(2_4) - congestion(2_5) - congestion(2_6) - congestion(2_7)
-   - congestion(2_8) - congestion(2_9) - congestion(2_10)
-   - congestion(2_11) - congestion(2_12) - congestion(2_13)
-   - congestion(2_14) - congestion(2_15) - congestion(2_16)
-   - congestion(2_17) - congestion(2_18) - congestion(2_19)
-   - congestion(2_20) - congestion(2_21) - congestion(2_22)
-   - congestion(2_23) - congestion(3_0) - congestion(3_1) - congestion(3_2)
-   - congestion(3_3) - congestion(3_4) - congestion(3_5) - congestion(3_6)
-   - congestion(3_7) - congestion(3_8) - congestion(3_9) - congestion(3_10)
-   - congestion(3_11) - congestion(3_12) - congestion(3_13)
-   - congestion(3_14) - congestion(3_15) - congestion(3_16)
-   - congestion(3_17) - congestion(3_18) - congestion(3_19)
-   - congestion(3_20) - congestion(3_21) - congestion(3_22)
-   - congestion(3_23) - congestion(4_0) - congestion(4_1) - congestion(4_2)
-   - congestion(4_3) - congestion(4_4) - congestion(4_5) - congestion(4_6)
-   - congestion(4_7) - congestion(4_8) - congestion(4_9) - congestion(4_10)
-   - congestion(4_11) - congestion(4_12) - congestion(4_13)
-   - congestion(4_14) - congestion(4_15) - congestion(4_16)
-   - congestion(4_17) - congestion(4_18) - congestion(4_19)
-   - congestion(4_20) - congestion(4_21) - congestion(4_22)
-   - congestion(4_23) - congestion(5_0) - congestion(5_1) - congestion(5_2)
-   - congestion(5_3) - congestion(5_4) - congestion(5_5) - congestion(5_6)
-   - congestion(5_7) - congestion(5_8) - congestion(5_9) - congestion(5_10)
-   - congestion(5_11) - congestion(5_12) - congestion(5_13)
-   - congestion(5_14) - congestion(5_15) - congestion(5_16)
-   - congestion(5_17) - congestion(5_18) - congestion(5_19)
-   - congestion(5_20) - congestion(5_21) - congestion(5_22)
-   - congestion(5_23) - congestion(6_0) - congestion(6_1) - congestion(6_2)
-   - congestion(6_3) - congestion(6_4) - congestion(6_5) - congestion(6_6)
-   - congestion(6_7) - congestion(6_8) - congestion(6_9) - congestion(6_10)
-   - congestion(6_11) - congestion(6_12) - congestion(6_13)
-   - congestion(6_14) - congestion(6_15) - congestion(6_16)
-   - congestion(6_17) - congestion(6_18) - congestion(6_19)
-   - congestion(6_20) - congestion(6_21) - congestion(6_22)
-   - congestion(6_23) - congestion(7_0) - congestion(7_1) - congestion(7_2)
-   - congestion(7_3) - congestion(7_4) - congestion(7_5) - congestion(7_6)
-   - congestion(7_7) - congestion(7_8) - congestion(7_9) - congestion(7_10)
-   - congestion(7_11) - congestion(7_12) - congestion(7_13)
-   - congestion(7_14) - congestion(7_15) - congestion(7_16)
-   - congestion(7_17) - congestion(7_18) - congestion(7_19)
-   - congestion(7_20) - congestion(7_21) - congestion(7_22)
-   - congestion(7_23) - congestion(8_0) - congestion(8_1) - congestion(8_2)
-   - congestion(8_3) - congestion(8_4) - congestion(8_5) - congestion(8_6)
-   - congestion(8_7) - congestion(8_8) - congestion(8_9) - congestion(8_10)
-   - congestion(8_11) - congestion(8_12) - congestion(8_13)
-   - congestion(8_14) - congestion(8_15) - congestion(8_16)
-   - congestion(8_17) - congestion(8_18) - congestion(8_19)
-   - congestion(8_20) - congestion(8_21) - congestion(8_22)
-   - congestion(8_23) - congestion(9_0) - congestion(9_1) - congestion(9_2)
-   - congestion(9_3) - congestion(9_4) - congestion(9_5) - congestion(9_6)
-   - congestion(9_7) - congestion(9_8) - congestion(9_9) - congestion(9_10)
-   - congestion(9_11) - congestion(9_12) - congestion(9_13)
-   - congestion(9_14) - congestion(9_15) - congestion(9_16)
-   - congestion(9_17) - congestion(9_18) - congestion(9_19)
-   - congestion(9_20) - congestion(9_21) - congestion(9_22)
-   - congestion(9_23) - congestion(10_0) - congestion(10_1)
-   - congestion(10_2) - congestion(10_3) - congestion(10_4)
-   - congestion(10_5) - congestion(10_6) - congestion(10_7)
-   - congestion(10_8) - congestion(10_9) - congestion(10_10)
-   - congestion(10_11) - congestion(10_12) - congestion(10_13)
-   - congestion(10_14) - congestion(10_15) - congestion(10_16)
-   - congestion(10_17) - congestion(10_18) - congestion(10_19)
-   - congestion(10_20) - congestion(10_21) - congestion(10_22)
-   - congestion(10_23) - congestion(11_0) - congestion(11_1)
+   - congestion(0_6) - congestion(0_7) - congestion(1_0) - congestion(1_1)
+   - congestion(1_2) - congestion(1_3) - congestion(1_4) - congestion(1_5)
+   - congestion(1_6) - congestion(1_7) - congestion(2_0) - congestion(2_1)
+   - congestion(2_2) - congestion(2_3) - congestion(2_4) - congestion(2_5)
+   - congestion(2_6) - congestion(2_7) - congestion(3_0) - congestion(3_1)
+   - congestion(3_2) - congestion(3_3) - congestion(3_4) - congestion(3_5)
+   - congestion(3_6) - congestion(3_7) - congestion(4_0) - congestion(4_1)
+   - congestion(4_2) - congestion(4_3) - congestion(4_4) - congestion(4_5)
+   - congestion(4_6) - congestion(4_7) - congestion(5_0) - congestion(5_1)
+   - congestion(5_2) - congestion(5_3) - congestion(5_4) - congestion(5_5)
+   - congestion(5_6) - congestion(5_7) - congestion(6_0) - congestion(6_1)
+   - congestion(6_2) - congestion(6_3) - congestion(6_4) - congestion(6_5)
+   - congestion(6_6) - congestion(6_7) - congestion(7_0) - congestion(7_1)
+   - congestion(7_2) - congestion(7_3) - congestion(7_4) - congestion(7_5)
+   - congestion(7_6) - congestion(7_7) - congestion(8_0) - congestion(8_1)
+   - congestion(8_2) - congestion(8_3) - congestion(8_4) - congestion(8_5)
+   - congestion(8_6) - congestion(8_7) - congestion(9_0) - congestion(9_1)
+   - congestion(9_2) - congestion(9_3) - congestion(9_4) - congestion(9_5)
+   - congestion(9_6) - congestion(9_7) - congestion(10_0)
+   - congestion(10_1) - congestion(10_2) - congestion(10_3)
+   - congestion(10_4) - congestion(10_5) - congestion(10_6)
+   - congestion(10_7) - congestion(11_0) - congestion(11_1)
    - congestion(11_2) - congestion(11_3) - congestion(11_4)
    - congestion(11_5) - congestion(11_6) - congestion(11_7)
-   - congestion(11_8) - congestion(11_9) - congestion(11_10)
-   - congestion(11_11) - congestion(11_12) - congestion(11_13)
-   - congestion(11_14) - congestion(11_15) - congestion(11_16)
-   - congestion(11_17) - congestion(11_18) - congestion(11_19)
-   - congestion(11_20) - congestion(11_21) - congestion(11_22)
-   - congestion(11_23) - congestion(12_0) - congestion(12_1)
-   - congestion(12_2) - congestion(12_3) - congestion(12_4)
-   - congestion(12_5) - congestion(12_6) - congestion(12_7)
-   - congestion(12_8) - congestion(12_9) - congestion(12_10)
-   - congestion(12_11) - congestion(12_12) - congestion(12_13)
-   - congestion(12_14) - congestion(12_15) - congestion(12_16)
-   - congestion(12_17) - congestion(12_18) - congestion(12_19)
-   - congestion(12_20) - congestion(12_21) - congestion(12_22)
-   - congestion(12_23) - congestion(13_0) - congestion(13_1)
-   - congestion(13_2) - congestion(13_3) - congestion(13_4)
-   - congestion(13_5) - congestion(13_6) - congestion(13_7)
-   - congestion(13_8) - congestion(13_9) - congestion(13_10)
-   - congestion(13_11) - congestion(13_12) - congestion(13_13)
-   - congestion(13_14) - congestion(13_15) - congestion(13_16)
-   - congestion(13_17) - congestion(13_18) - congestion(13_19)
-   - congestion(13_20) - congestion(13_21) - congestion(13_22)
-   - congestion(13_23) + total_congestion = 0
- c_e_decrease_congestion_: total_congestion = -10.67613200611291
+   - congestion(12_0) - congestion(12_1) - congestion(12_2)
+   - congestion(12_3) - congestion(12_4) - congestion(12_5)
+   - congestion(12_6) - congestion(12_7) - congestion(13_0)
+   - congestion(13_1) - congestion(13_2) - congestion(13_3)
+   - congestion(13_4) - congestion(13_5) - congestion(13_6)
+   - congestion(13_7) - congestion(14_0) - congestion(14_1)
+   - congestion(14_2) - congestion(14_3) - congestion(14_4)
+   - congestion(14_5) - congestion(14_6) - congestion(14_7)
+   - congestion(15_0) - congestion(15_1) - congestion(15_2)
+   - congestion(15_3) - congestion(15_4) - congestion(15_5)
+   - congestion(15_6) - congestion(15_7) - congestion(16_0)
+   - congestion(16_1) - congestion(16_2) - congestion(16_3)
+   - congestion(16_4) - congestion(16_5) - congestion(16_6)
+   - congestion(16_7) - congestion(17_0) - congestion(17_1)
+   - congestion(17_2) - congestion(17_3) - congestion(17_4)
+   - congestion(17_5) - congestion(17_6) - congestion(17_7)
+   - congestion(18_0) - congestion(18_1) - congestion(18_2)
+   - congestion(18_3) - congestion(18_4) - congestion(18_5)
+   - congestion(18_6) - congestion(18_7) - congestion(19_0)
+   - congestion(19_1) - congestion(19_2) - congestion(19_3)
+   - congestion(19_4) - congestion(19_5) - congestion(19_6)
+   - congestion(19_7) - congestion(20_0) - congestion(20_1)
+   - congestion(20_2) - congestion(20_3) - congestion(20_4)
+   - congestion(20_5) - congestion(20_6) - congestion(20_7)
+   - congestion(21_0) - congestion(21_1) - congestion(21_2)
+   - congestion(21_3) - congestion(21_4) - congestion(21_5)
+   - congestion(21_6) - congestion(21_7) - congestion(22_0)
+   - congestion(22_1) - congestion(22_2) - congestion(22_3)
+   - congestion(22_4) - congestion(22_5) - congestion(22_6)
+   - congestion(22_7) - congestion(23_0) - congestion(23_1)
+   - congestion(23_2) - congestion(23_3) - congestion(23_4)
+   - congestion(23_5) - congestion(23_6) - congestion(23_7)
+   - congestion(24_0) - congestion(24_1) - congestion(24_2)
+   - congestion(24_3) - congestion(24_4) - congestion(24_5)
+   - congestion(24_6) - congestion(24_7) - congestion(25_0)
+   - congestion(25_1) - congestion(25_2) - congestion(25_3)
+   - congestion(25_4) - congestion(25_5) - congestion(25_6)
+   - congestion(25_7) - congestion(26_0) - congestion(26_1)
+   - congestion(26_2) - congestion(26_3) - congestion(26_4)
+   - congestion(26_5) - congestion(26_6) - congestion(26_7)
+   - congestion(27_0) - congestion(27_1) - congestion(27_2)
+   - congestion(27_3) - congestion(27_4) - congestion(27_5)
+   - congestion(27_6) - congestion(27_7) - congestion(28_0)
+   - congestion(28_1) - congestion(28_2) - congestion(28_3)
+   - congestion(28_4) - congestion(28_5) - congestion(28_6)
+   - congestion(28_7) - congestion(29_0) - congestion(29_1)
+   - congestion(29_2) - congestion(29_3) - congestion(29_4)
+   - congestion(29_5) - congestion(29_6) - congestion(29_7)
+   - congestion(30_0) - congestion(30_1) - congestion(30_2)
+   - congestion(30_3) - congestion(30_4) - congestion(30_5)
+   - congestion(30_6) - congestion(30_7) - congestion(31_0)
+   - congestion(31_1) - congestion(31_2) - congestion(31_3)
+   - congestion(31_4) - congestion(31_5) - congestion(31_6)
+   - congestion(31_7) - congestion(32_0) - congestion(32_1)
+   - congestion(32_2) - congestion(32_3) - congestion(32_4)
+   - congestion(32_5) - congestion(32_6) - congestion(32_7)
+   - congestion(33_0) - congestion(33_1) - congestion(33_2)
+   - congestion(33_3) - congestion(33_4) - congestion(33_5)
+   - congestion(33_6) - congestion(33_7) - congestion(34_0)
+   - congestion(34_1) - congestion(34_2) - congestion(34_3)
+   - congestion(34_4) - congestion(34_5) - congestion(34_6)
+   - congestion(34_7) - congestion(35_0) - congestion(35_1)
+   - congestion(35_2) - congestion(35_3) - congestion(35_4)
+   - congestion(35_5) - congestion(35_6) - congestion(35_7)
+   - congestion(36_0) - congestion(36_1) - congestion(36_2)
+   - congestion(36_3) - congestion(36_4) - congestion(36_5)
+   - congestion(36_6) - congestion(36_7) - congestion(37_0)
+   - congestion(37_1) - congestion(37_2) - congestion(37_3)
+   - congestion(37_4) - congestion(37_5) - congestion(37_6)
+   - congestion(37_7) - congestion(38_0) - congestion(38_1)
+   - congestion(38_2) - congestion(38_3) - congestion(38_4)
+   - congestion(38_5) - congestion(38_6) - congestion(38_7)
+   - congestion(39_0) - congestion(39_1) - congestion(39_2)
+   - congestion(39_3) - congestion(39_4) - congestion(39_5)
+   - congestion(39_6) - congestion(39_7) - congestion(40_0)
+   - congestion(40_1) - congestion(40_2) - congestion(40_3)
+   - congestion(40_4) - congestion(40_5) - congestion(40_6)
+   - congestion(40_7) - congestion(41_0) - congestion(41_1)
+   - congestion(41_2) - congestion(41_3) - congestion(41_4)
+   - congestion(41_5) - congestion(41_6) - congestion(41_7)
+   - congestion(42_0) - congestion(42_1) - congestion(42_2)
+   - congestion(42_3) - congestion(42_4) - congestion(42_5)
+   - congestion(42_6) - congestion(42_7) + total_congestion = 0
+ c_e_decrease_congestion_: total_congestion = 2.644450378911598
 Bounds
+ f(0_0) free
+ f(0_1) free
+ f(0_2) free
+ f(0_3) free
+ f(0_4) free
+ f(0_6) free
+ f(0_7) free
+ f(1_0) free
+ f(1_1) free
+ f(1_2) free
+ f(1_3) free
+ f(1_4) free
+ f(1_6) free
+ f(1_7) free
+ f(2_0) free
+ f(2_1) free
+ f(2_2) free
+ f(2_3) free
+ f(2_4) free
+ f(2_6) free
+ f(2_7) free
+ f(3_0) free
+ f(3_1) free
+ f(3_2) free
+ f(3_3) free
+ f(3_4) free
+ f(3_6) free
+ f(3_7) free
+ f(4_0) free
+ f(4_1) free
+ f(4_2) free
+ f(4_3) free
+ f(4_4) free
+ f(4_6) free
+ f(4_7) free
+ f(5_0) free
+ f(5_1) free
+ f(5_2) free
+ f(5_3) free
+ f(5_4) free
+ f(5_6) free
+ f(5_7) free
+ f(6_0) free
+ f(6_1) free
+ f(6_2) free
+ f(6_3) free
+ f(6_4) free
+ f(6_6) free
+ f(6_7) free
+ f(7_0) free
+ f(7_1) free
+ f(7_2) free
+ f(7_3) free
+ f(7_4) free
+ f(7_6) free
+ f(7_7) free
+ f(8_0) free
+ f(8_1) free
+ f(8_2) free
+ f(8_3) free
+ f(8_4) free
+ f(8_6) free
+ f(8_7) free
+ f(9_0) free
+ f(9_1) free
+ f(9_2) free
+ f(9_3) free
+ f(9_4) free
+ f(9_6) free
+ f(9_7) free
+ f(10_0) free
+ f(10_1) free
+ f(10_2) free
+ f(10_3) free
+ f(10_4) free
+ f(10_6) free
+ f(10_7) free
+ f(11_0) free
+ f(11_1) free
+ f(11_2) free
+ f(11_3) free
+ f(11_4) free
+ f(11_6) free
+ f(11_7) free
+ f(12_0) free
+ f(12_1) free
+ f(12_2) free
+ f(12_3) free
+ f(12_4) free
+ f(12_6) free
+ f(12_7) free
+ f(13_0) free
+ f(13_1) free
+ f(13_2) free
+ f(13_3) free
+ f(13_4) free
+ f(13_6) free
+ f(13_7) free
+ f(14_0) free
+ f(14_1) free
+ f(14_2) free
+ f(14_3) free
+ f(14_4) free
+ f(14_6) free
+ f(14_7) free
+ f(15_0) free
+ f(15_1) free
+ f(15_2) free
+ f(15_3) free
+ f(15_4) free
+ f(15_6) free
+ f(15_7) free
+ f(16_0) free
+ congestion(16_0) free
+ f(16_1) free
+ congestion(16_1) free
+ f(16_2) free
+ congestion(16_2) free
+ f(16_3) free
+ congestion(16_3) free
+ f(16_4) free
+ congestion(16_4) free
+ f(16_6) free
+ congestion(16_6) free
+ f(16_7) free
+ f(17_0) free
+ f(17_1) free
+ f(17_2) free
+ f(17_3) free
+ f(17_4) free
+ f(17_6) free
+ f(17_7) free
+ f(18_0) free
+ f(18_1) free
+ f(18_2) free
+ f(18_3) free
+ f(18_4) free
+ f(18_6) free
+ f(18_7) free
+ f(19_0) free
+ f(19_1) free
+ f(19_2) free
+ f(19_3) free
+ f(19_4) free
+ f(19_6) free
+ f(19_7) free
+ f(20_0) free
+ f(20_1) free
+ f(20_2) free
+ f(20_3) free
+ f(20_4) free
+ f(20_6) free
+ f(20_7) free
+ f(21_0) free
+ f(21_1) free
+ f(21_2) free
+ f(21_3) free
+ f(21_4) free
+ f(21_6) free
+ f(21_7) free
+ f(22_0) free
+ f(22_1) free
+ f(22_2) free
+ f(22_3) free
+ f(22_4) free
+ f(22_6) free
+ f(22_7) free
+ f(23_0) free
+ f(23_1) free
+ f(23_2) free
+ f(23_3) free
+ f(23_4) free
+ f(23_6) free
+ f(23_7) free
+ f(24_0) free
+ congestion(24_0) free
+ f(24_1) free
+ congestion(24_1) free
+ f(24_2) free
+ congestion(24_2) free
+ f(24_3) free
+ congestion(24_3) free
+ f(24_4) free
+ congestion(24_4) free
+ f(24_5) free
+ congestion(24_5) free
+ f(24_6) free
+ congestion(24_6) free
+ f(24_7) free
+ congestion(24_7) free
+ f(25_0) free
+ congestion(25_0) free
+ f(25_1) free
+ congestion(25_1) free
+ f(25_2) free
+ congestion(25_2) free
+ f(25_3) free
+ congestion(25_3) free
+ f(25_4) free
+ congestion(25_4) free
+ f(25_5) free
+ congestion(25_5) free
+ f(25_6) free
+ congestion(25_6) free
+ f(25_7) free
+ congestion(25_7) free
+ f(26_0) free
+ f(26_1) free
+ f(26_2) free
+ f(26_3) free
+ f(26_4) free
+ f(26_5) free
+ f(26_6) free
+ f(26_7) free
+ f(27_0) free
+ f(27_1) free
+ f(27_2) free
+ f(27_3) free
+ f(27_4) free
+ f(27_5) free
+ f(27_6) free
+ f(27_7) free
+ f(28_0) free
+ f(28_1) free
+ f(28_2) free
+ f(28_3) free
+ f(28_4) free
+ f(28_5) free
+ f(28_6) free
+ f(28_7) free
+ f(29_0) free
+ f(29_1) free
+ f(29_2) free
+ f(29_3) free
+ f(29_4) free
+ f(29_6) free
+ f(29_7) free
+ congestion(29_7) free
+ f(30_0) free
+ f(30_1) free
+ f(30_2) free
+ f(30_3) free
+ f(30_4) free
+ f(30_6) free
+ f(30_7) free
+ f(31_0) free
+ f(31_1) free
+ f(31_2) free
+ f(31_3) free
+ f(31_4) free
+ f(31_6) free
+ f(31_7) free
+ f(32_0) free
+ f(32_1) free
+ f(32_2) free
+ f(32_3) free
+ f(32_4) free
+ f(32_6) free
+ f(32_7) free
+ f(33_0) free
+ f(33_1) free
+ f(33_2) free
+ f(33_3) free
+ f(33_4) free
+ f(33_6) free
+ f(33_7) free
+ f(34_0) free
+ f(34_1) free
+ f(34_2) free
+ f(34_3) free
+ f(34_4) free
+ f(34_6) free
+ f(34_7) free
+ f(35_0) free
+ f(35_1) free
+ f(35_2) free
+ f(35_3) free
+ f(35_4) free
+ f(35_6) free
+ f(35_7) free
+ f(36_0) free
+ f(36_1) free
+ f(36_2) free
+ f(36_3) free
+ f(36_4) free
+ f(36_6) free
+ f(36_7) free
+ f(37_0) free
+ f(37_1) free
+ f(37_2) free
+ f(37_3) free
+ f(37_4) free
+ f(37_6) free
+ f(37_7) free
+ f(38_0) free
+ f(38_1) free
+ f(38_2) free
+ f(38_3) free
+ f(38_4) free
+ f(38_6) free
+ f(38_7) free
+ f(39_0) free
+ f(39_1) free
+ f(39_2) free
+ f(39_3) free
+ f(39_4) free
+ f(39_6) free
+ f(39_7) free
+ f(40_0) free
+ f(40_1) free
+ f(40_2) free
+ f(40_3) free
+ f(40_4) free
+ f(40_6) free
+ f(40_7) free
+ f(41_0) free
+ f(41_1) free
+ f(41_2) free
+ f(41_3) free
+ f(41_4) free
+ f(41_6) free
+ f(41_7) free
+ f(42_0) free
+ congestion(42_0) free
+ f(42_1) free
+ congestion(42_1) free
+ f(42_2) free
+ congestion(42_2) free
+ f(42_3) free
+ congestion(42_3) free
+ f(42_4) free
+ congestion(42_4) free
+ f(42_6) free
+ congestion(42_6) free
+ f(42_7) free
+ theta(0_0) free
+ theta(0_1) free
+ theta(0_2) free
+ theta(0_3) free
+ theta(0_4) free
+ theta(0_6) free
+ theta(0_7) free
+ theta(1_0) free
+ theta(1_1) free
+ theta(1_2) free
+ theta(1_3) free
+ theta(1_4) free
+ theta(1_6) free
+ theta(1_7) free
+ theta(2_0) free
+ theta(2_1) free
+ theta(2_2) free
+ theta(2_3) free
+ theta(2_4) free
+ theta(2_6) free
+ theta(2_7) free
+ theta(3_0) free
+ theta(3_1) free
+ theta(3_2) free
+ theta(3_3) free
+ theta(3_4) free
+ theta(3_6) free
+ theta(3_7) free
+ theta(4_0) free
+ theta(4_1) free
+ theta(4_2) free
+ theta(4_3) free
+ theta(4_4) free
+ theta(4_6) free
+ theta(4_7) free
+ theta(5_0) free
+ theta(5_1) free
+ theta(5_2) free
+ theta(5_3) free
+ theta(5_4) free
+ theta(5_6) free
+ theta(5_7) free
+ theta(6_0) free
+ theta(6_1) free
+ theta(6_2) free
+ theta(6_3) free
+ theta(6_4) free
+ theta(6_6) free
+ theta(6_7) free
+ theta(7_0) free
+ theta(7_1) free
+ theta(7_2) free
+ theta(7_3) free
+ theta(7_4) free
+ theta(7_6) free
+ theta(7_7) free
+ theta(11_0) free
+ theta(11_1) free
+ theta(11_2) free
+ theta(11_3) free
+ theta(11_4) free
+ theta(11_6) free
+ theta(11_7) free
+ theta(9_0) free
+ theta(9_1) free
+ theta(9_2) free
+ theta(9_3) free
+ theta(9_4) free
+ theta(9_6) free
+ theta(9_7) free
+ theta(10_0) free
+ theta(10_1) free
+ theta(10_2) free
+ theta(10_3) free
+ theta(10_4) free
+ theta(10_6) free
+ theta(10_7) free
+ theta(12_0) free
+ theta(12_1) free
+ theta(12_2) free
+ theta(12_3) free
+ theta(12_4) free
+ theta(12_6) free
+ theta(12_7) free
+ theta(13_0) free
+ theta(13_1) free
+ theta(13_2) free
+ theta(13_3) free
+ theta(13_4) free
+ theta(13_6) free
+ theta(13_7) free
+ theta(14_0) free
+ theta(14_1) free
+ theta(14_2) free
+ theta(14_3) free
+ theta(14_4) free
+ theta(14_6) free
+ theta(14_7) free
+ theta(15_0) free
+ theta(15_1) free
+ theta(15_2) free
+ theta(15_3) free
+ theta(15_4) free
+ theta(15_6) free
+ theta(15_7) free
+ theta(16_0) free
+ theta(17_0) free
+ theta(16_1) free
+ theta(17_1) free
+ theta(16_2) free
+ theta(17_2) free
+ theta(16_3) free
+ theta(17_3) free
+ theta(16_4) free
+ theta(17_4) free
+ theta(16_6) free
+ theta(17_6) free
+ theta(16_7) free
+ theta(17_7) free
+ theta(18_0) free
+ theta(18_1) free
+ theta(18_2) free
+ theta(18_3) free
+ theta(18_4) free
+ theta(18_6) free
+ theta(18_7) free
+ theta(19_0) free
+ theta(19_1) free
+ theta(19_2) free
+ theta(19_3) free
+ theta(19_4) free
+ theta(19_6) free
+ theta(19_7) free
+ theta(23_0) free
+ theta(23_1) free
+ theta(23_2) free
+ theta(23_3) free
+ theta(23_4) free
+ theta(23_6) free
+ theta(23_7) free
+ theta(24_0) free
+ theta(24_1) free
+ theta(24_2) free
+ theta(24_3) free
+ theta(24_4) free
+ theta(24_6) free
+ theta(24_7) free
+ theta(25_0) free
+ theta(25_1) free
+ theta(25_2) free
+ theta(25_3) free
+ theta(25_4) free
+ theta(25_6) free
+ theta(25_7) free
+ theta(26_0) free
+ theta(26_1) free
+ theta(26_2) free
+ theta(26_3) free
+ theta(26_4) free
+ theta(26_6) free
+ theta(26_7) free
+ theta(27_0) free
+ theta(27_1) free
+ theta(27_2) free
+ theta(27_3) free
+ theta(27_4) free
+ theta(27_6) free
+ theta(27_7) free
+ theta(28_0) free
+ theta(28_1) free
+ theta(28_2) free
+ theta(28_3) free
+ theta(28_4) free
+ theta(28_6) free
+ theta(28_7) free
+ p(0_0) free
+ p(0_1) free
+ p(0_2) free
+ p(0_3) free
+ p(0_4) free
+ p(0_6) free
+ p(0_7) free
+ p(1_0) free
+ p(1_1) free
+ p(1_2) free
+ p(1_3) free
+ p(1_4) free
+ p(1_6) free
+ p(1_7) free
+ p(2_0) free
+ p(2_1) free
+ p(2_2) free
+ p(2_3) free
+ p(2_4) free
+ p(2_6) free
+ p(2_7) free
+ p(3_0) free
+ p(3_1) free
+ p(3_2) free
+ p(3_3) free
+ p(3_4) free
+ p(3_6) free
+ p(3_7) free
+ p(4_0) free
+ p(4_1) free
+ p(4_2) free
+ p(4_3) free
+ p(4_4) free
+ p(4_6) free
+ p(4_7) free
+ p(5_0) free
+ p(5_1) free
+ p(5_2) free
+ p(5_3) free
+ p(5_4) free
+ p(5_6) free
+ p(5_7) free
+ p(6_0) free
+ p(6_1) free
+ p(6_2) free
+ p(6_3) free
+ p(6_4) free
+ p(6_6) free
+ p(6_7) free
+ p(7_0) free
+ p(7_1) free
+ p(7_2) free
+ p(7_3) free
+ p(7_4) free
+ p(7_6) free
+ p(7_7) free
+ p(8_0) free
+ p(8_1) free
+ p(8_2) free
+ p(8_3) free
+ p(8_4) free
+ p(8_6) free
+ p(8_7) free
+ p(9_0) free
+ p(9_1) free
+ p(9_2) free
+ p(9_3) free
+ p(9_4) free
+ p(9_6) free
+ p(9_7) free
+ p(10_0) free
+ p(10_1) free
+ p(10_2) free
+ p(10_3) free
+ p(10_4) free
+ p(10_6) free
+ p(10_7) free
+ p(11_0) free
+ p(11_1) free
+ p(11_2) free
+ p(11_3) free
+ p(11_4) free
+ p(11_6) free
+ p(11_7) free
+ p(12_0) free
+ p(12_1) free
+ p(12_2) free
+ p(12_3) free
+ p(12_4) free
+ p(12_6) free
+ p(12_7) free
+ p(13_0) free
+ p(13_1) free
+ p(13_2) free
+ p(13_3) free
+ p(13_4) free
+ p(13_6) free
+ p(13_7) free
+ p(14_0) free
+ p(14_1) free
+ p(14_2) free
+ p(14_3) free
+ p(14_4) free
+ p(14_6) free
+ p(14_7) free
+ p(15_0) free
+ p(15_1) free
+ p(15_2) free
+ p(15_3) free
+ p(15_4) free
+ p(15_6) free
+ p(15_7) free
+ p(16_0) free
+ p(16_1) free
+ p(16_2) free
+ p(16_3) free
+ p(16_4) free
+ p(16_6) free
+ p(16_7) free
+ p(17_0) free
+ p(17_1) free
+ p(17_2) free
+ p(17_3) free
+ p(17_4) free
+ p(17_6) free
+ p(17_7) free
+ p(18_0) free
+ p(18_1) free
+ p(18_2) free
+ p(18_3) free
+ p(18_4) free
+ p(18_6) free
+ p(18_7) free
+ p(19_0) free
+ p(19_1) free
+ p(19_2) free
+ p(19_3) free
+ p(19_4) free
+ p(19_6) free
+ p(19_7) free
+ p(20_0) free
+ p(20_1) free
+ p(20_2) free
+ p(20_3) free
+ p(20_4) free
+ p(20_5) free
+ p(20_6) free
+ p(20_7) free
+ p(21_0) free
+ p(21_1) free
+ p(21_2) free
+ p(21_3) free
+ p(21_4) free
+ p(21_5) free
+ p(21_6) free
+ p(21_7) free
+ p(22_0) free
+ p(22_1) free
+ p(22_2) free
+ p(22_3) free
+ p(22_4) free
+ p(22_5) free
+ p(22_6) free
+ p(22_7) free
+ p(23_0) free
+ p(23_1) free
+ p(23_2) free
+ p(23_3) free
+ p(23_4) free
+ p(23_6) free
+ p(23_7) free
+ p(24_0) free
+ p(24_1) free
+ p(24_2) free
+ p(24_3) free
+ p(24_4) free
+ p(24_6) free
+ p(24_7) free
+ p(25_0) free
+ p(25_1) free
+ p(25_2) free
+ p(25_3) free
+ p(25_4) free
+ p(25_6) free
+ p(25_7) free
+ p(26_0) free
+ p(26_1) free
+ p(26_2) free
+ p(26_3) free
+ p(26_4) free
+ p(26_6) free
+ p(26_7) free
+ p(27_0) free
+ p(27_1) free
+ p(27_2) free
+ p(27_3) free
+ p(27_4) free
+ p(27_6) free
+ p(27_7) free
+ p(28_0) free
+ p(28_1) free
+ p(28_2) free
+ p(28_3) free
+ p(28_4) free
+ p(28_6) free
+ p(28_7) free
+ balancing_p(0) free
+ dp(0_0) free
+ dp(1_0) free
+ dp(2_0) free
+ dp(3_0) free
+ dp(4_0) free
+ dp(5_0) free
+ dp(6_0) free
+ dp(7_0) free
+ dp(8_0) free
+ dp(9_0) free
+ dp(10_0) free
+ dp(11_0) free
+ dp(12_0) free
+ dp(13_0) free
+ dp(14_0) free
+ balancing_p(1) free
+ dp(0_1) free
+ dp(1_1) free
+ dp(2_1) free
+ dp(3_1) free
+ dp(4_1) free
+ dp(5_1) free
+ dp(6_1) free
+ dp(7_1) free
+ dp(8_1) free
+ dp(9_1) free
+ dp(10_1) free
+ dp(11_1) free
+ dp(12_1) free
+ dp(13_1) free
+ dp(14_1) free
+ balancing_p(2) free
+ dp(0_2) free
+ dp(1_2) free
+ dp(2_2) free
+ dp(3_2) free
+ dp(4_2) free
+ dp(5_2) free
+ dp(6_2) free
+ dp(7_2) free
+ dp(8_2) free
+ dp(9_2) free
+ dp(10_2) free
+ dp(11_2) free
+ dp(12_2) free
+ dp(13_2) free
+ dp(14_2) free
+ balancing_p(3) free
+ dp(0_3) free
+ dp(1_3) free
+ dp(2_3) free
+ dp(3_3) free
+ dp(4_3) free
+ dp(5_3) free
+ dp(6_3) free
+ dp(7_3) free
+ dp(8_3) free
+ dp(9_3) free
+ dp(10_3) free
+ dp(11_3) free
+ dp(12_3) free
+ dp(13_3) free
+ dp(14_3) free
+ balancing_p(4) free
+ dp(0_4) free
+ dp(1_4) free
+ dp(2_4) free
+ dp(3_4) free
+ dp(4_4) free
+ dp(5_4) free
+ dp(6_4) free
+ dp(7_4) free
+ dp(8_4) free
+ dp(9_4) free
+ dp(10_4) free
+ dp(11_4) free
+ dp(12_4) free
+ dp(13_4) free
+ dp(14_4) free
+ dp(10_5) free
+ dp(11_5) free
+ balancing_p(6) free
+ dp(0_6) free
+ dp(1_6) free
+ dp(2_6) free
+ dp(3_6) free
+ dp(4_6) free
+ dp(5_6) free
+ dp(6_6) free
+ dp(7_6) free
+ dp(8_6) free
+ dp(9_6) free
+ dp(10_6) free
+ dp(11_6) free
+ dp(12_6) free
+ dp(13_6) free
+ dp(14_6) free
+ balancing_p(7) free
+ dp(0_7) free
+ dp(1_7) free
+ dp(2_7) free
+ dp(3_7) free
+ dp(4_7) free
+ dp(5_7) free
+ dp(6_7) free
+ dp(7_7) free
+ dp(8_7) free
+ dp(9_7) free
+ dp(10_7) free
+ dp(11_7) free
+ dp(12_7) free
+ dp(13_7) free
+ dp(14_7) free
  total_congestion free
 End
