@@ -12,10 +12,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.ticker as mticker
 #%% User defined parameters
-simulations_per_ratio = 20 #4886 for 98% CI
+simulations_per_ratio = 100 #4886 for 98% CI
 noise = 0.21
 security_of_supply = .99
-safety_margins = [0,.1,.2,.3,.8]
+safety_margins = [0,.5,1.0,1.1,1.2,1.3,1.5,2.0]
 
 #%%
 expected_time = 4.1*simulations_per_ratio*len(safety_margins)
@@ -65,9 +65,9 @@ for index, margin in enumerate(safety_margins):
     
     #check if more then a specified amount of solutinos was infeasible
     
-    secure = True if infeasible_count/simulations_per_ratio <= (1-security_of_supply) else False 
+    secure = True if infeasible_count/simulations_per_ratio < (1-security_of_supply) else False 
     # If infeasible, store [0,0,0,0,0]; otherwise, compute mean
-    result = monte_carlo_costs.iloc[:MC].mean() if secure else pd.Series([0, 0, 0, 0, 0], index=costs.columns)
+    result = monte_carlo_costs.iloc[:].mean() if secure else pd.Series([0, 0, 0, 0, 0], index=costs.columns)
     costs.iloc[index] = result  # Store result
     # Making a hist to chack normality
     # Extract values for the given ratio

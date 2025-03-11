@@ -111,10 +111,6 @@ def optimal_redispatch(load_per_node:pd.DataFrame, df_RD_orderbook:pd.DataFrame,
     model_RD.time_set = pyo.RangeSet(0, ptus - 1)  
     model_RD.asset_set = pyo.RangeSet(0, max(max_RD_up_dict.keys())[0])
     
-    print(f'assets: {assets}')
-    print(f'Max RD UP dict: {max_RD_up_dict}')
-    print(f'Asset set: {list(model_RD.asset_set)}')
-    print(f'Time set: {list(model_RD.time_set)}')
 
     # Define parameters
     model_RD.dt = pyo.Param(initialize=1.0)  # 1 hour time resolution
