@@ -16,11 +16,10 @@ import os
 ptus, input_file, susceptance, df_lines, buses, n_buses, n_lines, ratio = retrieve_config_variables()
 
 def optimal_redispatch(load_per_node:pd.DataFrame, df_RD_orderbook:pd.DataFrame, Tee :int = 0) -> pyo.ConcreteModel:
-    assets = list(np.unique(df_RD_orderbook.iloc[:,0].values))
+    assets = list(range(0,max(df_RD_orderbook.iloc[:,0].values)+1))
     df_lines['susceptance'] = 1/(df_lines['len']*(1/susceptance)) #not a global parameter, so also have to do this function locally
-    # Create a dictionary to map assets to their bus
-    asset_to_bus = {asset: df_RD_orderbook[df_RD_orderbook['asset'] == asset]['bus'].iloc[0] 
-                for asset in assets}
+
+
     p_prognosis = load_per_node.copy()
     
     max_RD_up_dict = {}
@@ -46,7 +45,8 @@ def optimal_redispatch(load_per_node:pd.DataFrame, df_RD_orderbook:pd.DataFrame,
     
                 # Store the maximum power in the dictionary
                 max_RD_up_dict[key] = max_power
-     
+
+
                         
     for asset in assets:  # Loop to construct the max_RD_down_dict
         for t in range(0, ptus):
@@ -109,8 +109,13 @@ def optimal_redispatch(load_per_node:pd.DataFrame, df_RD_orderbook:pd.DataFrame,
     model_RD.bus_set = pyo.RangeSet(0, n_buses - 1) #includes final value unlike normal python (hence -1)
     model_RD.line_set = pyo.RangeSet(0, n_lines - 1)
     model_RD.time_set = pyo.RangeSet(0, ptus - 1)  
-    model_RD.asset_set = pyo.RangeSet(0, len(np.unique(df_RD_orderbook.iloc[:,0].values))-1)
+    model_RD.asset_set = pyo.RangeSet(0, max(max_RD_up_dict.keys())[0])
     
+    print(f'assets: {assets}')
+    print(f'Max RD UP dict: {max_RD_up_dict}')
+    print(f'Asset set: {list(model_RD.asset_set)}')
+    print(f'Time set: {list(model_RD.time_set)}')
+
     # Define parameters
     model_RD.dt = pyo.Param(initialize=1.0)  # 1 hour time resolution
     model_RD.max_dp_up = pyo.Param(model_RD.asset_set, model_RD.time_set, within=pyo.Reals, initialize=max_RD_up_dict)
@@ -263,6 +268,7 @@ def optimal_redispatch(load_per_node:pd.DataFrame, df_RD_orderbook:pd.DataFrame,
     opt = SolverFactory('gurobi')
     opt.options['mipgap'] = 0.001
     opt.options['DualReductions'] = 0
+    opt.options['Threads'] = 8
     results = opt.solve(model_RD, tee=Tee)
     
     termination_condition = results.solver.termination_condition
@@ -541,6 +547,7 @@ def optimal_CBC(load_per_node:pd.DataFrame, df_CBC_orderbook:pd.DataFrame, conge
    opt = SolverFactory('gurobi')
    opt.options['mipgap'] = 0.001
    opt.options['DualReductions'] = 0
+   opt.options['Threads'] = 8
    results = opt.solve(model, tee=Tee)
    
    termination_condition = results.solver.termination_condition

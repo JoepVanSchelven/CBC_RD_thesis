@@ -9,6 +9,7 @@ Created on Thu Jan 16 12:58:40 2025
 
 import pandas as pd
 import config
+import os
 
 def retrieve_config_variables():
     """
@@ -20,7 +21,7 @@ def retrieve_config_variables():
     input_file = config.input_file
     susceptance = config.susceptance
     ratio = config.ratio
-
+    input_file = os.path.join("..", input_file)
     # Load data from input file
     df_lines = pd.read_excel(input_file, 'lines', header=0, index_col=0)
 

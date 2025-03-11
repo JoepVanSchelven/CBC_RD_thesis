@@ -11,15 +11,15 @@ from main_function import main_function
 import matplotlib.pyplot as plt
 import numpy as np
 #%% User defined parameters
-simulations_per_ratio = 100 #4886 for 98% CI
-step_size_ratios = 20
+simulations_per_ratio = 50 #4886 for 98% CI
+step_size_ratios = 10
 noise = 0.21
 security_of_supply = .99
 
 #%%
 expected_time = 3.6*((100/step_size_ratios)+1)*simulations_per_ratio
 
-print(f'Expeted time of entrie simulation: {expected_time/60:.2f} minutes')
+print(f'Expected time of entrie simulation: {expected_time/60:.2f} minutes')
 
 old_ratio = None
 i = 0
@@ -35,7 +35,7 @@ costs = pd.DataFrame(np.zeros((len(ratios), 5)),
 monte_carlo_costs = pd.DataFrame(np.zeros((len(simulations_per_value), 5)), 
                                   columns=['CBC costs', 'RD costs', 'total_costs', 'market_costs', 'market_price'], 
                                   index=simulations_per_value)
-#can be use to check if there is engough conversion
+#can be use to check if there is enough conversion
 all_results = {}
 for index, ratio in enumerate(ratios):
     print(f"Running simulations for ratio {ratio}")

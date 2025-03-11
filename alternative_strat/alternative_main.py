@@ -681,7 +681,7 @@ print(f"RD funciton runtime is {monotonic() - start_time} seconds")
 
 # %%
 
-dp_RD_values = {
+dp_RD_asset_level = {
     (a, t): pyo.value(model_RD.dp[a, t]) 
     for a in model_RD.asset_set 
     for t in model_RD.time_set
@@ -693,8 +693,12 @@ asset_to_bus = df_RD_orderbook[['asset', 'bus']].drop_duplicates().set_index('as
 # Step 2: Aggregate dp values per bus
 dp_per_bus = {}
 
-for (a, t), dp_value in dp_RD_values.items():
-    bus = asset_to_bus[a]  # Get the bus corresponding to the asset
+for (a, t), dp_value in dp_RD_asset_level.items():
+    
+    if a not in asset_to_bus:
+        bus = 0
+    else:    
+        bus = asset_to_bus[a]  # Get the bus corresponding to the asset
     if (bus, t) not in dp_per_bus:
         dp_per_bus[(bus, t)] = 0  # Initialize if not present
     dp_per_bus[(bus, t)] += dp_value  # Sum dp values per bus per time

@@ -82,6 +82,7 @@ def main_function(ratio_itterative: float, i, old_ratio:float, noise_mape:float 
                 np_out[bus_idx, :] += values  # Add values to the corresponding row in np_out
         return np_out
 
+    df_dp_CBC_asset_level = pd.DataFrame() 
 
     def CHP_dispatch_calc(df_chp_max: pd.DataFrame, load_per_node: pd.DataFrame) -> pd.DataFrame:
         '''
@@ -100,28 +101,30 @@ def main_function(ratio_itterative: float, i, old_ratio:float, noise_mape:float 
             DESCRIPTION.
 
         '''
+        #This is a function that identifies the imbalnce at every PTU and dispatches the CHPs to balance the system
+        # The CHPs are dispatched in order, to mimic a merit order (highset = cheapest)
         # Initialize an array for CHP dispatch
         chp_dispatch = np.zeros((len(df_chp_max), ptus))
         
         # Find total imbalance per PTU (power CHPs need to deliver to balance the grid)
         imbalance_per_ptu = load_per_node.sum(axis=0)
         p_chp_required = -imbalance_per_ptu  # Negative values indicate required generation
-
+    
         # Loop over each PTU
         for t in range(ptus):
             p = p_chp_required[t]  # Power required for this PTU
             chp = 0  # Start with the first CHP unit
-
+    
             # Balance the power for this PTU
             while p < 0.0 and chp < len(df_chp_max):  # Ensure we don't exceed available CHPs
                 max_dispatch = df_chp_max.iloc[chp, 1]  # Max dispatch capacity for this CHP
                 bus = df_chp_max.iloc[chp, 0]  # Bus associated with this CHP
-
+    
                 # Adjust max_dispatch if there's an order for this bus & PTU
-                if not df_dp_CBC_order_level.empty:
-                    for _, orders in df_dp_CBC_order_level.iterrows():
-                        order, hour = orders['Index']  # Unpack tuple index
-
+                if not df_dp_CBC_asset_level.empty:
+                    for _, orders in df_dp_CBC_asset_level.iterrows():
+                        asset, hour = orders['Index']  # Unpack tuple index
+    
                         # Find the corresponding order in the orderbook
                         condition = (
                             (df_CBC_orderbook['type'] == 'CHP') & 
@@ -141,13 +144,13 @@ def main_function(ratio_itterative: float, i, old_ratio:float, noise_mape:float 
                     chp_dispatch[chp, t] = max_dispatch
                     p -= max_dispatch  # Remaining imbalance
                     chp += 1  # Move to the next CHP
-
+    
             p_chp_required[t] = p  # Update remaining imbalance for this PTU (should not become positive)
-
+    
         # Convert to DataFrame and include node (bus) information
         chp_df = pd.DataFrame(chp_dispatch, columns=range(ptus))
         chp_df.insert(0, 'node', df_chp_max.iloc[:, 0])
-
+    
         return chp_df
 
      
@@ -352,8 +355,7 @@ def main_function(ratio_itterative: float, i, old_ratio:float, noise_mape:float 
     
     load_per_node_D2 = add_to_array(df_loads_D2, load_per_node_D2)
     
-    #This is a function that identifies the imbalnce at every PTU and dispatches the CHPs to balance the system
-        # The CHPs are dispatched in order, to mimic a merit order (highset = cheapest)
+
     global df_dp_CBC_order_level
     df_dp_CBC_order_level = pd.DataFrame()  
     
@@ -417,7 +419,6 @@ def main_function(ratio_itterative: float, i, old_ratio:float, noise_mape:float 
     df_CBC_orderbook = add_generation_to_orderbook(df_RE_D2, df_CBC_orderbook, 'RE')
     #df_CBC_orderbook = add_generation_to_orderbook(chp_prog, df_CBC_orderbook, 'CHP') #CHPs are assumed not to partake in CBC
     if perform_deterministic_part == True:
-        print('CBC is being performed')
         from RD_CBC_functionsV2 import optimal_CBC
         global model_CBC
         global termination_condition_CBC
@@ -425,12 +426,12 @@ def main_function(ratio_itterative: float, i, old_ratio:float, noise_mape:float 
     
         
         if termination_condition_CBC == pyo.TerminationCondition.infeasible:
-            return [0,0,0,0,0,ratio]
+            return [0,0,0,0,0,ratio,0,0,0,0]
         
     total_costs_CBC = pyo.value(model_CBC.total_costs)
     
     
-    dp_CBC_values = {
+    dp_CBC_asset_level = {
         (a, t): pyo.value(model_CBC.dp[a, t]) 
         for a in model_CBC.asset_set 
         for t in model_CBC.time_set
@@ -442,7 +443,7 @@ def main_function(ratio_itterative: float, i, old_ratio:float, noise_mape:float 
     # Step 2: Aggregate dp values per bus
     dp_per_bus = {}
     
-    for (a, t), dp_value in dp_CBC_values.items():
+    for (a, t), dp_value in dp_CBC_asset_level.items():
         bus = asset_to_bus[a]  # Get the bus corresponding to the asset
         if (bus, t) not in dp_per_bus:
             dp_per_bus[(bus, t)] = 0  # Initialize if not present
@@ -582,12 +583,12 @@ def main_function(ratio_itterative: float, i, old_ratio:float, noise_mape:float 
     
     model_RD, termination_condition_RD = optimal_redispatch(load_per_node, df_RD_orderbook)
     if termination_condition_RD == pyo.TerminationCondition.infeasible:
-        return [0,0,0,0,0,ratio]
+        return [0,0,0,0,0,ratio,0,0,0,0]
     
     
     # %%
     
-    dp_RD_values = {
+    dp_RD_asset_level = {
         (a, t): pyo.value(model_RD.dp[a, t]) 
         for a in model_RD.asset_set 
         for t in model_RD.time_set
@@ -599,8 +600,13 @@ def main_function(ratio_itterative: float, i, old_ratio:float, noise_mape:float 
     # Step 2: Aggregate dp values per bus
     dp_per_bus = {}
     
-    for (a, t), dp_value in dp_RD_values.items():
-        bus = asset_to_bus[a]  # Get the bus corresponding to the asset
+    for (a, t), dp_value in dp_RD_asset_level.items():
+        
+        if a not in asset_to_bus:
+            bus = 0
+            print(f'\n Bus not in asset to bus, so bus 0 selectdem but this is not important because dp is {dp_value} (Should be zero \n\n\n\n')
+        else:    
+            bus = asset_to_bus[a]  # Get the bus corresponding to the asset
         if (bus, t) not in dp_per_bus:
             dp_per_bus[(bus, t)] = 0  # Initialize if not present
         dp_per_bus[(bus, t)] += dp_value  # Sum dp values per bus per time
@@ -629,7 +635,7 @@ def main_function(ratio_itterative: float, i, old_ratio:float, noise_mape:float 
 
     old_ratio = ratio_itterative
 
-    return total_costs_CBC, total_costs_RD, total_costs, costs_market, market_price, old_ratio
+    return total_costs_CBC, total_costs_RD, total_costs, costs_market, market_price, old_ratio, df_CBC_orderbook, df_RD_orderbook, dp_CBC_asset_level, dp_RD_asset_level
     
     # %%
     

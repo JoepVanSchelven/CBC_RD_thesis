@@ -78,7 +78,7 @@ load_per_node_D2 = add_to_array(df_loads_D2, load_per_node_D2)
 
 #This is a function that identifies the imbalnce at every PTU and dispatches the CHPs to balance the system
     # The CHPs are dispatched in order, to mimic a merit order (highset = cheapest)
-df_dp_CBC_order_level = pd.DataFrame()  
+df_dp_CBC_asset_level = pd.DataFrame()  
 
 def CHP_dispatch_calc(df_chp_max: pd.DataFrame, load_per_node: pd.DataFrame) -> pd.DataFrame:
     # Initialize an array for CHP dispatch
@@ -99,9 +99,9 @@ def CHP_dispatch_calc(df_chp_max: pd.DataFrame, load_per_node: pd.DataFrame) -> 
             bus = df_chp_max.iloc[chp, 0]  # Bus associated with this CHP
 
             # Adjust max_dispatch if there's an order for this bus & PTU
-            if not df_dp_CBC_order_level.empty:
-                for _, orders in df_dp_CBC_order_level.iterrows():
-                    order, hour = orders['Index']  # Unpack tuple index
+            if not df_dp_CBC_asset_level.empty:
+                for _, orders in df_dp_CBC_asset_level.iterrows():
+                    asset, hour = orders['Index']  # Unpack tuple index
 
                     # Find the corresponding order in the orderbook
                     condition = (
@@ -393,7 +393,7 @@ print(f"Run time of CBC function {monotonic() - start_time} seconds\n")
 total_costs_CBC = pyo.value(model_CBC.total_costs)
 
 
-dp_CBC_values = {
+dp_CBC_asset_level = {
     (a, t): pyo.value(model_CBC.dp[a, t]) 
     for a in model_CBC.asset_set 
     for t in model_CBC.time_set
@@ -405,7 +405,7 @@ asset_to_bus = df_CBC_orderbook[['asset', 'bus']].drop_duplicates().set_index('a
 # Step 2: Aggregate dp values per bus
 dp_per_bus = {}
 
-for (a, t), dp_value in dp_CBC_values.items():
+for (a, t), dp_value in dp_CBC_asset_level.items():
     bus = asset_to_bus[a]  # Get the bus corresponding to the asset
     if (bus, t) not in dp_per_bus:
         dp_per_bus[(bus, t)] = 0  # Initialize if not present
@@ -626,7 +626,7 @@ print(f"RD funciton runtime is {monotonic() - start_time} seconds")
 
 # %%
 
-dp_RD_values = {
+dp_RD_asset_level = {
     (a, t): pyo.value(model_RD.dp[a, t]) 
     for a in model_RD.asset_set 
     for t in model_RD.time_set
@@ -638,7 +638,7 @@ asset_to_bus = df_RD_orderbook[['asset', 'bus']].drop_duplicates().set_index('as
 # Step 2: Aggregate dp values per bus
 dp_per_bus = {}
 
-for (a, t), dp_value in dp_RD_values.items():
+for (a, t), dp_value in dp_RD_asset_level.items():
     bus = asset_to_bus[a]  # Get the bus corresponding to the asset
     if (bus, t) not in dp_per_bus:
         dp_per_bus[(bus, t)] = 0  # Initialize if not present
