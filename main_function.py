@@ -33,8 +33,9 @@ def main_function(ratio_itterative: float, i, old_ratio:float, noise_mape:float 
     
     
     #%% IMPORTANT VAIRABLES
-    certificate_price= 6
-    CHP_buy_price = 30
+    certificate_price= 5                #price for RD for curtailing RE (base = 5)
+    CHP_buy_price = 30                #price for curtailing CHPs (i.e. negative for saved fuel costs, positive for illiquid market simul) (base=30)
+    chp_upward_price_multiplier = 1.1   #multiplier for how much more expensive upwards CHP actions are compared to their D-1 bids (base =1.1)
     
     # %%
     #Determine whether or not the deterministic part has to be performed, this is not the case if the ame ratio is tested multiple times, like in the monte_carlo
@@ -571,7 +572,7 @@ def main_function(ratio_itterative: float, i, old_ratio:float, noise_mape:float 
             
             if p > 0:
                 power = p
-                price = df_chp_max.loc[row,'price']*1.1 #how much does an upward actio cost?
+                price = df_chp_max.loc[row,'price']*chp_upward_price_multiplier #how much does an upward actio cost?
                 bus = values['node']
     
                 order_tuple = (asset, bus, start, start+1, 'sell', price, power, 'CHP')
@@ -604,7 +605,6 @@ def main_function(ratio_itterative: float, i, old_ratio:float, noise_mape:float 
         
         if a not in asset_to_bus:
             bus = 0
-            print(f'\n Bus not in asset to bus, so bus 0 selectdem but this is not important because dp is {dp_value} (Should be zero \n\n\n\n')
         else:    
             bus = asset_to_bus[a]  # Get the bus corresponding to the asset
         if (bus, t) not in dp_per_bus:

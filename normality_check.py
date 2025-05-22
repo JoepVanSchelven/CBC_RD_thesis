@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 """
+Created on Fri Mar 21 11:28:28 2025
+
+@author: 304723
+"""
+
+# -*- coding: utf-8 -*-
+"""
 Created on Tue Jan 28 16:27:01 2025
 
 @author: 304723
@@ -10,12 +17,13 @@ import pandas as pd
 from main_function import main_function
 import matplotlib.pyplot as plt
 import numpy as np
-plt.rcParams['font.family'] = 'Times New Roman'
+# Shapiro-Wilk Test
+from scipy.stats import shapiro
 #%% User defined parameters
-simulations_per_ratio = 1664 #4886 for 98% CI
-step_size_ratios = 5
+simulations_per_ratio = 50 #4886 for 98% CI
+step_size_ratios = 10
 noise = 0.21
-security_of_supply = .999
+security_of_supply = .99
 
 #%%
 expected_time = 3.6*((100/step_size_ratios)+1)*simulations_per_ratio
@@ -33,26 +41,32 @@ costs = pd.DataFrame(np.zeros((len(ratios), 5)),
                       columns=['CBC costs', 'RD costs', 'total_costs', 'market_costs', 'market_price'], 
                       index=ratios)
 
-monte_carlo_costs = pd.DataFrame(np.zeros((len(simulations_per_value), 5)), 
-                                  columns=['CBC costs', 'RD costs', 'total_costs', 'market_costs', 'market_price'], 
-                                  index=simulations_per_value)
+monte_carlo_costs = pd.DataFrame(columns=['CBC costs', 'RD costs', 'total_costs', 'market_costs', 'market_price'], )
 #can be use to check if there is enough conversion
+
+alpha = 0.05
+MC = -1
 all_results = {}
 for index, ratio in enumerate(ratios):
+    p = 0
     print(f"Running simulations for ratio {ratio}")
     infeasible_count = 0
     #feasible = True  # Assume feasibility
-
-    for MC in simulations_per_value:
+    while p < alpha:
+        MC+=1
         print(f"  Monte-Carlo iteration {MC}")
-
+        
         results = main_function(ratio / 100, i, old_ratio, noise)  # Run main function
         costs_tuple = results[0:5]
         i+=1
         old_ratio = results[5]
-        monte_carlo_costs.iloc[MC] = costs_tuple  
+        monte_carlo_costs.loc[-1] = costs_tuple
+        monte_carlo_costs = monte_carlo_costs.sort_index().reset_index(drop = True)
         all_results[ratio,MC] = costs_tuple[2]
-        
+        if MC > 3:
+            p = shapiro(monte_carlo_costs.loc[:,'total_costs'])[1]
+        if p>alpha:
+            print(f'\n\n\n\n Normally distributed after {MC} itteration \n\n\n')
         if sum(costs_tuple) == 0:  # Check for infeasibility
             print(f"  Infeasible solution found at ratio {ratio}")
             infeasible_count += 1
@@ -86,8 +100,8 @@ for index, ratio in enumerate(ratios):
 
 #%% Plotting
  
-def plot_data(data, xlabel, ylabel, title=None):
-    fig, ax = plt.subplots(dpi=1200)
+def plot_data(data, xlabel, ylabel, title):
+    fig, ax = plt.subplots()
     
 # Remove rows where all values are zero
     filtered_data = data.loc[~(data == 0).all(axis=1)]
@@ -117,17 +131,17 @@ def plot_data(data, xlabel, ylabel, title=None):
 # Plot operational costs
 plot_data(
     costs.iloc[:, :3],  # Assuming mean across columns if multiple exist
-    r"$\vartheta$ [%]",
-    r"Operational Costs [k€]",
-    #r"Costs VS CBC/RD ratio"
+    "% of congestion solved by CBC",
+    "Operational Costs [Euro]",
+    f"Costs VS CBC/RD ratio\nMonte-Carlo simulation (n={simulations_per_ratio} per measurement)"
 )
 
 # Plot market costs
 plot_data(
-    pd.DataFrame(costs.loc[:, 'market_price']),
-    r"$\vartheta$ [%]",
-    r"Total Market Price [k€]",
-    #r"Market Costs VS CBC/RD ratio"
+    pd.DataFrame(costs.loc[:, 'market_costs']),
+    "% of congestion solved by CBC",
+    "Total Market Costs [K Euro]",
+    f"Market Costs VS CBC/RD ratio\nMonte-Carlo simulation (n={simulations_per_ratio} per measurement)"
 )
 
 print(f"Expected duration = {expected_time} \n Actual duration = {monotonic() - start_time:.2f} seconds \n in minutes {(monotonic() - start_time)/60:.2f}")

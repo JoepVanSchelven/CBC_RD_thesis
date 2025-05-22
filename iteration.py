@@ -22,16 +22,17 @@ mape = 0  #.21 is base case
 ratios = list(range(0,100+step_size,step_size))
 #ratios = [30]*10
 #ratios = [50,70]
-costs = pd.DataFrame({'CBC costs': len(ratios)*0.0,
-                       'RD costs': len(ratios)*0.0,
-                       'total_costs': len(ratios)*0.0,
-                       'market_costs': len(ratios)*0.0,
-                       'market_price': len(ratios)*0.0},
-                         index = ratios)
-df_dp = pd.DataFrame({'Change in renewable generation' : len(ratios)*0.0, 
+costs = pd.DataFrame({'CBC costs':      len(ratios)*0.0,
+                       'RD costs':      len(ratios)*0.0,
+                       'total_costs':   len(ratios)*0.0,
+                       'market_costs':  len(ratios)*0.0,
+                       'market_price':  len(ratios)*0.0},
+                                         index = ratios)
+
+df_dp = pd.DataFrame({'Change in renewable generation' :    len(ratios)*0.0, 
                       'Change in conventional generation' : len(ratios)*0.0,
-                      'Change in consumption' : len(ratios)*0.0}, 
-                     index = ratios)
+                      'Change in consumption' :             len(ratios)*0.0}, 
+                                                             index = ratios)
 index = 0
 for i in ratios:
     print(f'tested ratio = {i}, itteration {index}\n')
@@ -48,7 +49,16 @@ for i in ratios:
     delta_RE          = 0
     delta_CHP         = 0
     delta_consumption = 0
-    
+    if sum(costs_tuple) >1:
+        average_spread = (
+        RD_orderbook
+        .assign(duration=lambda d: d["delivery_end"] - d["delivery_start"],
+                weighted=lambda d: d["price"] * d["power"] * d["duration"])
+        .groupby("buy/sell")
+        .apply(lambda g: g["weighted"].sum() / g["power"].sum() if g["power"].sum() != 0 else 0)
+        .sum()
+        )
+        print(f"\naverage spread is {average_spread}\n")
     if dp_CBC != 0:
         
         for (asset, time), value in dp_CBC.items():  # Correctly iterate over dictionary keys and values
@@ -82,7 +92,6 @@ for i in ratios:
     
     costs.iloc[index] = costs_tuple
     
-    
     index+=1  
  
 for index,row in costs.iterrows():
@@ -92,30 +101,31 @@ for index,row in costs.iterrows():
     
  
 #%%
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(dpi=1200)
 pd.DataFrame(costs.iloc[:, :3]).plot(ax=ax)  # Remove space after pd.
-ax.set_xlabel("% of congestion solved by CBC")
+ax.set_xlabel(r'$\vartheta$ [%]')
 ax.set_xticks(np.arange(0, 110, step=10))
-ax.set_ylabel("Operational Costs [Euro] ")
-ax.set_title("Costs VS CBC/RD ratio (CHP sell orders = 30")
+ax.set_ylabel(r"Operational Costs [[k €] ")
+#ax.set_title("Costs VS CBC/RD ratio")
 plt.show()
 
 
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(dpi=1200)
 pd.DataFrame(costs.loc[:,'market_price']).plot(ax=ax)
-ax.set_xlabel("% of congestion solved by CBC")
+ax.set_xlabel(r'$\vartheta$ [%]')
 ax.set_xticks(np.arange(0, 110, step=10))
-ax.set_ylabel("Whole-sale price [Euro/MW]")
-ax.set_title("Market price VS CBC/RD ratio (CHP sell orders = 30)")
+ax.set_ylabel(r"Whole-sale price [€/MW]")
+#ax.set_title("D-1 market price VS CLC/RD ratio")
 plt.show()
 
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(dpi=1200)
 df_dp.loc[~(df_dp.iloc[:, :3] == 0).all(axis=1), :].plot(ax=ax)
-ax.set_xlabel("% of congestion solved by CBC")
+ax.set_xlabel(r'$\vartheta$ [%]')
 ax.set_xticks(np.arange(0, 110, step=10))
-ax.set_ylabel("Change in production/generation (GW)")
-ax.set_title("Impact of CBC/RD on energy generation and consumption \n (+ is more production and consumption)")
+ax.set_ylabel(r"Change in production/generation (GW)")
+#ax.set_title("Impact of CLC/RD on energy generation and consumption \n (+ is more production and consumption)")
+ax.legend(loc='upper right', bbox_to_anchor=(1., 0.8))
 plt.show()
 
-plt.boxplot(costs['total_costs']/costs['total_costs'].mean())
-plt.show()
+#plt.boxplot(costs['total_costs']/costs['total_costs'].mean())
+#plt.show()

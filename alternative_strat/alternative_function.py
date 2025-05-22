@@ -398,7 +398,7 @@ def alt_function(safety_margin, i, old_margin,  noise_mape:float = 0.0 ) -> floa
     #change the pricing of RE and CHP RD orders
     for index, row in df_RD_bp_orderbook.iterrows():
         if row['type']=='RE':
-            row['price'] = 6.0 #price of green certficates
+            row['price'] = 5.0 #price of green certficates
             df_RD_bp_orderbook.iloc[index,:] = row
         if row['type']=='CHP' and row['buy/sell']=='buy':
             row['price'] = 20 #price of green fuel
@@ -598,10 +598,7 @@ def alt_function(safety_margin, i, old_margin,  noise_mape:float = 0.0 ) -> floa
         costs_market += cost
     market_price = costs_market/sum(df_loads.iloc[:,1:].sum())
         
-        
-    # %%
-    
-    
+
     # %% Vsualization of generation per type and per node before RD
     
     #make a dict with all the load per generation type
