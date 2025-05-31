@@ -97,7 +97,7 @@ def optimal_redispatch_congestion_cost(load_per_node:pd.DataFrame, df_RD_orderbo
                 ].fillna(0)  # Replace NaN with 0
     
                 # Get the maximum 'power' for this asset and time period
-                price_down = filtered_df['price'].max() if not filtered_df.empty else 0
+                price_down = -filtered_df['price'].max() if not filtered_df.empty else 0
     
                 # Store the maximum power in the dictionary
                 RD_price_down_dict[key] = price_down
@@ -124,7 +124,7 @@ def optimal_redispatch_congestion_cost(load_per_node:pd.DataFrame, df_RD_orderbo
     model_RD.congestion = pyo.Var(model_RD.line_set, model_RD.time_set, within=pyo.NonNegativeReals)  # >= 0
     model_RD.p = pyo.Var(model_RD.bus_set, model_RD.time_set, within=pyo.Reals)  # power
     model_RD.dp = pyo.Var(model_RD.asset_set, model_RD.time_set, within=pyo.Reals)  # dp after RD
-    model_RD.u = pyo.Var(model_RD.asset_set, model_RD.time_set, within=pyo.Binary)  # Binary variable for condition
+    #model_RD.u = pyo.Var(model_RD.asset_set, model_RD.time_set, within=pyo.Binary)  # Binary variable for condition
     
     
     model_RD.total_congestion = pyo.Var(within=pyo.Reals) #sum of congestion
@@ -192,7 +192,7 @@ def optimal_redispatch_congestion_cost(load_per_node:pd.DataFrame, df_RD_orderbo
         return sum(m.dp[a, t] for a in m.asset_set) == 0.0
     
     model_RD.con_dp_balance = pyo.Constraint( model_RD.time_set, rule=dp_balance)
-    
+    '''
     # Constraints to link `u` and `dp`. u is binary (0/1)  the following expresisons determine that if u is 1, dp has to be any value between 0 an 1e6
         #if u==0, dp is a negative price. This allow the objective funciton to add negative and positve prices. and allos for an upward bid and downward bid per location
     def link_u_dp_rule(m, a, t):
@@ -213,7 +213,13 @@ def optimal_redispatch_congestion_cost(load_per_node:pd.DataFrame, df_RD_orderbo
             m.dp[a, t] * m.price_down[a, t] * -(1 - m.u[a, t])  
             for a in m.asset_set for t in m.time_set
         )
-    
+    '''
+    def total_costs_def(m):
+        return m.total_costs == sum(
+            m.dp[a, t] * m.price_up[a, t] +  
+            m.dp[a, t] * m.price_down[a, t]
+            for a in m.asset_set for t in m.time_set
+        )
     model_RD.total_costs_constraint = pyo.Constraint(rule=total_costs_def)
     
         # Add congestion defition
@@ -363,7 +369,7 @@ def optimal_redispatch(load_per_node:pd.DataFrame, df_RD_orderbook:pd.DataFrame,
                 ].fillna(0)  # Replace NaN with 0
     
                 # Get the maximum 'power' for this asset and time period
-                price_down = filtered_df['price'].max() if not filtered_df.empty else 0
+                price_down = -filtered_df['price'].max() if not filtered_df.empty else 0
     
                 # Store the maximum power in the dictionary
                 RD_price_down_dict[key] = price_down
@@ -390,7 +396,7 @@ def optimal_redispatch(load_per_node:pd.DataFrame, df_RD_orderbook:pd.DataFrame,
     model_RD.congestion = pyo.Var(model_RD.line_set, model_RD.time_set, within=pyo.NonNegativeReals)  # >= 0
     model_RD.p = pyo.Var(model_RD.bus_set, model_RD.time_set, within=pyo.Reals)  # power
     model_RD.dp = pyo.Var(model_RD.asset_set, model_RD.time_set, within=pyo.Reals)  # dp after RD
-    model_RD.u = pyo.Var(model_RD.asset_set, model_RD.time_set, within=pyo.Binary)  # Binary variable for condition
+    #model_RD.u = pyo.Var(model_RD.asset_set, model_RD.time_set, within=pyo.Binary)  # Binary variable for condition
     
     
     model_RD.total_congestion = pyo.Var(within=pyo.Reals) #sum of congestion
@@ -465,7 +471,7 @@ def optimal_redispatch(load_per_node:pd.DataFrame, df_RD_orderbook:pd.DataFrame,
         return sum(m.dp[a, t] for a in m.asset_set) == 0.0
     
     model_RD.con_dp_balance = pyo.Constraint( model_RD.time_set, rule=dp_balance)
-    
+    '''
     # Constraints to link `u` and `dp`. u is binary (0/1)  the following expresisons determine that if u is 1, dp has to be any value between 0 an 1e6
         #if u==0, dp is a negative price. This allow the objective funciton to add negative and positve prices. and allos for an upward bid and downward bid per location
     def link_u_dp_rule(m, a, t):
@@ -486,7 +492,13 @@ def optimal_redispatch(load_per_node:pd.DataFrame, df_RD_orderbook:pd.DataFrame,
             m.dp[a, t] * m.price_down[a, t] * -(1 - m.u[a, t])  
             for a in m.asset_set for t in m.time_set
         )
-    
+    '''
+    def total_costs_def(m):
+        return m.total_costs == sum(
+            m.dp[a, t] * m.price_up[a, t] +  
+            m.dp[a, t] * m.price_down[a, t]  
+            for a in m.asset_set for t in m.time_set
+        )
     model_RD.total_costs_constraint = pyo.Constraint(rule=total_costs_def)
     
         # Add congestion defition

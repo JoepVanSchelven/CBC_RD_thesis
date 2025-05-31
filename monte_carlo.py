@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 plt.rcParams['font.family'] = 'Times New Roman'
 #%% User defined parameters
-simulations_per_ratio = 1664 #4886 for 98% CI
+simulations_per_ratio = 1664 #1664 for 98% CI
 step_size_ratios = 5
 noise = 0.21
 security_of_supply = .999

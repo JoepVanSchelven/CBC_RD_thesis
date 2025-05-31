@@ -2,7 +2,6 @@
 
 # Static configuration variables
 ptus = 8  # How many program time units
-import os
 input_file = "1h_NL_bus_input_V2.xlsx"
 
 
