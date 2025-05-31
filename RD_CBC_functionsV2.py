@@ -219,7 +219,7 @@ def optimal_redispatch(load_per_node:pd.DataFrame, df_RD_orderbook:pd.DataFrame,
     def total_costs_def(m):
         return m.total_costs == sum(
             m.dp[a, t] * m.price_up[a, t] * m.u[a, t] +  
-            m.dp[a, t] * m.price_down[a, t] * -(1 - m.u[a, t])  
+            m.dp[a, t] * m.price_down[a, t] * (-1 + m.u[a, t])  
             for a in m.asset_set for t in m.time_set
         )
     
