@@ -431,7 +431,7 @@ df_RD_bp_orderbook = merge_orders(df_RD_bp_orderbook)
 
 #%% Use optimilisation to find what congestion is not/difficult to be solved by the epexcted RD posibilities
 
-from RD_CBC_functionsV3 import optimal_redispatch_congestion_cost
+from RD_CBC_functions import optimal_redispatch_congestion_cost
 
 model_RD_prog, termination_condition_RD = optimal_redispatch_congestion_cost(load_per_node_D2,df_RD_bp_orderbook,0)
 
@@ -517,7 +517,7 @@ df_CBC_orderbook = merge_orders(df_CBC_orderbook)
 start_time = monotonic()
 print(f"time untill CBC funtion is {monotonic() - start_time} seconds")
 
-from RD_CBC_functionsV3 import optimal_CBC
+from RD_CBC_functions import optimal_CBC
 
 model_CBC, termination_condition_CBC = optimal_CBC(load_per_node_D2, df_CBC_orderbook,congestion_D2, chp_prog, df_lines_CBC)
 print(f"Run time of CBC function {monotonic() - start_time} seconds\n")
@@ -593,7 +593,7 @@ congestion = sum(abs(df_congestion).sum())
 
 #Calculate how much is paid for electricity in the entire market
 costs_market = 0
-for t, column in chp_coupling.iloc[:,1:].iteritems():
+for t, column in chp_coupling.iloc[:,1:].items():
     #print(t)
     merit = len(column[column!=0])
     cost = df_chp_max.iloc[merit-1,2] * df_loads.iloc[:,t+1].sum()
@@ -673,7 +673,7 @@ for row, values in df_chp_remainder.iterrows(): # aloop that adds all the remain
 df_RD_orderbook = merge_orders(df_RD_orderbook)
 start_time = monotonic()
 # something
-from RD_CBC_functionsV3 import optimal_redispatch
+from RD_CBC_functions import optimal_redispatch
 
 model_RD, termination_condition_RD = optimal_redispatch(load_per_node, df_RD_orderbook)
 
