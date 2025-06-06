@@ -1,39 +1,45 @@
-# CBC_RD_thesis
- The model files used for simulating different CBC/RD activationstrategies for the completion of my master thesis at TU/eindhoven
+CBC_RD_Thesis
 
- Files explanation
-Set-up:
-	-config
-File to declare the susceptance, input file name, amount of PTUs, and the predetermiend CBC/RD ratio (in case you excute main_single)
+This repository contains the model files used to simulate different CBC/RD activation strategies for the completion of my Master’s thesis at TU/eindhoven.
+📁 File Overview
+Set-up Files
 
-	-config_loader
-File acompanying -config.
+    -config
+    Defines key model parameters such as susceptance, the input file name, the number of PTUs, and the predetermined CBC/RD ratio (used when executing main_single).
 
-	-NL_model_input
-Input file used for the final modeling, The folder alternative inputs provides other filses you can use to test other scenarios or validate the model. (do change input file name in -config if you change input file)
+    -config_loader
+    Supporting script that loads the parameters defined in -config.
 
-	
-Excecutables:
-	-main_single
-This file is used to perform a single iteration of a predetermined CBC/RD ratio 
+    NL_model_input
+    The primary input file used for the final modeling.
+    Note: The alternative_inputs/ folder contains additional input files for testing other scenarios. If you switch input files, make sure to update the file name in -config.
 
-	-main_function
-The function derived from -main_single. this function is called by -main_iteration, and main_monte_carlo to perform the iterations
+Executable Files
 
-	-main_iteration
-File used to perform single iterations of different CBC/RD ratios. Since it is single iterations you should set the MAPE to 0 to obtain reliable results
+    main_single
+    Runs a single iteration based on a fixed CBC/RD ratio.
 
-	-main_monte_carlo
-File used to perform MC simulations (multiple iterations per RD/CBC ratio). 
+    main_function
+    Core function extracted from main_single. It is called by both main_iteration and main_monte_carlo to execute simulations.
 
-Supportin files:
-	- network_plotting
-Contains functions used in -main_single to lot the networks, is not useful for large models.
+    main_iteration
+    Executes a series of single-iteration simulations using varying CBC/RD ratios.
+    Important: To ensure reliable results, set the MAPE to 0.
 
-	-RD_CBC_functions
-Conatins the function that perform the optimisations to select the RD and CBC bids, using Pyomo and Gurobi, If you do not have a gurobi liscence,change opt = SolverFactory('gurobi') to opt = SolverFactory('GLPK'), or any other open-source solver engine	 
+    main_monte_carlo
+    Runs Monte Carlo simulations — multiple iterations for each CBC/RD ratio.
 
+Supporting Files
 
-Alternative_strat_folder
-This folder containt the files used to model the RD priority strategy. The files are named and structured in the same way as the files described above. 
+    network_plotting
+    Contains functions for visualizing network configurations, used by main_single.
+    Note: Not suitable for large network models.
 
+    RD_CBC_functions
+    Implements the optimization logic for selecting RD and CBC bids using Pyomo and Gurobi.
+    Tip: If you don’t have a Gurobi license, replace SolverFactory('gurobi') with SolverFactory('glpk') or any other supported open-source solver.
+
+📁 Alternative_strat_folder/
+
+Contains files used to model the RD-priority strategy.
+These files follow the same naming and structure conventions as those described above.
