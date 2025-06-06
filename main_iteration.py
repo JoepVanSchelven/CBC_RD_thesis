@@ -13,10 +13,10 @@ import numpy as np
 
 
 old_ratio = None
-
-#%% 
+#%% Decalre how big the step size of the RD/CBC ratio has to be and if you want to include a stochastic part 
+#(note this is no monte_carlo, so the stochastic part will not provide relaible results)
 step_size = 10
-mape = 0  #.21 is base case
+mape = 0  #keep at 0.0 unless you want to explore the impact of the MAPE
 
 
 ratios = list(range(0,100+step_size,step_size))

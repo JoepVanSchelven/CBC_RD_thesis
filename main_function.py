@@ -420,7 +420,7 @@ def main_function(ratio_itterative: float, i, old_ratio:float, noise_mape:float 
     df_CBC_orderbook = add_generation_to_orderbook(df_RE_D2, df_CBC_orderbook, 'RE')
     #df_CBC_orderbook = add_generation_to_orderbook(chp_prog, df_CBC_orderbook, 'CHP') #CHPs are assumed not to partake in CBC
     if perform_deterministic_part == True:
-        from RD_CBC_functionsV2 import optimal_CBC
+        from RD_CBC_functions import optimal_CBC
         global model_CBC
         global termination_condition_CBC
         model_CBC, termination_condition_CBC = optimal_CBC(load_per_node_D2, df_CBC_orderbook,congestion_D2, chp_prog, 0, ratio)
@@ -580,7 +580,7 @@ def main_function(ratio_itterative: float, i, old_ratio:float, noise_mape:float 
     
 
     # something
-    from RD_CBC_functionsV2 import optimal_redispatch
+    from RD_CBC_functions import optimal_redispatch
     
     model_RD, termination_condition_RD = optimal_redispatch(load_per_node, df_RD_orderbook)
     if termination_condition_RD == pyo.TerminationCondition.infeasible:

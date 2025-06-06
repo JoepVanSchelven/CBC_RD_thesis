@@ -429,7 +429,7 @@ def alt_function(safety_margin, i, old_margin,  noise_mape:float = 0.0 ) -> floa
     
     #%% Use optimilisation to find what congestion is not/difficult to be solved by the epexcted RD posibilities
     if i == 0:
-        from RD_CBC_functionsV3 import optimal_redispatch_congestion_cost
+        from RD_CBC_functions import optimal_redispatch_congestion_cost
         global model_RD_prog
         global termination_condition_RD_prog
         model_RD_prog, termination_condition_RD_prog = optimal_redispatch_congestion_cost(load_per_node_D2,df_RD_bp_orderbook,0)
@@ -515,7 +515,7 @@ def alt_function(safety_margin, i, old_margin,  noise_mape:float = 0.0 ) -> floa
 
     start_time = monotonic()
     if i == 0 or safety_margin != old_margin:
-        from RD_CBC_functionsV3 import optimal_CBC
+        from RD_CBC_functions import optimal_CBC
         global model_CBC
         global termination_condition_CBC
         model_CBC, termination_condition_CBC = optimal_CBC(load_per_node_D2, df_CBC_orderbook,congestion_D2, chp_prog, df_lines_CBC)
@@ -668,7 +668,7 @@ def alt_function(safety_margin, i, old_margin,  noise_mape:float = 0.0 ) -> floa
     df_RD_orderbook = merge_orders(df_RD_orderbook)
     start_time = monotonic()
     # something
-    from RD_CBC_functionsV3 import optimal_redispatch
+    from RD_CBC_functions import optimal_redispatch
     
     model_RD, termination_condition_RD = optimal_redispatch(load_per_node, df_RD_orderbook)
     if termination_condition_RD == pyo.TerminationCondition.infeasible:

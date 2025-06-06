@@ -29,7 +29,7 @@ import os
 
 #%% IMPORTANT VAIRABLES
 noise_mape = 0
-certificate_price= 6
+certificate_price= 6 #(buy price of RD for renewable generators)
 CHP_buy_price = 30
 
 # %% initliase data

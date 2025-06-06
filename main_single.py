@@ -8,9 +8,8 @@
 # This model is aimed to simulate different activation strategies of Capacity limitng contracts (CLC/CBC) and redispatch contracts. The main goal is to effectively mitigate congestion against optimal costs.
 # 
 
-# ### import packages
 
-# %%
+# %% import packages
 
 from time import monotonic
 
@@ -55,14 +54,26 @@ df_chp_max = pd.read_excel(input_file,'chp_max', header=0, index_col=0) #Load th
 # %% DC load-flow
 # First, we will use the the D-2 prognoses to perform a 'manual' DC load-flow. This load-flow will be used to visualise the network behaviour nd see where the congestion occurs. 
 
-#
-
-
 #Make a matrix where every node and every ptu have total load excluding CHP generation
 load_per_node_D2 = np.zeros((n_buses,ptus))
 
-# This is afunction to add the values of one DF to another array, based on the nodes provided in the DF
 def add_to_array(df_in: pd.DataFrame, np_out: np.array) -> np.array:
+    '''
+    This is a function to add the values of one DF to another array, based on the nodes provided in the DF
+
+    Parameters
+    ----------
+    df_in : pd.DataFrame
+        DESCRIPTION.
+    np_out : np.array
+        DESCRIPTION.
+
+    Returns
+    -------
+    np_out : TYPE
+        DESCRIPTION.
+
+    '''
     for idx, row in df_in.iterrows():  # Iterate over DataFrame rows
         node = row["node"]  # Use the "node" column explicitly
         if node in buses:  # Check if the node is in the buses list
@@ -76,11 +87,27 @@ load_per_node_D2 = add_to_array(df_RE_D2, load_per_node_D2)
 
 load_per_node_D2 = add_to_array(df_loads_D2, load_per_node_D2)
 
-#This is a function that identifies the imbalnce at every PTU and dispatches the CHPs to balance the system
-    # The CHPs are dispatched in order, to mimic a merit order (highset = cheapest)
+#
 df_dp_CBC_asset_level = pd.DataFrame()  
 
 def CHP_dispatch_calc(df_chp_max: pd.DataFrame, load_per_node: pd.DataFrame) -> pd.DataFrame:
+    '''
+    This is a function that identifies the imbalnce at every PTU and dispatches the CHPs to balance the system
+    The CHPs are dispatched in order, to mimic a merit order (highset = cheapest)
+
+    Parameters
+    ----------
+    df_chp_max : pd.DataFrame
+        DESCRIPTION.
+    load_per_node : pd.DataFrame
+        DESCRIPTION.
+
+    Returns
+    -------
+    chp_df : TYPE
+        DESCRIPTION.
+
+    '''
     # Initialize an array for CHP dispatch
     chp_dispatch = np.zeros((len(df_chp_max), ptus))
     
@@ -162,8 +189,21 @@ for _, row in df_lines.iterrows():
     B[to_idx, to_idx] += row['susceptance']
     
     
-#define a function to calculate the powerflows according to DC powerflow approach
 def calculate_powerflow(df_loads_D2: np.array) -> pd.DataFrame:
+    '''
+    Function to calculate the powerflows according to DC powerflow approach
+
+    Parameters
+    ----------
+    df_loads_D2 : np.array
+        DESCRIPTION.
+
+    Returns
+    -------
+    df_results : TYPE
+        DESCRIPTION.
+
+    '''
     # Initialize results df
     df_results = pd.DataFrame({'flow': n_lines * [0.0]}, index=df_lines.index)
 
@@ -210,6 +250,20 @@ df_congestion_D2 = pd.DataFrame(index=df_lines.index, columns = range(ptus))
 
 # definieer een functie die de overload kan bereken aan de hand van line capacity en flows
 def overload_calculation(df_flows : pd.DataFrame) -> pd.DataFrame:
+    '''
+    Function to calculate overload based on flows 
+
+    Parameters
+    ----------
+    df_flows : pd.DataFrame
+        DESCRIPTION.
+
+    Returns
+    -------
+    df_congestion_D2 : TYPE
+        DESCRIPTION.
+
+    '''
     for line in df_congestion_D2.index:  # Iterate over line indices
         for t in range(ptus):  # Iterate over PTUs (time steps)
             overload = abs(df_flows.iloc[line,t]) - df_lines['capacity'].loc[line]
@@ -301,11 +355,7 @@ if congestion_D2 == 0:
     sys.exit('No congestion is the system\n')
 
 
-# ### Activate CBCs
-# Het Idee is dat eerst CBCs worden afgeroepen (optimalisereend voor de kosten en het congestievolume terugdringend naar een bepaald niveau).
-# Vervolgens word er weer gedispatched met als constraint dat he tcongestievolume niet mag toenemen
-
-# %%
+# %% Activate CBCs
 df_CBC_orderbook = pd.read_excel(input_file,'CBC', header=0) #read the orderbook
 
 #add all activated RE and CHP to the CBC orderbook, in order to do this, an assumption about the D-1 price is made
@@ -314,6 +364,24 @@ CBC_RE_premium = 0.0*prognosis_wholesale_price #compensation on top off the whol
 CBC_CHP_premium = 0.2*prognosis_wholesale_price #compensation on top off the wholesale market prognosis for CHPs
 
 def add_generation_to_orderbook(generation:pd.DataFrame,orderbook:pd.DataFrame,source:str)->pd.DataFrame:
+    '''
+    Function that adds a set of genreators to the RD or CBC orderbook
+
+    Parameters
+    ----------
+    generation : pd.DataFrame
+        DESCRIPTION.
+    orderbook : pd.DataFrame
+        DESCRIPTION.
+    source : str
+        DESCRIPTION.
+
+    Returns
+    -------
+    orderbook : TYPE
+        DESCRIPTION.
+
+    '''
     if len(orderbook)>0:
         asset = max(orderbook.iloc[:,0])+1
     else:
@@ -426,12 +494,6 @@ df_dp_CBC = df_dp_CBC.reindex(buses, fill_value=0)  # Include all buses
 df_dp_CBC.reset_index(inplace=True)
 df_dp_CBC.rename(columns={'bus': 'node'}, inplace=True)  # Rename column
 
-
-
-
-      
-        
-
 '''
 # Define number of rows and columns
 num_rows = 13  # Adjust based on actual data
@@ -507,16 +569,11 @@ print(f'The aimed congestion reduction is {ratio}, the actual congestion after i
 
 #Calculate how much is paid for electricity in the entire market
 costs_market = 0
-for t, column in chp_coupling.iloc[:,1:].iteritems():
+for t, column in chp_coupling.iloc[:,1:].items():
     #print(t)
     merit = len(column[column!=0])
     cost = df_chp_max.iloc[merit-1,2] * df_loads.iloc[:,t+1].sum()
     costs_market += cost
-    
-    
-    
-# %%
-
 
 # %% Vsualization of generation per type and per node before RD
 
@@ -666,10 +723,3 @@ total_costs_RD = pyo.value(model_RD.total_costs)
 
 total_costs = total_costs_RD + total_costs_CBC
 print(f'\nTotal costs are {total_costs}.\n-RD costs = {total_costs_RD} \n-CBC costs = {total_costs_CBC}')
-
-
-# %%
-
-
-
-
